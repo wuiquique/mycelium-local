@@ -1,0 +1,12 @@
+openapi: 3.0.1
+paths:
+  /api:
+    get:
+      operationId: index
+      responses:
+        "200":
+          description: index 200 response
+          content:
+            text/plain:
+              schema:
+                type: string

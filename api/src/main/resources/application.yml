@@ -1,0 +1,29 @@
+micronaut:
+  application:
+    name: api
+  router:
+    static-resources:
+      swagger:
+        paths: classpath:META-INF/swagger
+        mapping: /swagger/**
+      swagger-ui:
+        paths: classpath:META-INF/swagger/views/swagger-ui
+        mapping: /swagger-ui/**
+  security:
+    authentication: bearer
+    token:
+      jwt:
+        signatures:
+          secret:
+            generator:
+              secret: ${JWT_GENERATOR_SIGNATURE_SECRET:pleaseChangeThisSecretForANewOne}
+datasources:
+  default:
+    driver-class-name: oracle.jdbc.OracleDriver
+    db-type: oracle
+    schema-generate: CREATE_DROP
+    dialect: ORACLE
+netty:
+  default:
+    allocator:
+      max-order: 3
