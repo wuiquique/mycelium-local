@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 
-export default function adminusers() {
+export default function AdminUsers() {
 
   const [users, setUsers] = useState([
     {id: 1, first_name: 'Diego', last_name: 'Vallejo', email: 'd@gmail.com', rol: 'Admin', rol_id: 1}
@@ -42,7 +42,7 @@ export default function adminusers() {
     let temp = [...users]
     temp[index][camp] = value
     console.log(temp)
-    setUsers[temp]
+    setUsers(temp)
   }
 
   const changeSelect = (index, value) => {

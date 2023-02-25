@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { MdMenu } from "react-icons/md";
+import Link from 'next/link';
 
 export default function NavBar() {
   return (
@@ -26,7 +27,8 @@ export default function NavBar() {
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           News
         </Typography>
-        <Button color="inherit">Login</Button>
+        <Button component={Link} href="/auth/login" color="inherit">Login</Button>
+        <Button component={Link} href="/auth/register" color="inherit">register</Button>
       </Toolbar>
     </AppBar>
   )
