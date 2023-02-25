@@ -43,11 +43,19 @@ export default function login() {
             <Typography variant='h4' mt={2}>
               mycelium :)
             </Typography>
-            <form className='mt-8 mb-11' >
+            <form className='mt-8 mb-11' onSubmit={handleSubmit}>
               <TextField label="Email" variant="standard" name='email_login'/>
               <TextField label="Password" variant="standard" name='password_login'/>
               <br/>
-              <Button className='mt-6' variant="outlined" disableElevation color='secondary'>Login</Button>
+              <Button 
+                className='mt-6' 
+                variant="outlined" 
+                disableElevation 
+                color='secondary'
+                type='submit'
+              >
+                Login
+              </Button>
             </form>
           </Card>
         </div>
