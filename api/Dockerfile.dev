@@ -1,0 +1,22 @@
+FROM docker.io/gradle:jdk17 AS deps
+
+WORKDIR /app
+
+COPY build.gradle.kts ./
+COPY settings.gradle.kts ./
+COPY gradle.properties ./
+
+RUN gradle dependencies --no-daemon --console plain
+
+FROM docker.io/openjdk:17-alpine AS runner
+
+WORKDIR /app
+
+COPY --from=deps /app/.gradle/ ./.gradle
+
+VOLUME /app
+
+EXPOSE 8080
+
+CMD ./gradlew run -t
+

@@ -1,0 +1,38 @@
+## Dependencies Stage
+FROM docker.io/node:16 AS mycelium-international-client-base
+
+WORKDIR /app
+
+COPY package.json yarn.lock ./
+
+RUN yarn install --non-interactive
+
+
+## App Stage
+FROM mycelium-international-client-base AS build-base
+
+WORKDIR /app
+
+COPY . .
+
+RUN yarn run build
+
+
+## App Stage
+FROM docker.io/node:16 AS mycelium-international-client
+
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
+
+WORKDIR /app
+
+# Copy build
+COPY --from=build-base /app/public ./public
+COPY --from=build-base /app/.next/standalone ./
+COPY --from=build-base /app/.next/static ./.next/static
+
+EXPOSE 3000
+
+ENV PORT 3000
+
+CMD [ "node", "index.js" ]

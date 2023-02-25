@@ -27,6 +27,7 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("com.oracle.database.jdbc:ojdbc8")
     implementation("io.micronaut:micronaut-validation")
+    implementation("io.micronaut.sql:micronaut-jdbc-ucp")
 
 }
 
