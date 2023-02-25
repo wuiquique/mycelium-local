@@ -2,15 +2,10 @@
 import "./globals.css";
 
 import React from "react";
-import {
-  AppBar,
-  Button,
-  Container,
-  IconButton,
-  Toolbar,
-  Typography,
-} from "@mui/material";
-import { MdMenu } from "react-icons/md";
+import { Container, CssBaseline } from "@mui/material";
+import NavBar from "../components/NavBar";
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "../theme";
 
 export default function layout({ children }) {
   return (
@@ -21,26 +16,13 @@ export default function layout({ children }) {
         */}
       <head />
       <body>
-        <AppBar>
-          <Toolbar>
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-            >
-              <MdMenu />
-            </IconButton>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              News
-            </Typography>
-            <Button color="inherit">Login</Button>
-          </Toolbar>
-        </AppBar>
-        <Container className="mt-[6rem]" maxWidth="lg">
-          <div className="text-center">{children}</div>
-        </Container>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <NavBar></NavBar>
+          <Container className="mt-[6rem]" maxWidth="lg">
+            <div className="text-center">{children}</div>
+          </Container>
+        </ThemeProvider>
       </body>
     </html>
   );
