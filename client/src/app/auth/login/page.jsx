@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Card, CardContent, CardMedia, Container, TextField, Typography } from '@mui/material'
+import { Card, CardContent, CardMedia, Button, TextField, Typography } from '@mui/material'
 import Grid2 from '@mui/material/Unstable_Grid2'
 
 export default function login() {
@@ -10,13 +10,29 @@ export default function login() {
 
   //'../../../public/redwhite.png;'
 
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    let post = {
+      email: e.target.email_login.value, 
+      password: e.target.password_login.value
+    }
+    axios.post('ruta', post)
+    .then(response => {
+      console.log(response.data)
+      console.log('navigate -> ?')
+    })
+    .catch(response => {
+      console.log('error')
+    })
+
+  }
+
+
   return (
 
-    <div className='text-center'>
+    <div className='flex justify-center text-center'>
       <Grid2 container spacing={2}>
-        <Grid2 lg={4}>
-        </Grid2>
-        <Grid2 lg={4} >
+        <div>
           <Card sx={{ maxWidth: 345 }}>
             <CardMedia
               component='img'
@@ -25,16 +41,16 @@ export default function login() {
               alt="Mycelium Logo"
             />
             <Typography variant='h4' mt={2}>
-              Login
+              mycelium :)
             </Typography>
-            <form className='mt-8 mb-11'>
-              <TextField label="Email" variant="standard" />
-              <TextField label="Password" variant="standard" />
+            <form className='mt-8 mb-11' >
+              <TextField label="Email" variant="standard" name='email_login'/>
+              <TextField label="Password" variant="standard" name='password_login'/>
+              <br/>
+              <Button className='mt-6' variant="outlined" disableElevation color='secondary'>Login</Button>
             </form>
           </Card>
-        </Grid2>
-        <Grid2 lg={4} >
-        </Grid2>
+        </div>
       </Grid2>
     </div>
   )
