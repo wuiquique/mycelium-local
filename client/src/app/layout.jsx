@@ -10,7 +10,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-// import { MdMenu } from "react-icons/md";
+import { MdMenu } from "react-icons/md";
 
 export default function layout({ children }) {
   return (
@@ -21,7 +21,6 @@ export default function layout({ children }) {
         */}
       <head />
       <body>
-        {/* <header> */}
         <AppBar>
           <Toolbar>
             <IconButton
@@ -31,7 +30,7 @@ export default function layout({ children }) {
               aria-label="menu"
               sx={{ mr: 2 }}
             >
-              {/* <MdMenu /> */}
+              <MdMenu />
             </IconButton>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               News
@@ -39,8 +38,8 @@ export default function layout({ children }) {
             <Button color="inherit">Login</Button>
           </Toolbar>
         </AppBar>
-        <Container maxWidth="lg">
-          <div className="mt-10 text-center">{children}</div>
+        <Container className="mt-[6rem]" maxWidth="lg">
+          <div className="text-center">{children}</div>
         </Container>
       </body>
     </html>
