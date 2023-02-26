@@ -14,10 +14,11 @@ import Grid2 from "@mui/material/Unstable_Grid2";
 
 export default function UserCart({products, cartOrCheckout, onChange}) {
 
-    const handleDeleteItem = (i) => {
-        let temp = [...products]
-        temp.splice(i, 1)
-        onChange(temp)
+    const handleDeleteItem = (productId) => {
+        axios.delete(`/api/user/cart/${productId}`)
+        .then(response => {
+            onChange(response.data)
+        })
     }
 
   return (
@@ -58,7 +59,7 @@ export default function UserCart({products, cartOrCheckout, onChange}) {
                             cartOrCheckout === 'cart' ?
                                 <Button
                                     variant='outlined'
-                                    onClick={() => handleDeleteItem(i)}
+                                    onClick={() => handleDeleteItem(e.id)}
                                 >
                                     Eliminar
                                 </Button>

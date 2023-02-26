@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 
-export default function CreditCard({}) {
+export default function CreditCard() {
 
   return (
     <div>

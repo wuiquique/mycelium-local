@@ -39,7 +39,7 @@ export default function Cart() {
         .catch(error => {
             
         })
-    }, [])
+    }, [setProducts])
 */
     const getTotal = () => {
         let total = 0
