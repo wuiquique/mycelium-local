@@ -8,7 +8,7 @@ const theme = createTheme({
       main: colors.rose[600],
     },
     secondary: {
-      main: colors.amber[500],
+      main: colors.amber[600],
     },
     error: {
       main: colors.red[600],
