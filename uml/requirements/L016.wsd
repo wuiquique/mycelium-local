@@ -5,22 +5,18 @@ entity "Frontend Server\nRequest" as fe
 entity "API Server\nRequest" as api
 database "Database Session" as db
 
-user -> fe : GET /reports
+user -> fe : GET /search
 activate fe
 fe -> user : Webpage contents
 deactivate fe
-user -> api : GET /reports/available
-activate api
-api -> user : Send available report generators
-deactivate api
-user -> api : GET /reports/generate?document=inventory&fields=name,price,type,user
+user -> api : GET /search?q={text}&category={category}&...
 activate api
 api -> api : Build query
 api -> db : Send query
 activate db
-db -> api : Return document references
+db -> api : List of products
 deactivate db
-api -> user : Serialize to JSON and send
+api -> user : List of products
 deactivate api
 
 @enduml

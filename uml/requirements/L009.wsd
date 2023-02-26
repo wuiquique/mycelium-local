@@ -1,0 +1,31 @@
+@startuml usecase1
+left to right direction
+
+entity "Módulo Importación/Exportación" as mod
+
+rectangle "Exportación e Importación de Productos" {
+    usecase "Generar logs de importación/exportación" as UC1
+    usecase "Generar logs sobre\nimportaciones/exportaciones\nexitosas" as UC2
+    usecase "Generar logs sobre errores durante\nimportaciones/exportaciones" as UC3
+    usecase "Ver logs de importación/exportación" as UC4
+    usecase "Ver éxitos sobre\nimportaciones/exportaciones\nexitosas" as UC5
+    usecase "Ver errores sobre errores durante\nimportaciones/exportaciones" as UC6
+}
+
+actor "Administrador/Empleado" as user
+database "Base de datos" as db
+
+UC1 ..> UC2 : <<includes>>
+UC1 ..> UC3 : <<includes>>
+UC4 ..> UC5 : <<includes>>
+UC4 ..> UC6 : <<includes>>
+
+mod -- UC1
+UC2 -- db
+UC3 -- db
+user -- UC4
+UC5 -- db
+UC6 -- db
+
+
+@enduml

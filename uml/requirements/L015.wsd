@@ -1,0 +1,23 @@
+@startuml sequence1
+
+actor "Administrador/Empleado" as user
+entity "Frontend Server\nRequest" as fe
+entity "API Server\nRequest" as api
+database "Database Session" as db
+
+user -> fe : GET {route}
+activate fe
+fe -> user : Webpage contents
+deactivate fe
+
+user -> api : GET /interface?route={route}
+activate api
+api -> db : Get texts for the specified route
+activate db
+db -> api : List of texts for the specified route
+deactivate db
+api -> user : List of texts for the specified route
+deactivate api
+user -> user : Replace placeholders\nwith the texts given
+
+@enduml

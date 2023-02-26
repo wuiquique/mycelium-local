@@ -1,0 +1,21 @@
+@startuml sequence1
+
+actor "Usuario" as user
+entity "Frontend Server\nRequest" as fe
+entity "API Server\nRequest" as api
+database "Database Session" as db
+
+user -> fe : GET /admin/product
+activate fe
+fe -> user : Webpage contents
+deactivate fe
+user -> api : GET /product/export
+activate api
+api -> db : SELECT ... FROM products p JOIN ...
+activate db
+db -> api : Return array of products
+deactivate db
+api -> user : Serialize to JSON and send
+deactivate api
+
+@enduml

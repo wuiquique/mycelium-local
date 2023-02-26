@@ -1,0 +1,24 @@
+@startuml usecase1
+left to right direction
+
+actor "Administrador/Empleado" as A
+
+rectangle "Módulo de Productos" {
+    usecase "Ver catálogo de productos" as UC1
+    usecase "Extraer catálogo\nde productos\ninternacionales" as UC2
+    usecase "Registrar y modificar\nproductos" as UC3
+    usecase "Export e importar\nproductos a JSON" as UC4
+    usecase "Dar productos de alta o baja" as UC5
+}
+
+actor "Proveedor Internacional" as P
+
+UC1 ..> UC2 : <<includes>>
+
+A -- UC1
+A -- UC3
+A -- UC4
+
+UC2 -- P
+UC5 -- P
+@enduml

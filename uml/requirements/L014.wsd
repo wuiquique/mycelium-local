@@ -6,7 +6,9 @@ entity "API Server\nRequest" as api
 database "Database Session" as db
 
 user -> fe : GET /reports
+activate fe
 fe -> user : Webpage contents
+deactivate fe
 user -> api : GET /reports/available
 activate api
 api -> user : Send available report generators

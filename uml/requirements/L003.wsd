@@ -1,0 +1,40 @@
+@startuml usecase1
+left to right direction
+
+actor "Usuario visitante anónimo" as VA
+actor "Usuario visitante registrado" as VR
+actor "Administrador/empleado" as A
+
+rectangle "Módulo de Usuarios" {
+    usecase "Buscar productos" as UC1
+    usecase "Ver categorías" as UC2
+    usecase "Manejar carrito de compras" as UC3
+    usecase "Solicitar pedidos" as UC4
+    usecase "Administrar usuarios" as UC5
+    usecase "Administrar pedidos" as UC6
+    usecase "Administrar portal web" as UC7
+    usecase "Generar reportes" as UC8
+    usecase "Registro de usuario" as UC9
+    usecase "Inicio de sesión" as UC10
+}
+
+VR -|> VA
+A -|> VR
+
+VA -- UC1
+
+VA -- UC2
+
+VR -- UC3
+
+VR -- UC4
+
+A -- UC5
+A -- UC6
+A -- UC7
+A -- UC8
+
+VA -- UC9
+VA -- UC10
+
+@enduml
