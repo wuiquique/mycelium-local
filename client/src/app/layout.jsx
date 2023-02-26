@@ -6,6 +6,8 @@ import { Container, CssBaseline } from "@mui/material";
 import NavBar from "../components/NavBar";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../theme";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 
 export default function layout({ children }) {
   return (
@@ -17,11 +19,13 @@ export default function layout({ children }) {
       <head />
       <body>
         <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <NavBar></NavBar>
-          <Container className="mt-[6rem]" maxWidth="lg">
-            <div className="text-center">{children}</div>
-          </Container>
+          <LocalizationProvider dateAdapter={AdapterMoment}>
+            <CssBaseline />
+            <NavBar></NavBar>
+            <Container className="mt-[6rem]" maxWidth="lg">
+              <div className="text-center">{children}</div>
+            </Container>
+          </LocalizationProvider>
         </ThemeProvider>
       </body>
     </html>

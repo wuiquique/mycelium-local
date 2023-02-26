@@ -22,8 +22,34 @@ import Select from "@mui/material/Select";
 export default function Create() {
   const [tech, setTech] = useState([{ type: "", value: "" }]);
 
-  const handleSubmit = (e) => {};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let out = {
+      name: e.target.product_name.value,
+      desc: e.target.product_desc.value,
+      categId: e.target.product_categorie.value,
+      brand: e.target.product_brand.value,
+      weight: e.target.product_weight.value,
+      quantity: e.target.product_quantity.value,
+      price: e.target.product_price.value,
+      urls: [
+        e.target.product_img1.value,
+        e.target.product_img2.value,
+        e.target.product_img3.value
+      ],
+      tech: [...tech]
+    }
+    axios.post('/api/product', out)
+    .then(response => {
+      console.log(response.data)
+      if(response.data === "Succes") {
+        location.reload()
+      }
+    })
+  };
+
   const [age, setAge] = useState("");
+
   const handleChange = (e) => {
     setAge(e.target.value);
   };
@@ -63,9 +89,12 @@ export default function Create() {
     setUrls(temp);
   };
 
-  useEffect(() => {
-    axios.post
-  }, [])
+  // useEffect(() => {
+  //   let out = {
+  //     name: 
+  //   }
+  //   axios.post('api/product', out)
+  // }, [])
 
   return (
     <div>
@@ -211,6 +240,7 @@ export default function Create() {
                         label="Quantity"
                         type="number"
                         variant="standard"
+                        name="product_quantity"
                       />
                       <Typography variant="body1" mt={6}>
                         Technical Specifications
