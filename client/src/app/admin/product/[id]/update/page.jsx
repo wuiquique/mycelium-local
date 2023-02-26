@@ -38,17 +38,16 @@ export default function Create() {
       urls: [
         e.target.product_img1.value,
         e.target.product_img2.value,
-        e.target.product_img3.value
+        e.target.product_img3.value,
       ],
-      tech: [...tech]
-    }
-    axios.post('/api/product/[id]', out)
-    .then(response => {
-      console.log(response.data)
-      if(response.data === "Succes") {
-        location.reload()
+      tech: [...tech],
+    };
+    axios.post("/api/product/[id]", out).then((response) => {
+      console.log(response.data);
+      if (response.data === "Success") {
+        location.reload();
       }
-    })
+    });
   };
 
   const [age, setAge] = useState("");
@@ -106,17 +105,15 @@ export default function Create() {
   };
 
   useEffect(() => {
-    axios.get('/apis/product/[id]')
-    .then(response => {
-      setProd(response.data.prod)
-      setUrls(response.data.urls)
-      setTech(response.data.tech)
-    })
-    axios.get('/api/category')
-    .then(response => {
-      setCategs(response.data)
-    })
-  }, [])
+    axios.get("/apis/product/[id]").then((response) => {
+      setProd(response.data.prod);
+      setUrls(response.data.urls);
+      setTech(response.data.tech);
+    });
+    axios.get("/api/category").then((response) => {
+      setCategs(response.data);
+    });
+  }, []);
 
   return (
     <div className="flex justify-center text-center">
