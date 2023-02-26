@@ -1,17 +1,9 @@
 ## Dependencies Stage
-FROM docker.io/node:16 AS mycelium-international-client-base
+FROM docker.io/node:16 AS mycelium-international-client
 
 WORKDIR /app
-
-COPY package.json yarn.lock ./
-
-RUN yarn install --non-interactive
-
-
-## App Stage
-FROM mycelium-international-client-base AS mycelium-international-client
 
 # Expose directory to the outside
 VOLUME /app
 
-CMD [ "yarn", "run", "dev" ]
+CMD bash -c "yarn install --non-interactive && yarn run dev"
