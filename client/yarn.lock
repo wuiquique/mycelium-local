@@ -77,7 +77,7 @@
   dependencies:
     "@date-io/core" "^2.16.0"
 
-"@date-io/moment@^2.15.0":
+"@date-io/moment@^2.15.0", "@date-io/moment@^2.16.1":
   version "2.16.1"
   resolved "https://registry.yarnpkg.com/@date-io/moment/-/moment-2.16.1.tgz#ec6e0daa486871e0e6412036c6f806842a0eeed4"
   integrity sha512-JkxldQxUqZBfZtsaCcCMkm/dmytdyq5pS1RxshCQ4fHhsvP5A7gSqPD22QbVXMcJydi3d3v1Y8BQdUKEuGACZQ==

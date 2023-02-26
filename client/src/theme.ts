@@ -1,5 +1,6 @@
-import { createTheme } from '@mui/material/styles';
-import * as colors from 'tailwindcss/colors'
+import { createTheme } from "@mui/material/styles";
+import * as colors from "tailwindcss/colors";
+import type {} from "@mui/x-date-pickers/themeAugmentation";
 
 // Create a theme instance.
 const theme = createTheme({
