@@ -1,15 +1,27 @@
 "use client";
 import "./globals.css";
 
-import React from "react";
+import React, { useState } from "react";
 import { Container, CssBaseline } from "@mui/material";
 import NavBar from "../components/NavBar";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../theme";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import NavDrawer from "../components/NavDrawer";
+import { MdLogin } from "react-icons/md";
 
-export default function layout({ children }) {
+const navItems = [
+  {
+    name: "Login",
+    href: "/auth/login",
+    icon: <MdLogin />,
+  },
+];
+
+export default function Layout({ children }) {
+  const [drawer, setDrawer] = useState(false);
+
   return (
     <html lang="en">
       {/*
@@ -21,9 +33,14 @@ export default function layout({ children }) {
         <ThemeProvider theme={theme}>
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <CssBaseline />
-            <NavBar></NavBar>
+            <NavBar onDrawer={() => setDrawer(true)} />
+            <NavDrawer
+              open={drawer}
+              onClose={() => setDrawer(false)}
+              items={navItems}
+            />
             <Container className="mt-[6rem]" maxWidth="lg">
-              <div className="text-center">{children}</div>
+              {children}
             </Container>
           </LocalizationProvider>
         </ThemeProvider>
