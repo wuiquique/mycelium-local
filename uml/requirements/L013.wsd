@@ -1,0 +1,24 @@
+@startuml sequence1
+
+actor "Administrador" as user
+entity "Frontend Server\nRequest" as fe
+entity "API Server\nRequest" as api
+database "Database Session" as db
+
+user -> fe : GET /reports
+fe -> user : Webpage contents
+user -> api : GET /reports/available
+activate api
+api -> user : Send available report generators
+deactivate api
+user -> api : GET /reports/generate?type=sales&select=name,price,type,user
+activate api
+api -> api : Build query
+api -> db : Send query
+activate db
+db -> api : Return document references
+deactivate db
+api -> user : Serialize to JSON and send
+deactivate api
+
+@enduml

@@ -1,0 +1,78 @@
+@startuml sequence1
+
+actor "Usuario registrado" as user
+entity "Frontend Server\nRequest" as fe
+entity "API Server\nRequest" as api
+database "Database Session" as db
+
+user -> fe : GET /cart
+activate fe
+fe -> user : Webpage contents
+deactivate fe
+user -> api : GET /cart/contents
+activate api
+api -> db : Get the user's cart's\nproducts' documents
+activate db
+db -> api : Return document references
+deactivate db
+api -> user : Serialize to JSON and send
+deactivate api
+user -> api : POST /order/fromcart
+activate api
+api -> db : Get the user's cart's\nproducts' documents
+activate db
+db -> api : Return document references
+deactivate db
+api -> api : Build order with documents
+api -> db : Create order
+activate db
+db -> api : Confirm
+deactivate db
+api -> db : Delete the user's cart's\nproducts' documents
+activate db
+db -> api : Confirm
+deactivate db
+api -> user : Confirm and send order id
+deactivate api
+
+@enduml
+
+@startuml state1
+hide empty description
+
+[*] --> Initiated
+Initiated --> Preparing : notified warehouse
+Initiated --> Cancelled : user-cancelled
+Preparing --> Sent : prepared
+Preparing --> Cancelled : user-cancelled
+Sent --> Delivered : reached\ndestination
+Sent --> Lost : failed to\ndeliver
+Lost --> Preparing : not found
+Lost --> Sent : found
+Delivered --> [*]
+Cancelled --> [*]
+
+@enduml
+
+@startuml state2
+hide empty description
+
+[*] --> Initiated
+Initiated --> PreparingForLocal : notified providers
+Initiated --> Cancelled : user-cancelled
+PreparingForLocal --> SentToLocal : prepared
+PreparingForLocal --> Cancelled : user-cancelled
+SentToLocal --> DeliveredToLocal : reached\ndestination
+SentToLocal --> Lost : failed to\ndeliver
+Lost --> PreparingForLocal : not found
+Lost --> SentToLocal : found
+DeliveredToLocal --> PreparingLocally : received
+PreparingLocally --> SentToUser : prepared
+SentToUser --> DeliveredToUser : reached\ndestination
+SentToUser --> LostLocally : failed to\ndeliver
+LostLocally --> PreparingLocally : not found
+LostLocally --> SentToUser : found
+DeliveredToUser --> [*]
+Cancelled --> [*]
+
+@enduml

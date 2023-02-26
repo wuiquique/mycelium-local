@@ -1,0 +1,28 @@
+@startuml sequence1
+
+actor "Usuario" as user
+entity "Frontend Server\nRequest" as fe
+entity "API Server\nRequest" as api
+database "Database Session" as db
+
+user -> fe : GET /register
+activate fe
+fe -> user : Webpage contents
+deactivate fe
+user -> api : POST /register
+activate api
+api -> api : Validate
+api -> db : Create user document
+activate db
+db -> api : Return reference to document
+deactivate db
+api -> api : Update with user data
+api -> db : Update user document
+activate db
+db -> api : Confirm
+deactivate db
+api -> api : Generate JWT token
+api -> user : Send token
+deactivate api
+
+@enduml
