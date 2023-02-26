@@ -4,6 +4,7 @@ actor "Administrador" as user
 entity "Frontend Server\nRequest" as fe
 entity "API Server\nRequest" as api
 database "Database Session" as db
+entity "International\nIntegration\nAPI Request" as integ
 
 user -> fe : GET /search
 activate fe
@@ -16,6 +17,11 @@ api -> db : Send query
 activate db
 db -> api : List of products
 deactivate db
+api -> integ : GET /search?q={text}&category={category}&...
+activate integ
+integ -> api : List of products
+deactivate integ
+api -> api : Join list of products
 api -> user : List of products
 deactivate api
 

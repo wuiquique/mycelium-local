@@ -12,12 +12,7 @@ deactivate fe
 user -> api : POST /register
 activate api
 api -> api : Validate
-api -> db : Create user document
-activate db
-db -> api : Return reference to document
-deactivate db
-api -> api : Update with user data
-api -> db : Update user document
+api -> db : Create user entry
 activate db
 db -> api : Confirm
 deactivate db
