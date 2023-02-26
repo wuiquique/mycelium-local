@@ -76,7 +76,7 @@ export default function AdminUsers() {
     <div>
       <Grid2 container spacing={2}>
         <Grid2 lg={12}>
-          <Typography variant='h3'>User Administration</Typography>
+          <Typography variant='h3' className='text-center'>User Administration</Typography>
           <br/>
           <Card elevation={10} sx={{ minHeight: 300 }}>
             <Table>

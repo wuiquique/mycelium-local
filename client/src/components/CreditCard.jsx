@@ -19,7 +19,7 @@ export default function CreditCard() {
     <div>
         <Card className="p-4" elevation={10}>
             <CardContent>
-                <Typography variant='h4'>Credit Card Information</Typography>
+                <Typography variant='h4' className='text-center'>Credit Card Information</Typography>
                 <TextField
                     sx={{ minWidth:'100%' }}
                     label='Card Number'
@@ -45,7 +45,7 @@ export default function CreditCard() {
                 <br/>
                 <br/>
                 <div>
-                    <Typography variant='h4'>Billing Address</Typography>
+                    <Typography variant='h4' className='text-center'>Billing Address</Typography>
                     <TextField
                         sx={{ minWidth:'100%' }}
                         label='Full Address'

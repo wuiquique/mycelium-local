@@ -42,7 +42,7 @@ export default function Orders() {
     <div>
       <Grid2 container spacing={2}>
         <Grid2 lg={12}>
-          <Typography variant='h3'>All Orders</Typography>
+          <Typography variant='h3' className='text-center'>All Orders</Typography>
           <br/>
           <Card elevation={10} sx={{ minHeight: 300 }}>
             <Table>

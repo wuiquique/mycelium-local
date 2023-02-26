@@ -46,7 +46,7 @@ export default function Checkout() {
 
   return (
     <div>
-        <Typography variant='h2'>Checkout</Typography>
+        <Typography variant='h2' className='text-center'>Checkout</Typography>
         <br/>
         <Grid2 container spacing={2}>
             <Grid2 lg={6}>

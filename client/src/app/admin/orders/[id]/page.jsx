@@ -67,7 +67,7 @@ export default function OrderDetails() {
 
   return (
     <div>
-      <Typography variant='h3'>Order Details</Typography>
+      <Typography variant='h3' className='text-center'>Order Details</Typography>
       <br/>
       <Grid2 container spacing={2}>
         <Grid2 lg={8}>
@@ -75,13 +75,13 @@ export default function OrderDetails() {
         </Grid2>
         <Grid2 lg={4}>
           <Card elevation={10}>
-            <Typography variant='h4' className="mt-4">Order Summary</Typography>
+            <Typography variant='h4' className="text-center mt-4">Order Summary</Typography>
             <div className="text-left p-4">
               <Typography variant="h5">{`Total: Q.${getTotal()}.00`}</Typography>
               <Typography variant="h5">{`Unique Items: ${products.length}`}</Typography>
             </div>
             <br/>
-            <Typography variant="h5"><strong>Delivery Details</strong></Typography>
+            <Typography variant="h5" className='text-center'><strong>Delivery Details</strong></Typography>
             <div className="text-left p-4">
               <Typography variant='h6'><strong>Address:</strong>&nbsp;{orderDetails.direction}</Typography>
               <Typography variant='h6'><strong>State:</strong>&nbsp;{orderDetails.state}</Typography>

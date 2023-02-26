@@ -21,7 +21,7 @@ export default function UserAddress({ setAddress }) {
     <div>
       <Card className="p-4" elevation={10}>
         <CardContent>
-          <Typography variant="h4">Mailing Address</Typography>
+          <Typography variant="h4" className='text-center'>Mailing Address</Typography>
           <TextField
             sx={{ minWidth: "100%" }}
             label="Address"
@@ -35,23 +35,27 @@ export default function UserAddress({ setAddress }) {
             <TextField label="Zip" variant="standard" className="mr-1" />
             <TextField label="Phone" variant="standard" />
           </div>
-          <Typography>Delivery Range</Typography>
-          <DateTimePicker
-            renderInput={(props) => <TextField {...props} />}
-            label="From"
-            value={date1}
-            onChange={(newValue) => {
-              setDate1(newValue);
-            }}
-          />
-          <DateTimePicker
-            renderInput={(props) => <TextField {...props} />}
-            label="To"
-            value={date2}
-            onChange={(newValue) => {
-              setDate1(newValue);
-            }}
-          />
+          <br/>
+          <Typography variant='h5' className='text-center'>Delivery Range</Typography>
+          <br/>
+          <div className="flex">
+            <DateTimePicker
+              renderInput={(props) => <TextField {...props} />}
+              label="From"
+              value={date1}
+              onChange={(newValue) => {
+                setDate1(newValue);
+              }}
+            /> &nbsp;
+            <DateTimePicker
+              renderInput={(props) => <TextField {...props} />}
+              label="To"
+              value={date2}
+              onChange={(newValue) => {
+                setDate2(newValue);
+              }}
+            />
+          </div>
         </CardContent>
       </Card>
     </div>

@@ -51,7 +51,7 @@ export default function Cart() {
 
   return (
     <div>
-        <Typography variant="h3">mycelium cart :)</Typography>
+        <Typography variant="h3" className='text-center'>mycelium cart :)</Typography>
         <br/>
         <Grid2 container spacing={2}>
             <Grid2 lg={8}>
