@@ -8,9 +8,16 @@ import {
   CardContent,
   Typography,
   Button,
+  TextField,
 } from "@mui/material";
 
-export default function UserCart({products, cartOrCheckout, onChange}) {
+export default function UserCart({products, cartOrCheckout, onChange, orderId}) {
+
+    const [localProds, setLocalProds] = useState(products)
+
+    useEffect(() => {
+        setLocalProds(products)
+    }, [products])
 
     const handleDeleteItem = (productId) => {
         axios.delete(`/api/user/cart/${productId}`)
@@ -19,17 +26,33 @@ export default function UserCart({products, cartOrCheckout, onChange}) {
         })
     }
 
+    const handleCommentChange = (i, value) => {
+        let temp = [...localProds]
+        temp[i]['comment'] = value
+        setLocalProds(temp)
+    }
+
+    const handleBlur = () => {
+        axios.patch(`/api/admin/orders/${orderId}`)
+        .then(response => {
+            onChange(response.data)
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    }
+
   return (
     <div>
         {
-            products.length === 0 ?
+            localProds.length === 0 ?
 
             <Card elevation={10} sx={{ display: 'flex' }}>
                 <Typography variant='h4'>No Cuentas con Objetos en tu Carrito :)</Typography>
             </Card>
             :
-            products.map((e, i) => (
-                <Card elevation={10} sx={{ display: 'flex' }} key={i}>
+            localProds.map((e, i) => (
+                <Card elevation={10} sx={{ display: 'flex', marginBottom:'10px' }} key={i} >
                     <CardMedia
                         sx={{ width: 250 }}
                         component='img'
@@ -46,10 +69,9 @@ export default function UserCart({products, cartOrCheckout, onChange}) {
                                 </Typography>
                         </div>
                         <div className="text-left">
-                            <Typography variant='h5'>{`Qty. ${e.quantity}`}</Typography>
                             <Typography variant='h6'>{e.description}</Typography>
-                            <Typography>{`Brand: ${e.brand}`}</Typography>
-                            <Typography>{`Weight: ${e.weight} Lb`}</Typography>
+                            <Typography><strong>Brand:</strong>&nbsp;{e.brand}</Typography>
+                            <Typography><strong>Weight:</strong>&nbsp;{e.weight}</Typography>
                         </div>
                     </CardContent>
                     <div className="text-right p-5">
@@ -65,16 +87,33 @@ export default function UserCart({products, cartOrCheckout, onChange}) {
                                 <></>
                         }
                         <Typography variant='h4'>{`Q.${e.price}.00`}</Typography>
+                        <Typography variant='subtitle1'><strong>{`Qty. ${e.quantity}`}</strong></Typography>
                         {
                             cartOrCheckout === 'details' ?
-                                <div className='mt-14'>
-                                    <Typography variant='h5'><strong>{e.status}</strong></Typography>
+                                <div className='mt-8'>
+                                    <Button
+                                        sx={{ minWidth: '100% '}}  
+                                        variant='outlined' 
+                                        color='secondary'
+                                    >
+                                        <Typography ><strong>{e.status}</strong></Typography>
+                                    </Button>
+                                    <TextField
+                                        className="mt-2"
+                                        label='Status Comment'
+                                        value={e.comment}
+                                        variant='standard'
+                                        size='small'
+                                        multiline
+                                        rows={2}
+                                        onChange={(ev) => handleCommentChange(i, ev.target.value)}
+                                        onBlur={() => handleBlur()}
+                                    />
                                 </div>
                             :
                                 <></>
                         }
                     </div>
-                    <br/>
                 </Card>
             ))
         }
