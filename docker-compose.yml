@@ -14,6 +14,8 @@ services:
     image: localhost/mycelium-local_api:dev
     expose:
       - "8080"
+    ports:
+      - "5000:8080/tcp"
     volumes:
       - ./api:/app:rw
       - gradle:/root/.gradle:rw

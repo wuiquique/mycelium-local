@@ -20,12 +20,20 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
 export default function Create() {
-  const [tech, setTech] = useState([{ type: "", value: "" }]);
+  const [tech, setTech] = useState([
+    { type: "Longitud", value: "20cm" },
+    { type: "Color", value: "Dorado obviamente xdddd" },
+  ]);
 
   const handleSubmit = (e) => {};
+
   const [age, setAge] = useState("");
+
   const handleChange = (e) => {
-    setAge(e.target.value);
+    let temp = { ...prod };
+    temp.categId = e.target.value;
+    setProd(temp);
+    console.log(temp);
   };
 
   const addRow = (e) => {
@@ -46,10 +54,20 @@ export default function Create() {
     setTech(temp);
   };
 
+  const [prod, setProd] = useState({
+    name: "Cuchara de Oro",
+    desc: "Una cuchara de ORO",
+    brand: "Cosas de Oro S.A.",
+    weight: 50,
+    price: 50000,
+    quantity: 2,
+    categId: 1,
+  });
+
   const [urls, setUrls] = useState([
-    "/default.jpg",
-    "/default.jpg",
-    "/default.jpg",
+    "https://falabella.scene7.com/is/image/FalabellaPE/770197465_1?wid=800&hei=800&qlt=70",
+    "https://m.media-amazon.com/images/I/71g0Vo7zJUL.__AC_SY300_SX300_QL70_FMwebp_.jpg",
+    "https://media.istockphoto.com/id/1136230616/es/foto/cuchara-dorada-aislada-sobre-fondo-blanco.jpg?s=612x612&w=0&k=20&c=v9lFtWCJWSflVyvkzx-GOvPTENDIh2uyLLyhEVTqwZY=",
   ]);
 
   const [categ, setCategs] = useState([
@@ -63,12 +81,8 @@ export default function Create() {
     setUrls(temp);
   };
 
-  useEffect(() => {
-    axios.post
-  }, [])
-
   return (
-    <div>
+    <div className="flex justify-center text-center">
       <Grid2 container spacing={2}>
         <div>
           <Card className="p-4" elevation={10} sx={{ width: "100%" }}>
@@ -82,7 +96,7 @@ export default function Create() {
               />
             </div>
             <Typography variant="h5" mt={2}>
-              Create a new product
+              Update product
             </Typography>
             <form className="mt-8 mb-11" onSubmit={handleSubmit}>
               <Grid2 container spacing={2}>
@@ -93,6 +107,7 @@ export default function Create() {
                       label="Name"
                       variant="standard"
                       name="product_name"
+                      defaultValue={prod.name}
                     />
                     <br />
                     <TextField
@@ -100,6 +115,7 @@ export default function Create() {
                       label="Description"
                       variant="standard"
                       name="product_desc"
+                      defaultValue={prod.desc}
                     />
                     <br />
                     <TextField
@@ -107,6 +123,7 @@ export default function Create() {
                       label="Brand"
                       variant="standard"
                       name="product_brand"
+                      defaultValue={prod.brand}
                     />
                   </Card>
                 </Grid2>
@@ -117,6 +134,7 @@ export default function Create() {
                       label="Weight"
                       variant="standard"
                       name="product_weight"
+                      defaultValue={prod.weight}
                     />
                     <br />
                     <TextField
@@ -124,6 +142,7 @@ export default function Create() {
                       label="Price"
                       variant="standard"
                       name="product_price"
+                      defaultValue={prod.price}
                     />
                     <br />
                     <FormControl
@@ -134,7 +153,7 @@ export default function Create() {
                       <Select
                         labelId="form-id-categorie"
                         name="product_categorie"
-                        value={age}
+                        value={prod.categId}
                         onChange={handleChange}
                         label="Categories"
                       >
@@ -163,6 +182,7 @@ export default function Create() {
                             label="URL"
                             variant="standard"
                             name="product_img1"
+                            value={urls[0]}
                             onChange={(e) => changeImg(0, e.target.value)}
                           />
                         </div>
@@ -180,6 +200,7 @@ export default function Create() {
                             label="URL"
                             variant="standard"
                             name="product_img2"
+                            value={urls[1]}
                             onChange={(e) => changeImg(1, e.target.value)}
                           />
                         </div>
@@ -197,7 +218,8 @@ export default function Create() {
                             label="URL"
                             variant="standard"
                             name="product_img3"
-                            onChange={(e) => changeImg(1, e.target.value)}
+                            value={urls[2]}
+                            onChange={(e) => changeImg(2, e.target.value)}
                           />
                         </div>
                       </Grid2>
@@ -211,6 +233,7 @@ export default function Create() {
                         label="Quantity"
                         type="number"
                         variant="standard"
+                        defaultValue={prod.quantity}
                       />
                       <Typography variant="body1" mt={6}>
                         Technical Specifications

@@ -1,12 +1,22 @@
 package com.mycelium.local;
 
-import io.micronaut.http.annotation.*;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.Controller;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.rules.SecurityRule;
 
-@Controller("/api")
+@Secured(SecurityRule.IS_ANONYMOUS)
+@Controller("/")
 public class ApiController {
 
-    @Get(uri="/", produces="text/plain")
+    @Get(uri = "/", produces = "text/plain")
     public String index() {
         return "Example Response";
+    }
+
+    @Secured(SecurityRule.IS_AUTHENTICATED)
+    @Get(uri = "/seguro", produces = "application/json")
+    public String seguro() {
+        return "{\"seguro\":1}";
     }
 }
