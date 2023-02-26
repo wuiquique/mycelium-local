@@ -12,9 +12,10 @@ import {
   TableCell,
   Select,
   MenuItem,
-  FormControl
+  FormControl,
+  Card
 } from "@mui/material";
-import Grid2 from "@mui/material/Unstable_Grid2";
+import Grid2 from "@mui/material/Unstable_Grid2"; 
 
 export default function AdminUsers() {
 
@@ -77,62 +78,64 @@ export default function AdminUsers() {
         <Grid2 lg={12}>
           <Typography variant='h3'>User Administration</Typography>
           <br/>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>First Name</TableCell>
-                <TableCell>Last Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Rol</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {
-                users.map((e, i) => (
-                  <TableRow key={i} >
-                    <TableCell>
-                      <TextField
-                        defaultValue={e.first_name}
-                        variant='standard'
-                        onChange={(ev) => changeInput(i, 'first_name', ev.target.value)}
-                        onBlur={() => blurSave(e.id, i)}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <TextField
-                        defaultValue={e.last_name}
-                        variant='standard'
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <TextField
-                        defaultValue={e.email}
-                        variant='standard'
-                        onChange={(ev) => changeInput(i, 'last_name', ev.target.value)}
-                        onBlur={() => blurSave(e.id, i)}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <FormControl variant='standard' sx={{ m: 1, minWidth: 120 }}>
-                        <Select
-                          value={e.rol_id}
-                          onChange={(ev) => changeSelect(i, ev.target.value)}
+          <Card elevation={10} sx={{ minHeight: 300 }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>First Name</TableCell>
+                  <TableCell>Last Name</TableCell>
+                  <TableCell>Email</TableCell>
+                  <TableCell>Rol</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {
+                  users.map((e, i) => (
+                    <TableRow key={i} >
+                      <TableCell>
+                        <TextField
+                          defaultValue={e.first_name}
+                          variant='standard'
+                          onChange={(ev) => changeInput(i, 'first_name', ev.target.value)}
                           onBlur={() => blurSave(e.id, i)}
-                        >
-                          <MenuItem value={e.rol_id}>{e.rol}</MenuItem>
-                          {
-                            roles.filter(r => r.rol_id !== e.rol_id).map((el, ind) => (
-                              <MenuItem value={el.rol_id} key={ind}>{el.rol}</MenuItem>
-                            ))
-                          }
-                        </Select>
-                      </FormControl>
-                    </TableCell>
-                  </TableRow>
-                ))
-              }
-            </TableBody>
-          </Table>
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <TextField
+                          defaultValue={e.last_name}
+                          variant='standard'
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <TextField
+                          defaultValue={e.email}
+                          variant='standard'
+                          onChange={(ev) => changeInput(i, 'last_name', ev.target.value)}
+                          onBlur={() => blurSave(e.id, i)}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <FormControl variant='standard' sx={{ m: 1, minWidth: 120 }}>
+                          <Select
+                            value={e.rol_id}
+                            onChange={(ev) => changeSelect(i, ev.target.value)}
+                            onBlur={() => blurSave(e.id, i)}
+                          >
+                            <MenuItem value={e.rol_id}>{e.rol}</MenuItem>
+                            {
+                              roles.filter(r => r.rol_id !== e.rol_id).map((el, ind) => (
+                                <MenuItem value={el.rol_id} key={ind}>{el.rol}</MenuItem>
+                              ))
+                            }
+                          </Select>
+                        </FormControl>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                }
+              </TableBody>
+            </Table>
+          </Card>
         </Grid2>
       </Grid2>
     </div>

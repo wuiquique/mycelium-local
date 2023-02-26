@@ -6,11 +6,9 @@ import {
   Card,
   CardMedia,
   CardContent,
-  Box,
   Typography,
   Button,
 } from "@mui/material";
-import Grid2 from "@mui/material/Unstable_Grid2";
 
 export default function UserCart({products, cartOrCheckout, onChange}) {
 
@@ -67,6 +65,14 @@ export default function UserCart({products, cartOrCheckout, onChange}) {
                                 <></>
                         }
                         <Typography variant='h4'>{`Q.${e.price}.00`}</Typography>
+                        {
+                            cartOrCheckout === 'details' ?
+                                <div className='mt-14'>
+                                    <Typography variant='h5'><strong>{e.status}</strong></Typography>
+                                </div>
+                            :
+                                <></>
+                        }
                     </div>
                     <br/>
                 </Card>
