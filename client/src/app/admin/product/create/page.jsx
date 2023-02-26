@@ -12,12 +12,14 @@ import {
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 
-export default function create() {
+export default function Create() {
   return (
-    <div className="flex justify-center text-center">
+    <div>
       <Grid2 container spacing={2}>
         <div>
-          <Grid></Grid>
+          <Grid2 >
+
+          </Grid2>
         </div>
       </Grid2>
     </div>

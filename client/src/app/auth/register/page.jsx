@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Card,
-  CardContent,
   CardMedia,
   Button,
   TextField,
@@ -12,7 +11,7 @@ import {
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 
-export default function register() {
+export default function Register() {
   const handleSubmit = (e) => {
     e.preventDefault();
     let post = {

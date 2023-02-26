@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 
-export default function login() {
+export default function Login() {
   //import redwhite from '../../../assets/icons/redwhite.png;'
 
   //'../../../public/redwhite.png;'
