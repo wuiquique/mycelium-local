@@ -24,6 +24,7 @@ import Rating from "@mui/material/Rating";
 
 export default function Product() {
   const [prod, setProd] = useState({
+    id: 1,
     name: "Cuchara de Oro",
     desc: "Una cuchara de ORO",
     brand: "Cosas de Oro S.A.",
@@ -59,8 +60,31 @@ export default function Product() {
     return temp;
   };
 
+  const addCart = (e) => {
+    e.preventDefault();
+    let out = {
+      prodId: prod.id,
+      quantity: parseInt(e.target.cartQuantity.value),
+      userId: 1,
+    };
+    axios.post("/api/user/cart", out).then((response) => {
+      console.log(response.data);
+    });
+  };
+
   const ratingAvg = 5;
   const [rU, setRU] = useState(0);
+
+  useEffect(() => {
+    axios.get("/api/produc/[id]").then((response) => {
+      setProd(response.data.prod);
+      setUrls(response.data.urls);
+      setTech(response.data.tech);
+    });
+    axios.get("/api/category").then((response) => {
+      setCategs(response.data);
+    });
+  }, []);
 
   return (
     <div className="flex justify-center text-center">
@@ -121,6 +145,24 @@ export default function Product() {
                       <b>Quantity: </b> {prod.quantity}
                     </Typography>
                   </div>
+                  <form onSubmit={addCart}>
+                    <TextField
+                      className="m-2"
+                      label="Quantity"
+                      variant="standard"
+                      type={"number"}
+                      name="cartQuantity"
+                      inputProps={{ min: 0, max: prod.quantity }}
+                    />
+                    <Button
+                      className="mt-6"
+                      variant="outlined"
+                      color="primary"
+                      type="submit"
+                    >
+                      Add to Cart
+                    </Button>
+                  </form>
                 </Card>
               </Grid2>
             </Grid2>
@@ -133,6 +175,18 @@ export default function Product() {
                   setRU(n ?? R);
                 }}
               />
+              <br />
+              <TextField
+                className="mt-1"
+                label="Comment"
+                variant="standard"
+                multiline
+                name="user_commment"
+              />
+            </Card>
+            <Card className="p-4 mt-1" elevation={10}>
+              Aqui van los comentarios que no he hecho porque son anidados y
+              noje como los hicieron xdddd
             </Card>
           </Card>
         </div>
