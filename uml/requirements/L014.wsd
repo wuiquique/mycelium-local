@@ -11,7 +11,7 @@ user -> api : GET /reports/available
 activate api
 api -> user : Send available report generators
 deactivate api
-user -> api : GET /reports/generate?document=inventory&fields=name,price,type,user
+user -> api : GET /reports/generate?document=sales&fields=name,price,type,user
 activate api
 api -> api : Build query
 api -> db : Send query

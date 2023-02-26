@@ -1,0 +1,32 @@
+@startuml usecase1
+left to right direction
+
+actor "Usuario registrado" as R
+actor "Administrador/Empleado" as A
+
+rectangle "Módulo de Pedidos" {
+    usecase "Manejar carrito de compras" as UC1
+    usecase "Solicitar pedido" as UC2
+    usecase "Ver pedidos propios" as UC3
+    usecase "Ver todos los\npedidos hechos" as UC4
+    usecase "Comentar en\npedidos en curso" as UC5
+    usecase "Solicitar pedido a\nproveedor internacional" as UC6
+    usecase "Ver todos los\npedidos a proveedores" as UC7
+}
+
+actor "Proveedor Internacional" as P
+
+UC4 .> UC3 : <<includes>>
+UC2 ..> UC6 : <<includes>>
+
+R -- UC1
+R -- UC2
+R -- UC3
+
+A -- UC4
+A -- UC5
+A -- UC7
+
+UC7 -- P
+UC6 -- P
+@enduml
