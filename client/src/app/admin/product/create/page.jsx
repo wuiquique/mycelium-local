@@ -35,17 +35,16 @@ export default function Create() {
       urls: [
         e.target.product_img1.value,
         e.target.product_img2.value,
-        e.target.product_img3.value
+        e.target.product_img3.value,
       ],
-      tech: [...tech]
-    }
-    axios.post('/api/product', out)
-    .then(response => {
-      console.log(response.data)
-      if(response.data === "Succes") {
-        location.reload()
+      tech: [...tech],
+    };
+    axios.post("/api/product", out).then((response) => {
+      console.log(response.data);
+      if (response.data === "Succes") {
+        location.reload();
       }
-    })
+    });
   };
 
   const [age, setAge] = useState("");
@@ -89,13 +88,6 @@ export default function Create() {
     setUrls(temp);
   };
 
-  // useEffect(() => {
-  //   let out = {
-  //     name: 
-  //   }
-  //   axios.post('api/product', out)
-  // }, [])
-
   return (
     <div>
       <Grid2 container spacing={2}>
@@ -110,13 +102,17 @@ export default function Create() {
                 sx={{ maxWidth: 345 }}
               />
             </div>
-            <Typography variant="h5" mt={2}>
+            <Typography variant="h5" mt={2} className="text-center">
               Create a new product
             </Typography>
             <form className="mt-8 mb-11" onSubmit={handleSubmit}>
               <Grid2 container spacing={2}>
                 <Grid2 xs={12} md={6}>
-                  <Card className="p-4" elevation={10} sx={{ height: 200 }}>
+                  <Card
+                    className="p-4 justify-center text-center"
+                    elevation={10}
+                    sx={{ height: 200 }}
+                  >
                     <TextField
                       className="mt-1"
                       label="Name"
@@ -140,7 +136,11 @@ export default function Create() {
                   </Card>
                 </Grid2>
                 <Grid2 xs={12} md={6}>
-                  <Card className="p-4" elevation={10} sx={{ height: 200 }}>
+                  <Card
+                    className="p-4 justify-center text-center"
+                    elevation={10}
+                    sx={{ height: 200 }}
+                  >
                     <TextField
                       className="mt-1"
                       label="Weight"
@@ -180,7 +180,7 @@ export default function Create() {
                   <Card className="p-4" elevation={10}>
                     <Grid2 container spacing={2}>
                       <Grid2 lg={4}>
-                        <div className="p-4">
+                        <div className="p-4 justify-center text-center">
                           <CardMedia
                             component="img"
                             height="100%"
@@ -235,7 +235,7 @@ export default function Create() {
                 </Grid2>
                 <Grid2 lg={12}>
                   <Card className="p-4" elevation={10}>
-                    <div>
+                    <div className="justify-center text-center">
                       <TextField
                         label="Quantity"
                         type="number"
@@ -247,7 +247,7 @@ export default function Create() {
                       </Typography>
                     </div>
                     {tech.map((e, i) => (
-                      <div key={i}>
+                      <div key={i} className="justify-center text-center">
                         <TextField
                           className="m-1"
                           label="Type"
@@ -276,7 +276,7 @@ export default function Create() {
                         </Button>
                       </div>
                     ))}
-                    <div>
+                    <div className="justify-center text-center">
                       <Button
                         className="mt-6"
                         variant="outlined"
@@ -289,14 +289,16 @@ export default function Create() {
                   </Card>
                 </Grid2>
                 <Grid2 xs={12}>
-                  <Button
-                    className="mt-6"
-                    variant="outlined"
-                    color="secondary"
-                    type="submit"
-                  >
-                    Create
-                  </Button>
+                  <div className="justify-center text-center">
+                    <Button
+                      className="mt-6"
+                      variant="outlined"
+                      color="secondary"
+                      type="submit"
+                    >
+                      Create
+                    </Button>
+                  </div>
                 </Grid2>
               </Grid2>
             </form>
