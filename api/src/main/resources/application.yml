@@ -11,6 +11,9 @@ micronaut:
         mapping: /swagger-ui/**
   security:
     authentication: bearer
+    reject-not-found: false
+    redirect:
+      enabled: false
     token:
       jwt:
         signatures:
