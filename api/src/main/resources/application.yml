@@ -20,7 +20,7 @@ micronaut:
 datasources:
   default:
     driverClassName: oracle.jdbc.OracleDriver
-    url: "jdbc:oracle:thin:@localhost:1521/XE"
+    url: "jdbc:oracle:thin:@myceliumdb:1521/XE"
     username: system
     password: "12345"
     dbType: oracle

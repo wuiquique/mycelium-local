@@ -16,6 +16,7 @@ services:
       - "8080"
     volumes:
       - ./api:/app:rw
+      - gradle:/root/.gradle:rw
     build:
       context: api
       dockerfile: Dockerfile.dev
@@ -60,6 +61,7 @@ services:
 
 volumes:
   oracledb:
+  gradle:
 
 networks:
   mycelium-local:

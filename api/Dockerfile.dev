@@ -1,22 +1,31 @@
-FROM docker.io/gradle:jdk17 AS deps
+FROM docker.io/alpine/git:latest AS entr-cloner
 
 WORKDIR /app
 
-COPY build.gradle.kts ./
-COPY settings.gradle.kts ./
-COPY gradle.properties ./
+RUN git clone --depth=1 https://github.com/eradman/entr.git --branch 5.3 .
 
-RUN gradle dependencies --no-daemon --console plain
+FROM docker.io/alpine:3.17.2 AS gcc-base
+
+RUN set -ex && \
+    apk add --no-cache gcc make musl-dev
+
+FROM gcc-base AS entr-builder
+
+COPY --from=entr-cloner /app /app
+
+WORKDIR /app
+
+ENV DESTDIR=/app/build
+
+RUN make -f ./Makefile.linux install
 
 FROM docker.io/openjdk:17-alpine AS runner
 
-WORKDIR /app
-
-COPY --from=deps /app/.gradle/ ./.gradle
+COPY --from=entr-builder /app/build/usr/local/bin/entr /usr/local/bin/entr
 
 VOLUME /app
 
 EXPOSE 8080
 
-CMD ./gradlew run -t
+ENTRYPOINT [ "/app/dev-entrypoint.sh" ]
 
