@@ -25,7 +25,31 @@ export default function Create() {
     { type: "Color", value: "Dorado obviamente xdddd" },
   ]);
 
-  const handleSubmit = (e) => {};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let out = {
+      name: e.target.product_name.value,
+      desc: e.target.product_desc.value,
+      categId: e.target.product_categorie.value,
+      brand: e.target.product_brand.value,
+      weight: e.target.product_weight.value,
+      quantity: e.target.product_quantity.value,
+      price: e.target.product_price.value,
+      urls: [
+        e.target.product_img1.value,
+        e.target.product_img2.value,
+        e.target.product_img3.value
+      ],
+      tech: [...tech]
+    }
+    axios.post('/api/product/[id]', out)
+    .then(response => {
+      console.log(response.data)
+      if(response.data === "Succes") {
+        location.reload()
+      }
+    })
+  };
 
   const [age, setAge] = useState("");
 
@@ -80,6 +104,19 @@ export default function Create() {
     temp[i] = u;
     setUrls(temp);
   };
+
+  useEffect(() => {
+    axios.get('/apis/product/[id]')
+    .then(response => {
+      setProd(response.data.prod)
+      setUrls(response.data.urls)
+      setTech(response.data.tech)
+    })
+    axios.get('/api/category')
+    .then(response => {
+      setCategs(response.data)
+    })
+  }, [])
 
   return (
     <div className="flex justify-center text-center">
