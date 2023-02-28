@@ -1,38 +1,38 @@
 @startuml sequence1
 
-actor "Usuario registrado" as user
-entity "Frontend Server\nRequest" as fe
-entity "API Server\nRequest" as api
-database "Database Session" as db
+participant "Registered user" as user
+participant "Frontend Server\nRequest" as fe
+participant "API Server\nRequest" as api
+participant "Database Session" as db
 
 user -> fe : GET /cart
 activate fe
-fe -> user : Webpage contents
+user <-- fe : Webpage contents
 deactivate fe
 user -> api : GET /cart/contents
 activate api
-api -> db : Get the user's cart's\nproducts' documents
+api -> db : Get the user's cart's\nproducts
 activate db
-db -> api : Return document references
+api <-- db : Return list of products
 deactivate db
-api -> user : Serialize to JSON and send
+user <-- api : Serialize to JSON and send
 deactivate api
 user -> api : POST /order/fromcart
 activate api
-api -> db : Get the user's cart's\nproducts' documents
+api -> db : Get the user's cart's\nproducts
 activate db
-db -> api : Return document references
+api <-- db : Return list of products
 deactivate db
 api -> api : Build order with documents
 api -> db : Create order
 activate db
-db -> api : Confirm
+api <-- db : Confirm
 deactivate db
-api -> db : Delete the user's cart's\nproducts' documents
+api -> db : Delete the user's cart's\nproducts
 activate db
-db -> api : Confirm
+api <-- db : Confirm
 deactivate db
-api -> user : Confirm and send order id
+user <-- api : Confirm and send order id
 deactivate api
 
 @enduml

@@ -1,1 +1,21 @@
-' TODO
+@startuml usecase1
+left to right direction
+
+actor "Usuario Administrador" as user
+
+rectangle "Filtro de productos por categoría" {
+    usecase "Filtrado de\nproductos por\ncategoría" as UC1
+    usecase "Filtro por marca" as UC2
+    usecase "Filtro por rating" as UC3
+    usecase "Filtro por\nespecificaciones\ntécnicas" as UC4
+    usecase "Filtro por precios" as UC5
+}
+
+UC1 ..> UC2 : <<includes>>
+UC1 ..> UC3 : <<includes>>
+UC1 ..> UC4 : <<includes>>
+UC1 ..> UC5 : <<includes>>
+
+user --> UC1
+
+@enduml

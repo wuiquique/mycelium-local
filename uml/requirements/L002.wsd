@@ -1,1 +1,39 @@
-' TODO
+@startuml usecase1
+left to right direction
+
+actor "Usuario empresarial" as user
+
+rectangle "Inicio de sesión" {
+    usecase "Inicio de sesión" as UC1
+    usecase "Solicitar correo\nelectrónico" as UC2
+    usecase "Solicitar\ncontraseña" as UC3
+}
+
+UC1 ..> UC2 : <<includes>>
+UC1 ..> UC3 : <<includes>>
+
+user --> UC1
+
+@enduml
+
+@startuml sequence1
+
+participant User as user
+participant "Login Box" as lbox
+participant "REST Server" as rsv
+participant "DB Server" as db
+
+user -> lbox : Credenciales de acceso
+activate lbox
+lbox -> rsv : verifyUser\n(email, password)
+activate rsv
+rsv -> db : email, password\ncoinciden?
+activate db
+rsv <-- db : Sí
+deactivate db
+lbox <-- rsv : Autenticación exitosa
+deactivate rsv
+user <-- lbox : Acceso a la página
+deactivate lbox
+
+@enduml

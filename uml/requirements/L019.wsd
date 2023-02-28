@@ -1,1 +1,21 @@
-' TODO
+@startuml usecase1
+left to right direction
+
+actor "Usuario" as user
+
+rectangle "Checkout" {
+    usecase "Ver pedidos anteriores" as UC1
+    usecase "Checkout" as UC2
+    usecase "Entrada de\ndetalles de\ntarjeta y\ndirección\nde envío" as UC3
+}
+
+UC1 <. UC2 : <<includes>>
+UC2 .> UC3 : <<includes>>
+
+user --> UC1
+user --> UC2
+user --> UC3
+
+@enduml
+
+' TODO: Component

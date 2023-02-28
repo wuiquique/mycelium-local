@@ -1,26 +1,26 @@
 @startuml sequence1
 
-actor "Administrador" as user
-entity "Frontend Server\nRequest" as fe
-entity "API Server\nRequest" as api
-database "Database Session" as db
+participant "Administrator/Employee" as user
+participant "Frontend Server\nRequest" as fe
+participant "API Server\nRequest" as api
+participant "Database Session" as db
 
 user -> fe : GET /reports
 activate fe
-fe -> user : Webpage contents
+user <-- fe : Webpage contents
 deactivate fe
 user -> api : GET /reports/available
 activate api
-api -> user : Send available report generators
+user <-- api : Send available report generators
 deactivate api
-user -> api : GET /reports/generate?document=sales&fields=name,price,type,user
+user -> api : GET /reports/generate?document=sales\n&fields=name,price,type,user
 activate api
 api -> api : Build query
 api -> db : Send query
 activate db
-db -> api : Return document references
+api <-- db : Return document references
 deactivate db
-api -> user : Serialize to JSON and send
+user <-- api : Serialize to JSON and send
 deactivate api
 
 @enduml

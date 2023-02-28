@@ -1,35 +1,35 @@
 @startuml sequence1
 
-actor "Administrador" as user
-entity "Frontend Server\nRequest" as fe
-entity "API Server\nRequest" as api
-database "Database Session" as db
+participant "Administrator/Employee" as user
+participant "Frontend Server\nRequest" as fe
+participant "API Server\nRequest" as api
+participant "Database Session" as db
 
 user -> fe : GET /product/1
 activate fe
-fe -> user : Webpage contents
+user <-- fe : Webpage contents
 deactivate fe
 user -> api : GET /product/1
 activate api
 api -> db : Get product with id
 activate db
-db -> api : Product data
+api <-- db : Product data
 deactivate db
 api -> db : Get product comments
 activate db
-db -> api : List of product comments
+api <-- db : List of product comments
 deactivate db
 api -> api : Build JSON object
-api -> user : Send JSON object
+user <-- api : Send JSON object
 deactivate api
 user -> user : Write comment
 user -> api : POST /product/1/comment
 activate api
 api -> db : Create comment on specified product
 activate db
-db -> api : Confirm
+api <-- db : Confirm
 deactivate db
-api -> user : Confirm
+user <-- api : Confirm
 deactivate api
 
 @enduml
