@@ -1,7 +1,7 @@
 @startuml usecase1
 left to right direction
 
-actor "Usuario empresarial" as user
+actor "Usuario" as user
 
 rectangle "Inicio de sesión" {
     usecase "Inicio de sesión" as UC1
