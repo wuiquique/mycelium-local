@@ -31,7 +31,7 @@ export default function NavBar({ onDrawer }: { onDrawer: () => void }) {
             <MdMenu />
           </IconButton>
           <Typography variant="h6" component="div" className="mt-2">
-            News
+            mycellium :)
           </Typography>
         </div>
         <div>
