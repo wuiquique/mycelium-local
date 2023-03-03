@@ -22,6 +22,7 @@ import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import Rating from "@mui/material/Rating";
 import CommentTree from "../../../components/comments/CommentTree";
+import Image from "next/image";
 
 export default function Product() {
   const [prod, setProd] = useState({
@@ -132,7 +133,7 @@ export default function Product() {
             <ImageList sx={{ height: 300 }} cols={1} rowHeight={164}>
               {urls.map((e, i) => (
                 <ImageListItem key={i}>
-                  <img src={urls[i]} />
+                  <Image src={urls[i]} alt="" />
                 </ImageListItem>
               ))}
             </ImageList>
@@ -191,7 +192,7 @@ export default function Product() {
             name="userRating"
             value={rU}
             onChange={(e, n) => {
-              setRU(n ?? R);
+              setRU(n ?? rU);
             }}
           />
           <br />
@@ -204,8 +205,7 @@ export default function Product() {
           />
         </Card>
         <Card className="p-4 mt-1" elevation={10}>
-          Aqui van los comentarios que no he hecho porque son anidados y noje
-          como los hicieron xdddd
+          <CommentTree comments={comments} />
         </Card>
       </Card>
     </div>
