@@ -133,7 +133,7 @@ export default function Product() {
             <ImageList sx={{ height: 300 }} cols={1} rowHeight={164}>
               {urls.map((e, i) => (
                 <ImageListItem key={i}>
-                  <Image src={urls[i]} alt="" />
+                  <img src={urls[i]} alt="" />
                 </ImageListItem>
               ))}
             </ImageList>
