@@ -23,33 +23,33 @@ export default function OrderDetails() {
 
   const [products, setProducts] = useState([
     {
-      status: 'In Transit',
-      comment: 'SE ATRAZÓ SALU3',
+      status: 'In Transit', 
+      comment: "",
       type: 'local',
       id: '1', 
-      name: 'Pez', 
-      description: 'Pero mira como bebe por ver a dios nacido, beben y beben y vuelven a beber',
+      name: 'Cuchara de Oro', 
+      description: 'Muy fina',
       quantity: '3', 
-      category: 'God',  //-> nombre
-      brand: 'Jesus', 
+      category: 'Oro',  //-> nombre
+      brand: 'Dioro', 
       weight: '23', 
       price: 75, 
-      pictures: ['https://pbs.twimg.com/profile_images/949787136030539782/LnRrYf6e_400x400.jpg'] //-> solo 1
-  },
-  {
-    status: 'In Transit', 
-    comment: "",
-    type: 'local',
-    id: '1', 
-    name: 'Pez', 
-    description: 'Pero mira como bebe por ver a dios nacido, beben y beben y vuelven a beber',
-    quantity: '3', 
-    category: 'God',  //-> nombre
-    brand: 'Jesus', 
-    weight: '23', 
-    price: 75, 
-    pictures: ['https://pbs.twimg.com/profile_images/949787136030539782/LnRrYf6e_400x400.jpg'] //-> solo 1
-  }
+      pictures: ['https://falabella.scene7.com/is/image/FalabellaPE/770197465_1?wid=800&hei=800&qlt=70'] //-> solo 1
+    },
+    {
+      status: 'In Transit', 
+      comment: "",
+      type: 'local',
+      id: '1', 
+      name: 'Cuchara de Bronce', 
+      description: 'Muy fina',
+      quantity: '5', 
+      category: 'Bronce',  //-> nombre
+      brand: 'Dioro', 
+      weight: '23', 
+      price: 55, 
+      pictures: ['https://falabella.scene7.com/is/image/FalabellaPE/770197465_1?wid=800&hei=800&qlt=70'] //-> solo 1
+    }
   ])
   const [orderDetails, setOrderDetails] = useState({
     id: 1,
