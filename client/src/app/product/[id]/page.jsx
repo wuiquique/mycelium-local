@@ -21,6 +21,7 @@ import Select from "@mui/material/Select";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import Rating from "@mui/material/Rating";
+import CommentTree from "../../../components/comments/CommentTree";
 
 export default function Product() {
   const [prod, setProd] = useState({
@@ -48,6 +49,29 @@ export default function Product() {
   const [tech, setTech] = useState([
     { type: "Longitud", value: "20cm" },
     { type: "Color", value: "Dorado obviamente xdddd" },
+  ]);
+
+  const [comments, setComments] = useState([
+    {
+      author: "Test",
+      content: "Test",
+      votes: 10,
+      replies: [
+        {
+          author: "Test",
+          content: "Test",
+          votes: 10,
+          replies: [],
+        },
+        {
+          author: "Test",
+          content: "Test",
+          votes: 10,
+          replies: [],
+        },
+      ],
+    },
+    { author: "Test", content: "Test", votes: 10, replies: [] },
   ]);
 
   const categSelect = () => {
@@ -80,6 +104,7 @@ export default function Product() {
       setProd(response.data.prod);
       setUrls(response.data.urls);
       setTech(response.data.tech);
+      setComments(response.data.comments);
     });
     axios.get("/api/category").then((response) => {
       setCategs(response.data);
