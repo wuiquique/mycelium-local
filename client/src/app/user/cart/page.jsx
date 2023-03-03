@@ -20,14 +20,14 @@ export default function Cart() {
         {
             type: 'local',
             id: '1', 
-            name: 'Pez', 
-            description: 'Pero mira como bebe por ver a dios nacido, beben y beben y vuelven a beber',
+            name: 'Cuchara de Oro', 
+            description: 'Muy Fina',
             quantity: '3', 
-            category: 'God',  //-> nombre
-            brand: 'Jesus', 
+            category: 'Oro',  //-> nombre
+            brand: 'Dioro', 
             weight: '23', 
             price: 75, 
-            pictures: ['https://pbs.twimg.com/profile_images/949787136030539782/LnRrYf6e_400x400.jpg'] //-> solo 1
+            pictures: ['https://falabella.scene7.com/is/image/FalabellaPE/770197465_1?wid=800&hei=800&qlt=70'] //-> solo 1
         }
     ])
 
