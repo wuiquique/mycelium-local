@@ -23,6 +23,7 @@ import ImageListItem from "@mui/material/ImageListItem";
 import Rating from "@mui/material/Rating";
 import CommentTree from "../../../components/comments/CommentTree";
 import Image from "next/image";
+import BackPage from "../../../components/BackPage";
 
 export default function Product() {
   const [prod, setProd] = useState({
@@ -113,7 +114,8 @@ export default function Product() {
   }, []);
 
   return (
-    <div className="flex justify-center text-center">
+    <div className="justify-center">
+      <BackPage />
       <Card className="p-4 mt-2" elevation={10} sx={{ width: "100%" }}>
         <div className="flex justify-center text-center">
           <CardMedia
