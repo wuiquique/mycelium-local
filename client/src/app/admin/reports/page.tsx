@@ -1,5 +1,7 @@
 "use client";
 
+import FilterOption from "@/components/reports/FilterOption";
+import OrderOption from "@/components/reports/OrderOption";
 import {
   Box,
   Button,
@@ -7,6 +9,7 @@ import {
   CardContent,
   CardHeader,
   Chip,
+  Divider,
   FormControl,
   InputLabel,
   List,
@@ -14,6 +17,7 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
+  TextField,
   Typography,
   Unstable_Grid2 as Grid2,
 } from "@mui/material";
@@ -21,7 +25,13 @@ import React, { useState } from "react";
 import { MdAdd, MdRemove } from "react-icons/md";
 
 export default function Reports() {
-  const [availableReports, setAvailableReports] = useState([
+  const [availableReports, setAvailableReports] = useState<
+    {
+      name: string;
+      document: string;
+      fields: { name: string; key: string; type: "text" | "number" }[];
+    }[]
+  >([
     {
       name: "Inventario",
       document: "inventory",
@@ -36,6 +46,13 @@ export default function Reports() {
   const [orders, setOrders] = useState<
     { index: number | null; order: "asc" | "desc" }[]
   >([]);
+  const [filters, setFilters] = useState<
+    {
+      index: number | null;
+      comparison: "gt" | "lt" | "gteq" | "lteq" | "eq" | "neq";
+      value: string;
+    }[]
+  >([]);
 
   const [fields, setFields] = useState<number[]>([]);
 
@@ -43,134 +60,120 @@ export default function Reports() {
     <Card>
       <CardHeader title="Reportes" />
       <CardContent>
-        <Grid2 container spacing={2}>
-          <Grid2 xs={12}>
-            <FormControl className="m-1 w-full">
-              <InputLabel id="reports-label">Reporte</InputLabel>
-              <Select
-                className="w-full"
-                labelId="reports-label"
-                value={selectedReport ?? ""}
-                input={<OutlinedInput label="Reporte" />}
-                onChange={(e) =>
-                  setSelectedReport(e.target.value as number | null)
-                }
-              >
-                {availableReports.map((r, i) => (
-                  <MenuItem key={r.document} value={i}>
-                    {r.name}
-                  </MenuItem>
+        <FormControl className="m-1 w-full">
+          <InputLabel id="reports-label">Reporte</InputLabel>
+          <Select
+            className="w-full"
+            labelId="reports-label"
+            value={selectedReport ?? ""}
+            input={<OutlinedInput label="Reporte" />}
+            onChange={(e) => setSelectedReport(e.target.value as number | null)}
+          >
+            {availableReports.map((r, i) => (
+              <MenuItem key={r.document} value={i}>
+                {r.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl className="m-1 w-full">
+          <InputLabel id="multiple-fields-label">Campos</InputLabel>
+          <Select
+            labelId="multiple-fields-label"
+            value={fields}
+            onChange={(e) =>
+              setFields(
+                typeof e.target.value === "string"
+                  ? e.target.value.split(",").map((d) => parseInt(d, 10))
+                  : e.target.value
+              )
+            }
+            multiple
+            input={<OutlinedInput label="Campos" />}
+            renderValue={(selected) => (
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                {selected.map((value) => (
+                  <Chip
+                    key={value}
+                    label={
+                      availableReports[selectedReport ?? -1].fields[value].name
+                    }
+                  />
                 ))}
-              </Select>
-            </FormControl>
-          </Grid2>
-          <Grid2 xs={12}>
-            <FormControl className="m-1 w-full">
-              <InputLabel id="multiple-fields-label">Campos</InputLabel>
-              <Select
-                labelId="multiple-fields-label"
-                value={fields}
-                onChange={(e) =>
-                  setFields(
-                    typeof e.target.value === "string"
-                      ? e.target.value.split(",").map((d) => parseInt(d, 10))
-                      : e.target.value
-                  )
-                }
-                multiple
-                input={<OutlinedInput label="Campos" />}
-                renderValue={(selected) => (
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip
-                        key={value}
-                        label={
-                          availableReports[selectedReport ?? -1].fields[value]
-                            .name
-                        }
-                      />
-                    ))}
-                  </Box>
-                )}
-              >
-                {selectedReport !== null
-                  ? availableReports[selectedReport].fields.map((f, i) => (
-                      <MenuItem key={f.key} value={i}>
-                        {f.name}
-                      </MenuItem>
-                    ))
-                  : null}
-              </Select>
-            </FormControl>
-          </Grid2>
+              </Box>
+            )}
+          >
+            {selectedReport !== null
+              ? availableReports[selectedReport].fields.map((f, i) => (
+                  <MenuItem key={f.key} value={i}>
+                    {f.name}
+                  </MenuItem>
+                ))
+              : null}
+          </Select>
+        </FormControl>
+        <Divider variant="middle" />
+        <Grid2 container spacing={2}>
           <Grid2 xs={12} md={6}>
             <Typography variant="h6" component="div">
               Filtros
             </Typography>
+            {filters.map((o, i) => (
+              <FilterOption
+                key={i}
+                report={
+                  selectedReport !== null
+                    ? availableReports[selectedReport]
+                    : undefined
+                }
+                value={o}
+                onChange={(val) => {
+                  const temp = [...filters];
+                  if (val === null) {
+                    temp.splice(i, 1);
+                  } else {
+                    temp[i] = val;
+                  }
+                  setFilters(temp);
+                }}
+              />
+            ))}
+            <Button
+              className="m-1 w-full"
+              onClick={() =>
+                setFilters([
+                  ...filters,
+                  { index: null, comparison: "lt", value: "" },
+                ])
+              }
+            >
+              <MdAdd />
+              &nbsp;Agregar
+            </Button>
           </Grid2>
           <Grid2 xs={12} md={6}>
             <Typography variant="h6" component="div">
               Ordenamiento
             </Typography>
             {orders.map((o, i) => (
-              <div
-                className="grid grid-cols-[repeat(2,_minmax(0,_1fr))_auto] my-4 gap-1"
+              <OrderOption
                 key={i}
-              >
-                <FormControl>
-                  <InputLabel id="ordering-select">Campo</InputLabel>
-                  <Select
-                    value={o.index ?? ""}
-                    onChange={(e) => {
-                      const temp = [...orders];
-                      temp[i] = {
-                        ...o,
-                        index:
-                          typeof e.target.value === "string"
-                            ? parseInt(e.target.value, 10)
-                            : e.target.value,
-                      };
-                      setOrders(temp);
-                    }}
-                    input={<OutlinedInput label="Campo" />}
-                  >
-                    {selectedReport !== null
-                      ? availableReports[selectedReport].fields.map((f, i) => (
-                          <MenuItem key={f.key} value={i}>
-                            {f.name}
-                          </MenuItem>
-                        ))
-                      : null}
-                  </Select>
-                </FormControl>
-                <FormControl>
-                  <InputLabel id="ordering-select">Ordenamiento</InputLabel>
-                  <Select
-                    value={o.order}
-                    onChange={(e) => {
-                      const temp = [...orders];
-                      temp[i] = {
-                        ...o,
-                        order: e.target.value as "asc" | "desc",
-                      };
-                      setOrders(temp);
-                    }}
-                    input={<OutlinedInput label="Ordenamiento" />}
-                  >
-                    <MenuItem value="asc">Ascendiente</MenuItem>
-                    <MenuItem value="desc">Descendiente</MenuItem>
-                  </Select>
-                </FormControl>
-                <Button
-                  onClick={() => {
-                    const temp = [...orders];
+                report={
+                  selectedReport !== null
+                    ? availableReports[selectedReport]
+                    : undefined
+                }
+                value={o}
+                onChange={(val) => {
+                  const temp = [...orders];
+                  if (val === null) {
                     temp.splice(i, 1);
-                    setOrders(temp);
-                  }}
-                >
-                  <MdRemove />
-                </Button>
-              </div>
+                  } else {
+                    temp[i] = val;
+                  }
+                  setOrders(temp);
+                }}
+              />
             ))}
             <Button
               className="m-1 w-full"
@@ -183,6 +186,8 @@ export default function Reports() {
             </Button>
           </Grid2>
         </Grid2>
+        <Divider variant="middle" />
+        <Button className="m-1 w-full">Generar</Button>
       </CardContent>
     </Card>
   );
