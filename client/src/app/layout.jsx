@@ -10,6 +10,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import NavDrawer from "../components/NavDrawer";
 import { MdLogin } from "react-icons/md";
+import Footer from "../components/Footer";
 
 const navItems = [
   {
@@ -42,6 +43,7 @@ export default function Layout({ children }) {
             <Container className="mt-[6rem]" maxWidth="lg">
               {children}
             </Container>
+            <Footer />
           </LocalizationProvider>
         </ThemeProvider>
       </body>
