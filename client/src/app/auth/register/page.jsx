@@ -2,14 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  Card,
-  CardMedia,
-  Button,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Card, CardMedia, Button, TextField, Typography } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
+import BackPage from "../../../components/BackPage";
 
 export default function Register() {
   const handleSubmit = (e) => {
@@ -32,46 +27,41 @@ export default function Register() {
   };
 
   return (
-    <div className="flex justify-center text-center">
-      <Grid2 container spacing={2}>
-        <div>
-          <Card className="p-4" elevation={10} sx={{ maxWidth: 345 }}>
-            <CardMedia
-              component="img"
-              height="100%"
-              image="/redwhite.png"
-              alt="Mycelium Logo"
+    <div>
+      <BackPage />
+      <div className="flex justify-center text-center">
+        <Card className="p-4" elevation={10} sx={{ maxWidth: 345 }}>
+          <CardMedia
+            component="img"
+            height="100%"
+            image="/redwhite.png"
+            alt="Mycelium Logo"
+          />
+          <Typography variant="h4" mt={2}>
+            mycelium :)
+          </Typography>
+          <form className="mt-8 mb-11" onSubmit={handleSubmit}>
+            <TextField
+              label="First Name"
+              variant="standard"
+              name="first_name"
             />
-            <Typography variant="h4" mt={2}>
-              mycelium :)
-            </Typography>
-            <form className="mt-8 mb-11" onSubmit={handleSubmit}>
-              <TextField
-                label="First Name"
-                variant="standard"
-                name="first_name"
-              />
-              <TextField
-                label="Last Name"
-                variant="standard"
-                name="last_name"
-              />
-              <TextField label="Email" variant="standard" name="email" />
-              <TextField label="Password" variant="standard" name="password" />
-              <br />
-              <Button
-                className="mt-6"
-                variant="outlined"
-                disableElevation
-                color="secondary"
-                type="submit"
-              >
-                Register
-              </Button>
-            </form>
-          </Card>
-        </div>
-      </Grid2>
+            <TextField label="Last Name" variant="standard" name="last_name" />
+            <TextField label="Email" variant="standard" name="email" />
+            <TextField label="Password" variant="standard" name="password" />
+            <br />
+            <Button
+              className="mt-6"
+              variant="outlined"
+              disableElevation
+              color="secondary"
+              type="submit"
+            >
+              Register
+            </Button>
+          </form>
+        </Card>
+      </div>
     </div>
   );
 }

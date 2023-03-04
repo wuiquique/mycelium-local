@@ -18,6 +18,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import BackPage from "../../../../../components/BackPage";
 
 export default function Create() {
   const [tech, setTech] = useState([
@@ -116,9 +117,10 @@ export default function Create() {
   }, []);
 
   return (
-    <div className="flex justify-center text-center">
+    <div>
+      <BackPage />
       <Grid2 container spacing={2}>
-        <div>
+        <div className="justify-center text-center">
           <Card className="p-4" elevation={10} sx={{ width: "100%" }}>
             <div className="flex justify-center text-center">
               <CardMedia
