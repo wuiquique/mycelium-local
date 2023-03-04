@@ -33,18 +33,15 @@ public class AuthenticationProviderEmailPassword implements AuthenticationProvid
             var password = (String) authenticationRequest.getSecret();
             var foundUsers = this.userRepo.findByEmail(username);
 
-            var found = false;
             for (var user : foundUsers) {
-                if (password.equals(password)) {
+                if (password.equals(user.password)) {
                     emitter.success(AuthenticationResponse.success((String) authenticationRequest.getIdentity(),
                             Map.ofEntries(entry("id", user.id))));
-                    found = true;
+                    return;
                 }
             }
 
-            if (!found) {
-                emitter.error(AuthenticationResponse.exception());
-            }
+            emitter.error(AuthenticationResponse.exception());
         });
     }
 
