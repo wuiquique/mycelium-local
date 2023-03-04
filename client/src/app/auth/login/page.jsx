@@ -14,18 +14,14 @@ import Grid2 from "@mui/material/Unstable_Grid2";
 import BackPage from "../../../components/BackPage";
 
 export default function Login() {
-  //import redwhite from '../../../assets/icons/redwhite.png;'
-
-  //'../../../public/redwhite.png;'
-
   const handleSubmit = (e) => {
     e.preventDefault();
     let post = {
-      email: e.target.email_login.value,
+      username: e.target.email_login.value,
       password: e.target.password_login.value,
     };
     axios
-      .post("ruta", post)
+      .post("/api/login", post)
       .then((response) => {
         console.log(response.data);
         console.log("navigate -> ?");
