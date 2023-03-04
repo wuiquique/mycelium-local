@@ -3,12 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
-  Typography,
-  Button,
-  Card,
-  CardMedia,
-  CardContent,
-  Box
+  Typography
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import CreditCard from "../../../components/CreditCard";
@@ -31,7 +26,6 @@ export default function Checkout() {
             pictures: ['https://falabella.scene7.com/is/image/FalabellaPE/770197465_1?wid=800&hei=800&qlt=70'] //-> solo 1
         }
     ])
-    const [address, setAddress] = useState({})
 
     useEffect(() => {
         axios.get('/api/user/cart')
@@ -44,6 +38,7 @@ export default function Checkout() {
     }, [])
 
 
+
   return (
     <div>
         <Typography variant='h2' className='text-center'>Checkout</Typography>
@@ -53,7 +48,7 @@ export default function Checkout() {
                 <CreditCard />
             </Grid2>
             <Grid2 lg={6}>
-                <UserAddress setAddress={setAddress}/>
+                <UserAddress products={products}/>
             </Grid2>
             <Grid2 lg={12}>
                 <UserCart products={products} cartOrCheckout='checkout' onChange={setProducts}/>
