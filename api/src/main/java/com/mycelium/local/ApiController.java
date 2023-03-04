@@ -13,10 +13,4 @@ public class ApiController {
     public String index() {
         return "Example Response";
     }
-
-    @Secured(SecurityRule.IS_AUTHENTICATED)
-    @Get(uri = "/seguro", produces = "application/json")
-    public String seguro() {
-        return "{\"seguro\":1}";
-    }
 }

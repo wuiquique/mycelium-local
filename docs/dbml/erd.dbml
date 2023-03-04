@@ -1,0 +1,189 @@
+table users {
+  id int [pk, increment]
+  name varchar(50)
+  lastname varchar(50)
+  email varchar(200)
+  password varchar(50)
+  roleId int
+}
+
+table userRole {
+  id int [pk, increment]
+  name varchar(50)
+}
+
+ref: users.roleId > userRole.id
+
+table integrations {
+  id int [pk, increment]
+  name varchar(50)
+  request varchar(200)
+  user varchar(50)
+  password varchar(50)
+}
+
+table pictures {
+  id int [pk, increment]
+  url varchar(200)
+  productId int
+}
+
+table products {
+  id int [pk, increment]
+  name varchar(50)
+  desc varchar(200)
+  categorieId int
+  brand varchar(50)
+  weight int
+  quantity int
+  price int
+}
+
+ref: products.id < pictures.productId
+
+table categories {
+  id int [pk, increment]
+  name varchar(50)
+}
+
+ref: products.categorieId > categories.id
+
+table technical {
+  id int [pk, increment]
+  type varchar(50)
+  value varchar(50)
+  productId int
+}
+
+ref: products.id < technical.productId
+
+table jsonLog {
+  id int [pk, increment]
+  userId int
+  when datetime
+  operation boolean
+  archiveName varchar(50)
+  success int
+  error int
+}
+
+ref: jsonLog.userId > users.id
+
+table errorLog {
+  id int [pk, increment]
+  message varchar(200)
+  jsonLogId int
+}
+
+ref: jsonLog.id < errorLog.jsonLogId
+
+table carts {
+  id int [pk, increment]
+  productId int
+  quantity int
+  userId int
+}
+
+ref: users.id < carts.userId
+ref: products.id < carts.productId
+
+table orderProducts {
+  id int [pk, increment]
+  orderId int
+  productId int
+  quantity int
+  statusId int
+  tracking varchar(50)
+  time int
+  integOrderId int
+  created datetime
+  updated datetime
+}
+
+ref: products.id < orderProducts.productId
+
+table status {
+  id int [pk, increment]
+  name varchar(50)
+}
+
+ref: orderProducts.statusId > status.id
+
+table orderMessages {
+  orderId int [pk]
+  statusId int [pk]
+  message varchar(200)
+}
+
+ref: status.id < orderMessages.statusId
+ref: orderProducts.id < orderMessages.orderId
+
+table ratings {
+  id int [pk, increment]
+  userId int
+  productId int
+  rating int
+}
+
+ref: users.id < ratings.userId
+ref: products.id < ratings.productId
+
+table comments {
+  id int [pk, increment]
+  userId int
+  productId int
+  commentId int
+  message varchar(200)
+  created datetime
+  updated datetime
+}
+
+ref: users.id < comments.userId
+ref: products.id < comments.productId
+ref: comments.id < comments.commentId
+
+table orders {
+  id int [pk, increment]
+  userId int
+  direction varchar(200)
+  state varchar(50)
+  city varchar(50)
+  zip int
+  phone int
+  since datetime
+  till datetime
+}
+
+ref: orders.id < orderProducts.orderId
+ref: users.id < orders.userId
+
+
+table integOrderProducts {
+  id int [pk, increment]
+  orderId int
+  productId int
+  quantity int
+  statusIntegId int
+  statusLocalId int
+  trackingInteg varchar(50)
+  trackingLocal varchar(50)
+  timeInteg int
+  timeLocal int
+  integrationId int
+  created datetime
+  updated datetime
+}
+
+ref: integrations.id < integOrderProducts.integrationId
+ref: status.id < integOrderProducts.statusIntegId
+ref: status.id < integOrderProducts.statusLocalId
+ref: orders.id < integOrderProducts.orderId
+
+table cartInteg {
+  id int [pk, increment]
+  productId int
+  quantity int
+  userId int
+}
+
+ref: cartInteg.userId > users.id

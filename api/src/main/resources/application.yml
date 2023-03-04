@@ -23,11 +23,12 @@ micronaut:
 datasources:
   default:
     driverClassName: oracle.jdbc.OracleDriver
-    url: "jdbc:oracle:thin:@myceliumdb:1521/XE"
-    username: system
+    url: "jdbc:oracle:thin:@myceliumdb:1521/XEPDB1"
+    username: PDBADMIN
     password: "12345"
     dbType: oracle
-    schemaGenerate: CREATE_DROP
+    schema: PDBADMIN
+    schemaGenerate: NONE
     dialect: ORACLE
 netty:
   default:
