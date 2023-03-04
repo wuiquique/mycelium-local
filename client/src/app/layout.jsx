@@ -9,14 +9,57 @@ import theme from "../theme";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import NavDrawer from "../components/NavDrawer";
-import { MdLogin } from "react-icons/md";
+import {
+  MdCreate,
+  MdLogin,
+  MdShoppingCart,
+  MdTag,
+  MdVerifiedUser,
+} from "react-icons/md";
 import Footer from "../components/Footer";
+import { UserProvider } from "../hooks/userContext";
 
 const navItems = [
+  {
+    name: "Categorías",
+    href: "/categories",
+    icon: <MdTag />,
+  },
+  {
+    name: "Carrito",
+    href: "/user/cart",
+    icon: <MdShoppingCart />,
+    privileges: 1,
+  },
+  {
+    name: "Usuarios",
+    href: "/admin/users",
+    icon: <MdVerifiedUser />,
+    privileges: 2,
+  },
+  {
+    name: "Categorías",
+    href: "/admin/category",
+    icon: <MdTag />,
+    privileges: 2,
+  },
+  {
+    name: "Reportes",
+    href: "/admin/reports",
+    icon: <MdTag />,
+    privileges: 2,
+  },
   {
     name: "Login",
     href: "/auth/login",
     icon: <MdLogin />,
+    privileges: 0,
+  },
+  {
+    name: "Register",
+    href: "/auth/register",
+    icon: <MdCreate />,
+    privileges: 0,
   },
 ];
 
@@ -33,17 +76,19 @@ export default function Layout({ children }) {
       <body>
         <ThemeProvider theme={theme}>
           <LocalizationProvider dateAdapter={AdapterMoment}>
-            <CssBaseline />
-            <NavBar onDrawer={() => setDrawer(true)} />
-            <NavDrawer
-              open={drawer}
-              onClose={() => setDrawer(false)}
-              items={navItems}
-            />
-            <Container className="mt-[6rem]" maxWidth="lg">
-              {children}
-            </Container>
-            <Footer />
+            <UserProvider>
+              <CssBaseline />
+              <NavBar onDrawer={() => setDrawer(true)} />
+              <NavDrawer
+                open={drawer}
+                onClose={() => setDrawer(false)}
+                items={navItems}
+              />
+              <Container className="mt-[6rem]" maxWidth="lg">
+                {children}
+              </Container>
+              <Footer />
+            </UserProvider>
           </LocalizationProvider>
         </ThemeProvider>
       </body>

@@ -37,13 +37,13 @@ public class RatingController {
 
     @Get("/{id}")
     public Rating get(int id) {
-        return ratingRepo.findById(id).get();
+        return ratingRepo.findByProductId(id).get();
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/{productId}")
     public void create(int productId, @Body RatingCreateRequest body) {
-        ratingRepo.create(body.userId, body.productId, body.rating);
+        ratingRepo.create(body.userId, productId, body.rating);
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)

@@ -16,8 +16,8 @@ import io.micronaut.transaction.annotation.TransactionalAdvice;
 @JdbcRepository(dialect = Dialect.ORACLE)
 public interface RatingRepo extends GenericRepository<Rating, Integer> {
 
-    @Query("SELECT * FROM \"ratings\" WHERE id = :id")
-    Optional<Rating> findById(Integer id);
+    @Query("SELECT * FROM \"ratings\" WHERE \"productId\" = :id")
+    Optional<Rating> findByProductId(Integer id);
 
     @Query("SELECT * FROM \"ratings\"")
     List<Rating> findAll();

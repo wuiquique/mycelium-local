@@ -24,17 +24,12 @@ import Rating from "@mui/material/Rating";
 import CommentTree from "../../../components/comments/CommentTree";
 import Image from "next/image";
 import BackPage from "../../../components/BackPage";
+import { usePathname } from "next/navigation";
 
 export default function Product() {
   const [prod, setProd] = useState({
     id: 1,
-    name: "Cuchara de Oro",
-    desc: "Una cuchara de ORO",
-    brand: "Cosas de Oro S.A.",
-    weight: 50,
-    price: 50000,
-    quantity: 2,
-    categId: 1,
+    caategId: 1,
   });
 
   const [urls, setUrls] = useState([
@@ -76,6 +71,20 @@ export default function Product() {
     { author: "Test", content: "Test", votes: 10, replies: [] },
   ]);
 
+  useEffect(() => {
+    axios.get(`/api/product/${prod.id}`).then((response) => {
+      console.log(response.data);
+      setProd(response.data.prod);
+      //    setUrls(response.data.urls);
+      //  setTech(response.data.tech);
+      //setComments(response.data.comments);
+    });
+    axios.get("/api/categories/").then((response) => {
+      setCategs(response.data);
+      console.log(response.data);
+    });
+  }, []);
+
   const categSelect = () => {
     let temp = "";
     for (let i = 0; i < categ.length; i++) {
@@ -100,18 +109,6 @@ export default function Product() {
 
   const ratingAvg = 5;
   const [rU, setRU] = useState(0);
-
-  useEffect(() => {
-    axios.get("/api/produc/[id]").then((response) => {
-      setProd(response.data.prod);
-      setUrls(response.data.urls);
-      setTech(response.data.tech);
-      setComments(response.data.comments);
-    });
-    axios.get("/api/category").then((response) => {
-      setCategs(response.data);
-    });
-  }, []);
 
   return (
     <div className="justify-center">
@@ -144,7 +141,7 @@ export default function Product() {
             <Card className="p-4" elevation={10}>
               <div className="text-left">
                 <Typography variant="body1" mt={1}>
-                  <b>Description:</b> {prod.desc}
+                  <b>Description:</b> {prod.description}
                 </Typography>
                 <Typography variant="body1" mt={1}>
                   <b>Brand: </b> {prod.brand}

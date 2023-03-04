@@ -38,7 +38,7 @@ export default function Category() {
       name: categ[index].name,
     };
     axios.post(`/api/admin/categories/${id}`, post).then((response) => {
-      setCategs(response.date);
+      setCategs(response.data);
     });
   };
 

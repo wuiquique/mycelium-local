@@ -64,18 +64,7 @@ export default function Checkout() {
             products={products}
             cartOrCheckout="checkout"
             onChange={setProducts}
-          />
-        </Grid2>
-      </Grid2>
-      <Grid2 container spacing={2}>
-        <Grid2 lg={6}>
-          <UserAddress setAddress={setAddress} />
-        </Grid2>
-        <Grid2 lg={12}>
-          <UserCart
-            products={products}
-            cartOrCheckout="checkout"
-            onChange={setProducts}
+            orderId={2}
           />
         </Grid2>
       </Grid2>
