@@ -17,7 +17,8 @@ import io.micronaut.transaction.annotation.TransactionalAdvice;
 @JdbcRepository(dialect = Dialect.ORACLE)
 public interface UserRepo extends GenericRepository<User, Integer> {
 
-    @Query("SELECT * FROM \"users\" WHERE \"id\" = :id")
+    @Query("SELECT u.*, r_.\"name\" AS r_name FROM \"users\" u INNER JOIN \"userRole\" r_ ON u.\"roleId\" = r_.\"id\" WHERE u.\"id\" = :id")
+    @Join(value = "role", alias = "r_")
     Optional<User> findById(Integer id);
 
     @Query("SELECT u.*, r_.\"name\" AS r_name FROM \"users\" u INNER JOIN \"userRole\" r_ ON u.\"roleId\" = r_.\"id\"")
@@ -26,6 +27,11 @@ public interface UserRepo extends GenericRepository<User, Integer> {
 
     @Query("SELECT * FROM \"users\" WHERE \"email\" = :email")
     List<User> findByEmail(String email);
+
+    @TransactionalAdvice("default")
+    @Transactional
+    @Query("INSERT INTO \"users\"(\"name\", \"lastname\", \"email\", \"password\", \"roleId\") VALUES(:name, :lastname, :email, :password, :roleId)")
+    void create(String name, String lastname, String email, String password, Integer roleId);
 
     @TransactionalAdvice("default")
     @Transactional
