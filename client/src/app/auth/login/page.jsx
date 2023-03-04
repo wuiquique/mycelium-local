@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
+import BackPage from "../../../components/BackPage";
 
 export default function Login() {
   //import redwhite from '../../../assets/icons/redwhite.png;'
@@ -35,40 +36,39 @@ export default function Login() {
   };
 
   return (
-    <div className="flex justify-center text-center">
-      <Grid2 container spacing={2}>
-        <div>
-          <Card className="p-4" elevation={10} sx={{ maxWidth: 345 }}>
-            <CardMedia
-              component="img"
-              height="100%"
-              image="/redwhite.png"
-              alt="Mycelium Logo"
+    <div>
+      <BackPage />
+      <div className="flex justify-center text-center">
+        <Card className="p-4" elevation={10} sx={{ maxWidth: 345 }}>
+          <CardMedia
+            component="img"
+            height="100%"
+            image="/redwhite.png"
+            alt="Mycelium Logo"
+          />
+          <Typography variant="h4" mt={2}>
+            mycelium :)
+          </Typography>
+          <form className="mt-8 mb-11" onSubmit={handleSubmit}>
+            <TextField label="Email" variant="standard" name="email_login" />
+            <TextField
+              label="Password"
+              variant="standard"
+              name="password_login"
             />
-            <Typography variant="h4" mt={2}>
-              mycelium :)
-            </Typography>
-            <form className="mt-8 mb-11" onSubmit={handleSubmit}>
-              <TextField label="Email" variant="standard" name="email_login" />
-              <TextField
-                label="Password"
-                variant="standard"
-                name="password_login"
-              />
-              <br />
-              <Button
-                className="mt-6"
-                variant="outlined"
-                disableElevation
-                color="secondary"
-                type="submit"
-              >
-                Login
-              </Button>
-            </form>
-          </Card>
-        </div>
-      </Grid2>
+            <br />
+            <Button
+              className="mt-6"
+              variant="outlined"
+              disableElevation
+              color="secondary"
+              type="submit"
+            >
+              Login
+            </Button>
+          </form>
+        </Card>
+      </div>
     </div>
   );
 }

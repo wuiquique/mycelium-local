@@ -18,6 +18,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import BackPage from "../../../../components/BackPage";
 
 export default function Create() {
   const [tech, setTech] = useState([{ type: "", value: "" }]);
@@ -90,6 +91,7 @@ export default function Create() {
 
   return (
     <div>
+      <BackPage />
       <Grid2 container spacing={2}>
         <div>
           <Card className="p-4" elevation={10} sx={{ width: "100%" }}>

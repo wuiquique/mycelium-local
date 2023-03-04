@@ -34,6 +34,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import Box from "@mui/material/Box";
 import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
+import Footer from "../components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -160,7 +161,7 @@ export default function Home() {
   ]);
 
   return (
-    <div className="flex justify-center text-center">
+    <div className="justify-center text-center">
       <Card className="p-4" elevation={10} sx={{ width: "100%" }}>
         <div className="flex justify-center text-center">
           <CardMedia
@@ -304,6 +305,12 @@ export default function Home() {
                       image={newp[i].url}
                     />
                     <Typography variant="h6">{newp[i].name}</Typography>
+                    <Typography variant="body1">
+                      Q. {newp[i].price}.00
+                    </Typography>
+                    <Typography variant="subtitle2">
+                      Quantity: {newp[i].quantity}
+                    </Typography>
                   </Card>
                 </ListItemButton>
               </ListItem>
