@@ -29,14 +29,16 @@ export default function Orders() {
     },
   ]);
 
-  axios
-    .get(`admin/orders/`)
-    .then((response) => {
-      setOrders(response.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  useEffect(() => {
+    axios
+      .get(`admin/orders/`)
+      .then((response) => {
+        setOrders(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <div>

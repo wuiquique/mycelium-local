@@ -48,7 +48,6 @@ export default function Checkout() {
 
   return (
     <div>
-      <BackPage />
       <Typography variant="h2" className="text-center">
         Checkout
       </Typography>
@@ -57,6 +56,18 @@ export default function Checkout() {
         <Grid2 lg={6}>
           <CreditCard />
         </Grid2>
+        <Grid2 lg={6}>
+          <UserAddress products={products} />
+        </Grid2>
+        <Grid2 lg={12}>
+          <UserCart
+            products={products}
+            cartOrCheckout="checkout"
+            onChange={setProducts}
+          />
+        </Grid2>
+      </Grid2>
+      <Grid2 container spacing={2}>
         <Grid2 lg={6}>
           <UserAddress setAddress={setAddress} />
         </Grid2>
