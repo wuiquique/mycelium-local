@@ -16,33 +16,17 @@ import UserCart from "../../../components/UserCart";
 import BackPage from "../../../components/BackPage";
 
 export default function Cart() {
-  const [products, setProducts] = useState([
-    {
-      type: "local",
-      id: "1",
-      name: "Cuchara de Oro",
-      description: "Muy Fina",
-      quantity: "3",
-      category: "Oro", //-> nombre
-      brand: "Dioro",
-      weight: "23",
-      price: 75,
-      pictures: [
-        "https://falabella.scene7.com/is/image/FalabellaPE/770197465_1?wid=800&hei=800&qlt=70",
-      ], //-> solo 1
-    },
-  ]);
+  const [products, setProducts] = useState<any[]>([]);
 
-  /*    useEffect(() => {
-        axios.get('/api/user/cart')
-        .then(response => {
-            setProducts(response.data)
-        })
-        .catch(error => {
-            
-        })
-    }, [setProducts])
-*/
+  useEffect(() => {
+    axios
+      .get("/api/user/cart")
+      .then((response) => {
+        setProducts(response.data);
+      })
+      .catch((error) => {});
+  }, []);
+
   const getTotal = () => {
     let total = 0;
     for (let i of products) {
