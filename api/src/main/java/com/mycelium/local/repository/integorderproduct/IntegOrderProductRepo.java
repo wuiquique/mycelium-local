@@ -11,6 +11,7 @@ import io.micronaut.data.annotation.Repository;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
 import io.micronaut.data.model.query.builder.sql.Dialect;
 import io.micronaut.data.repository.GenericRepository;
+import io.micronaut.transaction.annotation.TransactionalAdvice;
 
 @Repository("default")
 @JdbcRepository(dialect = Dialect.ORACLE)
@@ -22,6 +23,7 @@ public interface IntegOrderProductRepo extends GenericRepository<IntegOrderProdu
     @Query("SELECT * FROM \"integOrderProducts\"")
     List<IntegOrderProduct> findAll();
 
+    @TransactionalAdvice("default")
     @Transactional
     @Query("INSERT INTO \"integOrderProducts\"(\"orderId\", \"productId\", \"quantity\", \"statusIntegId\", \"statusLocalId\", \"trackingInteg\", \"trackingLocal\", \"timeInteg\", \"timeLocal\", \"integrationId\", \"created\", \"updated\") VALUES(:orderId, :productId, :quantity, :statusIntegId, :statusLocalId, :trackingInteg, :trackingLocal, :timeInteg, :timeLocal, :integrationId, :created, :updated)")
     void create(int orderId, int productId, int quantity, int statusIntegId, int statusLocalId, String trackingInteg,

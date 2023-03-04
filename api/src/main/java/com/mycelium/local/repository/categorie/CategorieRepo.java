@@ -10,6 +10,7 @@ import io.micronaut.data.annotation.Repository;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
 import io.micronaut.data.model.query.builder.sql.Dialect;
 import io.micronaut.data.repository.GenericRepository;
+import io.micronaut.transaction.annotation.TransactionalAdvice;
 
 @Repository("default")
 @JdbcRepository(dialect = Dialect.ORACLE)
@@ -21,6 +22,7 @@ public interface CategorieRepo extends GenericRepository<Categorie, Integer> {
     @Query("SELECT * FROM \"categories\"")
     List<Categorie> findAll();
 
+    @TransactionalAdvice("default")
     @Transactional
     @Query("INSERT INTO \"categories\"(\"name\") VALUES(:name)")
     void create(String name);

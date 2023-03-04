@@ -10,6 +10,7 @@ import io.micronaut.data.annotation.Repository;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
 import io.micronaut.data.model.query.builder.sql.Dialect;
 import io.micronaut.data.repository.GenericRepository;
+import io.micronaut.transaction.annotation.TransactionalAdvice;
 
 @Repository("default")
 @JdbcRepository(dialect = Dialect.ORACLE)
@@ -21,6 +22,7 @@ public interface CartRepo extends GenericRepository<Cart, Integer> {
     @Query("SELECT * FROM \"carts\"")
     List<Cart> findAll();
 
+    @TransactionalAdvice("default")
     @Transactional
     @Query("INSERT INTO \"carts\"(\"productId\", \"quantity\", \"userId\") VALUES(:productId, :quantity, :userId)")
     void create(int productId, int quantity, int userId);
