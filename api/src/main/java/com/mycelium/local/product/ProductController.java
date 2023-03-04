@@ -7,8 +7,10 @@ import com.mycelium.local.repository.product.ProductRepo;
 
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.Put;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 
@@ -37,8 +39,26 @@ public class ProductController {
         return productRepo.findAll();
     }
 
+    @Get("/{id}")
+    public Product get(int id) {
+        return productRepo.findById(id).get();
+    }
+
+    @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/")
     public void create(@Body ProductCreateRequest body) {
-        productRepo.save(body.name, body.desc, body.categorieId, body.brand, body.weight, body.quantity, body.price);
+        productRepo.create(body.name, body.desc, body.categorieId, body.brand, body.weight, body.quantity, body.price);
+    }
+
+    @Secured(SecurityRule.IS_AUTHENTICATED)
+    @Put("/")
+    public void update() {
+        // TODO
+    }
+
+    @Secured(SecurityRule.IS_AUTHENTICATED)
+    @Delete("/{id}")
+    public void delete(int id) {
+        // TODO
     }
 }

@@ -14,7 +14,8 @@ public class Technical {
     @GeneratedValue
     public Integer id;
     public String type;
-    public String productId;
+    public String value;
+    public Integer productId;
 
     @Relation(value = Relation.Kind.MANY_TO_ONE)
     public Product product;
@@ -35,11 +36,19 @@ public class Technical {
         this.type = type;
     }
 
-    public String getProductId() {
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public Integer getProductId() {
         return productId;
     }
 
-    public void setProductId(String productId) {
+    public void setProductId(Integer productId) {
         this.productId = productId;
     }
 

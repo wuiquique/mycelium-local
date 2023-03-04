@@ -3,6 +3,7 @@ package com.mycelium.local.repository.product;
 import java.util.List;
 
 import com.mycelium.local.repository.categorie.Categorie;
+import com.mycelium.local.repository.picture.Picture;
 
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
@@ -25,6 +26,9 @@ public class Product {
 
     @Relation(value = Relation.Kind.MANY_TO_ONE)
     public Categorie categorie;
+
+    @Relation(value = Relation.Kind.ONE_TO_MANY)
+    public List<Picture> pictures;
 
     public Integer getId() {
         return id;
