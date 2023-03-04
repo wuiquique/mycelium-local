@@ -28,7 +28,7 @@ export default function UserAddress({ products }) {
       till: date2
     }
     let prodHolder = products
-
+    console.log({dir: dirHolder, products: prodHolder})
     //no se como se va a ser el body pero aca ta adelantado 
     axios.post('url', {dir: dirHolder, products: prodHolder})
     .then(response => {
@@ -79,6 +79,7 @@ export default function UserAddress({ products }) {
             </div>
             <div className="text-center mt-3">
               <Button
+                type='submit'
                 variant='outlined'
               >
                 Place Order
