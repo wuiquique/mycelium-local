@@ -16,7 +16,7 @@ import io.micronaut.transaction.annotation.TransactionalAdvice;
 @JdbcRepository(dialect = Dialect.ORACLE)
 public interface ProductRepo extends GenericRepository<Product, Integer> {
 
-    @Query("SELECT * FROM \"products\" WHERE id = :id")
+    @Query("SELECT * FROM \"products\" WHERE \"id\" = :id")
     Optional<Product> findById(Integer id);
 
     @Query("SELECT * FROM \"products\"")

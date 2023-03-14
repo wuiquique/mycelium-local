@@ -51,9 +51,13 @@ export default function UserCart({
   return (
     <div>
       {localProds.length === 0 ? (
-        <Card elevation={10} sx={{ display: "flex" }}>
-          <Typography variant="h4">
-            No Cuentas con Objetos en tu Carrito :)
+        <Card
+          elevation={10}
+          className="text-center"
+          sx={{ display: "flex", height: "485px" }}
+        >
+          <Typography variant="h5" sx={{ padding: "2%" }}>
+            No hay productos en tu carrito :(
           </Typography>
         </Card>
       ) : (

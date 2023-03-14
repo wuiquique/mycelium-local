@@ -74,12 +74,12 @@ public class CartController {
 
         List<CartUnifiedResponse> res = new ArrayList<CartUnifiedResponse>();
         for (Cart cart : cartRepo.findByUser(userId)) {
-            var pics = new ArrayList<String>();
-            for (var p : cart.product.pictures) {
-                pics.add(p.url);
-            }
+            // var pics = new ArrayList<String>();
+            // for (var p : cart.product.pictures) {
+            // pics.add(p.url);
+            // }
             res.add(new CartUnifiedResponse(cart.id, false, cart.productId, cart.product.name, cart.product.desc,
-                    cart.quantity, cart.product.categorie.name, cart.product.weight, cart.product.price, pics));
+                    cart.quantity, cart.product.categorie.name, cart.product.weight, cart.product.price, List.of()));
         }
         for (CartInteg cart : cartIntegRepo.findByUser(userId)) {
             res.add(new CartUnifiedResponse(cart.id, true, cart.productId, "Ejemplo Internacional",

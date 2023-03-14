@@ -26,11 +26,9 @@ import Image from "next/image";
 import BackPage from "../../../components/BackPage";
 import { usePathname } from "next/navigation";
 
-export default function Product() {
-  const [prod, setProd] = useState({
-    id: 1,
-    caategId: 1,
-  });
+export default function Product({ params: { id } }) {
+  const [prod, setProd] = useState({});
+  console.log(prod);
 
   const [urls, setUrls] = useState([
     "https://falabella.scene7.com/is/image/FalabellaPE/770197465_1?wid=800&hei=800&qlt=70",
@@ -72,23 +70,21 @@ export default function Product() {
   ]);
 
   useEffect(() => {
-    axios.get(`/api/product/${prod.id}`).then((response) => {
-      console.log(response.data);
-      setProd(response.data.prod);
+    axios.get(`/api/product/${id}`).then((response) => {
+      setProd(response.data);
       //    setUrls(response.data.urls);
       //  setTech(response.data.tech);
       //setComments(response.data.comments);
     });
     axios.get("/api/categories/").then((response) => {
       setCategs(response.data);
-      console.log(response.data);
     });
-  }, []);
+  }, [id]);
 
   const categSelect = () => {
     let temp = "";
     for (let i = 0; i < categ.length; i++) {
-      if (prod.categId === categ[i].id) {
+      if (prod.categorieId === categ[i].id) {
         temp = categ[i].name;
       }
     }
@@ -98,11 +94,11 @@ export default function Product() {
   const addCart = (e) => {
     e.preventDefault();
     let out = {
-      prodId: prod.id,
+      international: false,
+      productId: prod.id,
       quantity: parseInt(e.target.cartQuantity.value),
-      userId: 1,
     };
-    axios.post("/api/user/cart", out).then((response) => {
+    axios.put("/api/user/cart", out).then((response) => {
       console.log(response.data);
     });
   };
@@ -141,7 +137,7 @@ export default function Product() {
             <Card className="p-4" elevation={10}>
               <div className="text-left">
                 <Typography variant="body1" mt={1}>
-                  <b>Description:</b> {prod.description}
+                  <b>Description:</b> {prod.desc}
                 </Typography>
                 <Typography variant="body1" mt={1}>
                   <b>Brand: </b> {prod.brand}
