@@ -22,6 +22,9 @@ public interface PictureRepo extends GenericRepository<Picture, Integer> {
     @Query("SELECT * FROM \"pictures\"")
     List<Picture> findAll();
 
+    @Query("SELECT * FROM \"pictures\" WHERE \"productId\" = :productId")
+    List<Picture> findByProductId(Integer productId);
+
     @TransactionalAdvice("default")
     @Transactional
     @Query("INSERT INTO \"pictures\"(\"url\", \"productId\") VALUES(:url, :productId)")

@@ -22,6 +22,9 @@ public interface ProductRepo extends GenericRepository<Product, Integer> {
     @Query("SELECT * FROM \"products\"")
     List<Product> findAll();
 
+    @Query("SELECT * FROM \"products\" WHERE \"categorieId\" = :categorieId")
+    List<Product> findByCategorieId(Integer categorieId);
+
     @TransactionalAdvice("default")
     @Transactional
     @Query("INSERT INTO \"products\"(\"name\", \"desc\", \"categorieId\", \"brand\", \"weight\", \"quantity\", \"price\") VALUES(:name, :desc, :categorieId, :brand, :weight, :quantity, :price)")

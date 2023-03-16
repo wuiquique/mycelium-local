@@ -20,7 +20,7 @@ class PictureCreateRequest {
 }
 
 @Secured(SecurityRule.IS_ANONYMOUS)
-@Controller("/product/{id}/pictures")
+@Controller("/pictures")
 public class PictureController {
 
     private PictureRepo pictureRepo;
@@ -32,6 +32,11 @@ public class PictureController {
     @Get("/")
     public List<Picture> list() {
         return pictureRepo.findAll();
+    }
+
+    @Get("/product/{productId}")
+    public List<Picture> list(int productId) {
+        return pictureRepo.findByProductId(productId);
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)

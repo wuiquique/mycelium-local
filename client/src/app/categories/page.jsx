@@ -25,35 +25,19 @@ import { Stack } from "@mui/system";
 import BackPage from "../../components/BackPage";
 
 export default function Categories() {
-  /*
   useEffect(() => {
-    axios.get('/api/categories/')
-    .then(response => {
-      setAllCategories(response.data)
-    })
-  }, [])
-*/
+    axios.get("/api/categories/").then((response) => {
+      setAllCategories(response.data);
+    });
+  }, []);
 
-  const [allCategories, setAllCategories] = useState([
-    {
-      id: 1,
-      name: "DIOROOO",
-    },
-    {
-      id: 2,
-      name: "WOOOOW",
-    },
-    {
-      id: 3,
-      name: "SOPAS",
-    },
-  ]);
+  const [allCategories, setAllCategories] = useState([]);
   const [currentCat, setCurrentCat] = useState({
     name: "Select a Category",
     id: 0,
   });
   const [products, setProducts] = useState([
-    {
+    /*{
       type: "local",
       id: "1",
       name: "Cuchara de Oro",
@@ -66,12 +50,12 @@ export default function Categories() {
       pictures: [
         "https://falabella.scene7.com/is/image/FalabellaPE/770197465_1?wid=800&hei=800&qlt=70",
       ], //-> solo 1
-    },
+    },*/
   ]);
 
   const handleChangeCat = (cat) => {
     setCurrentCat(cat);
-    axios.post(`/api/categories/${cat.id}`).then((response) => {
+    axios.get(`/api/product/byCategory/${cat.id}`).then((response) => {
       setProducts(response.data);
     });
   };
