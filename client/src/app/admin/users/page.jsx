@@ -129,8 +129,10 @@ export default function AdminUsers() {
                         >
                           <Select
                             value={e.roleId}
-                            onChange={(ev) => changeSelect(i, ev.target.value)}
-                            onBlur={() => blurSave(e.id, i)}
+                            onChange={(ev) => {
+                              changeSelect(i, ev.target.value);
+                              blurSave(e.id, i);
+                            }}
                           >
                             {roles.map((el, ind) => (
                               <MenuItem value={el.id} key={ind}>
