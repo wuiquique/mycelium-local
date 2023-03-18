@@ -22,9 +22,21 @@ public interface CategorieRepo extends GenericRepository<Categorie, Integer> {
     @Query("SELECT * FROM \"categories\"")
     List<Categorie> findAll();
 
+    @Query("SELECT * FROM \"categories\" WHERE \"name\" = :name LIMIT 1")
+    Optional<Categorie> findByName(String name);
+
     @TransactionalAdvice("default")
     @Transactional
-    @Query("INSERT INTO \"categories\"(\"name\") VALUES(:name)")
-    void create(String name);
+    @Query("INSERT INTO \"categories\"(\"name\") VALUES(:name) RETURNING \"id\"")
+    long create(String name);
 
+    @TransactionalAdvice("default")
+    @Transactional
+    @Query("Update \"categories\" SET \"name\" = :name WHERE \"id\" = :id")
+    void update(int id, String name);
+
+    @TransactionalAdvice("default")
+    @Transactional
+    @Query("DELETE FROM \"categories\" WHERE \"id\" = :id")
+    void delete(int id);
 }

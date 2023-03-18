@@ -10,10 +10,16 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
+import io.micronaut.http.annotation.Delete;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 
 class CategorieCreateRequest {
+    public String name;
+}
+
+class CategorieUpdateRequest {
+    public int id;
     public String name;
 }
 
@@ -37,15 +43,22 @@ public class CategorieController {
         return categorieRepo.findById(id).get();
     }
 
-    @Secured(SecurityRule.IS_AUTHENTICATED)
+   @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/")
-    public void create(@Body CategorieCreateRequest body) {
-        categorieRepo.create(body.name);
+    public long create(@Body CategorieCreateRequest body) {
+        long newCategoryId = categorieRepo.create(body.name);
+        return newCategoryId;
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
-    @Put("/")
-    public void update() {
-        // TOOD
+    @Put("/{id}")
+    public void update(@Body CategorieUpdateRequest body) {
+        categorieRepo.update(body.id, body.name);
+    }
+
+    @Secured(SecurityRule.IS_AUTHENTICATED)
+    @Delete("/{id}")
+    public void delete(int id) {
+        categorieRepo.delete(id);
     }
 }

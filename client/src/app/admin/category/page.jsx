@@ -20,15 +20,18 @@ import Grid2 from "@mui/material/Unstable_Grid2";
 import BackPage from "../../../components/BackPage";
 
 export default function Category() {
-  const [categ, setCategs] = useState([
-    { id: 1, name: "GOD" },
-    { id: 2, name: "NonGOD" },
-  ]);
+  useEffect(() => {
+    axios.get("/api/categories/").then((response) => {
+      setCategs(response.data);
+    });
+  }, []);
+
+  const [categ, setCategs] = useState([]);
 
   const changeInput = (index, camp, value) => {
     let temp = [...categ];
     temp[index][camp] = value;
-    console.log(temp);
+    // console.log(temp);
     setCategs(temp);
   };
 
@@ -37,21 +40,33 @@ export default function Category() {
       id: categ[index].id,
       name: categ[index].name,
     };
-    axios.post(`/api/admin/categories/${id}`, post).then((response) => {
-      setCategs(response.data);
+    axios.put(`/api/categories/${id}`, post).then((response) => {
+      // setCategs(response.data);
     });
   };
 
-  const deleteRow = (e, i) => {
+  const deleteRow = (id, i) => {
     let temp = [...categ];
     temp.splice(i, 1);
     setCategs(temp);
+    axios.delete(`/api/categories/${id}`).then((response) => {
+      console.log("Delete Succesfull");
+    });
   };
 
   const addRow = (e) => {
-    let temp = [...categ];
+    /*let temp = [...categ];
     temp.push({ id: categ.length + 1, name: "" });
-    setCategs(temp);
+    setCategs(temp);*/
+    let post = { name: "" };
+    axios.post(`/api/categories/`, post).then((response) => {
+      let temp = [...categ];
+      temp.push({ id: response.data, name: "" });
+      setCategs(temp);
+    });
+    axios.get("/api/categories/").then((response) => {
+      setCategs(response.data);
+    });
   };
 
   return (
@@ -85,7 +100,7 @@ export default function Category() {
                     className="mt-6"
                     variant="outlined"
                     color="primary"
-                    onClick={(e) => deleteRow(e, i)}
+                    onClick={() => deleteRow(e.id, i)}
                   >
                     Delete
                   </Button>

@@ -17,14 +17,21 @@ import io.micronaut.transaction.annotation.TransactionalAdvice;
 public interface RatingRepo extends GenericRepository<Rating, Integer> {
 
     @Query("SELECT * FROM \"ratings\" WHERE \"productId\" = :id")
-    Optional<Rating> findByProductId(Integer id);
+    List<Rating> findByProductId(Integer id);
 
     @Query("SELECT * FROM \"ratings\"")
     List<Rating> findAll();
+
+    @Query("SELECT AVG(\"rating\") FROM \"ratings\" WHERE \"productId\" = :id")
+    int findAvgByPId(Integer id);
 
     @TransactionalAdvice("default")
     @Transactional
     @Query("INSERT INTO \"ratings\"(\"userId\", \"productId\", \"rating\") VALUES(:userId, :productId, :rating)")
     void create(int userId, int productId, int rating);
 
+    @TransactionalAdvice("default")
+    @Transactional
+    @Query("UPDATE \"ratings\" SET \"rating\" = :rating WHERE \"userId\" = :userId")
+    void update(int rating, int userId);
 }

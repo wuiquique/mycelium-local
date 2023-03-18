@@ -21,6 +21,9 @@ public interface TechnicalRepo extends GenericRepository<Technical, Integer> {
     @Query("SELECT * FROM \"technical\"")
     List<Technical> findAll();
 
+    @Query("SELECT * FROM \"technical\" WHERE \"productId\" = :productId")
+    List<Technical> findByProductId(Integer productId);
+
     @TransactionalAdvice("default")
     @Transactional
     @Query("INSERT INTO \"technical\"(\"type\", \"value\", \"productId\") VALUES(:url, :value, :productId)")

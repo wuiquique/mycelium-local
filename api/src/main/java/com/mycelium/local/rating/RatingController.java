@@ -36,8 +36,13 @@ public class RatingController {
     }
 
     @Get("/{id}")
-    public Rating get(int id) {
-        return ratingRepo.findByProductId(id).get();
+    public List<Rating> get(int id) {
+        return ratingRepo.findByProductId(id);
+    }
+
+    @Get("avg/{id}")
+    public int avg(int id) {
+        return ratingRepo.findAvgByPId(id);
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
@@ -48,8 +53,8 @@ public class RatingController {
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Put("/{id}")
-    public void update(int id) {
-        // ToDO
+    public void update(@Body RatingCreateRequest body) {
+        ratingRepo.update(body.rating, body.userId);
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)

@@ -22,7 +22,7 @@ class TechnicalCreateRequest {
 }
 
 @Secured(SecurityRule.IS_ANONYMOUS)
-@Controller("/product/{id}/technical")
+@Controller("/technical")
 public class TechnicalController {
 
     private TechnicalRepo technicalRepo;
@@ -34,6 +34,11 @@ public class TechnicalController {
     @Get("/")
     public List<Technical> list() {
         return technicalRepo.findAll();
+    }
+
+    @Get("/product/{productId}")
+    public List<Technical> list2(int productId) {
+        return technicalRepo.findByProductId(productId);
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)

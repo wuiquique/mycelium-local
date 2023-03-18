@@ -25,26 +25,22 @@ import CommentTree from "../../../components/comments/CommentTree";
 import Image from "next/image";
 import BackPage from "../../../components/BackPage";
 import { usePathname } from "next/navigation";
+import { useUser } from "../../../hooks/userContext";
 
 export default function Product({ params: { id } }) {
   const [prod, setProd] = useState({});
-  console.log(prod);
 
-  const [urls, setUrls] = useState([
-    "https://falabella.scene7.com/is/image/FalabellaPE/770197465_1?wid=800&hei=800&qlt=70",
-    "https://m.media-amazon.com/images/I/71g0Vo7zJUL.__AC_SY300_SX300_QL70_FMwebp_.jpg",
-    "https://media.istockphoto.com/id/1136230616/es/foto/cuchara-dorada-aislada-sobre-fondo-blanco.jpg?s=612x612&w=0&k=20&c=v9lFtWCJWSflVyvkzx-GOvPTENDIh2uyLLyhEVTqwZY=",
-  ]);
+  const [urls, setUrls] = useState([]);
 
-  const [categ, setCategs] = useState([
-    { id: 1, name: "GOD" },
-    { id: 2, name: "NonGOD" },
-  ]);
+  const [categ, setCategs] = useState([]);
 
-  const [tech, setTech] = useState([
-    { type: "Longitud", value: "20cm" },
-    { type: "Color", value: "Dorado obviamente xdddd" },
-  ]);
+  const [tech, setTech] = useState([]);
+
+  const [ratings, setRatings] = useState([]);
+
+  const [ratingAvg, setRAvg] = useState([]);
+
+  const [user, setUser] = useUser();
 
   const [comments, setComments] = useState([
     {
@@ -79,6 +75,23 @@ export default function Product({ params: { id } }) {
     axios.get("/api/categories/").then((response) => {
       setCategs(response.data);
     });
+    axios.get(`/api/pictures/product/${id}`).then((response) => {
+      setUrls(response.data);
+    });
+    axios.get(`/api/technical/product/${id}`).then((response) => {
+      setTech(response.data);
+    });
+    axios.get(`/api/product/rating/${id}`).then((response) => {
+      setRatings(response.data);
+      for (const rat of response.data) {
+        if (rat.userId === user.id) {
+          setRU(rat.rating);
+        }
+      }
+    });
+    axios.get(`/api/product/rating/avg/${id}`).then((response) => {
+      setRAvg(response.data);
+    });
   }, [id]);
 
   const categSelect = () => {
@@ -103,8 +116,50 @@ export default function Product({ params: { id } }) {
     });
   };
 
-  const ratingAvg = 5;
   const [rU, setRU] = useState(0);
+
+  const changeRating = (e, n) => {
+    setRU(n ?? rU);
+    for (const rat of ratings) {
+      if (rat.userId === user.id) {
+        let temp = {
+          userId: user.id,
+          rating: n,
+        };
+        axios.put(`/api/product/rating/${id}`, temp).then((response) => {});
+        axios.get(`/api/product/rating/avg/${id}`).then((response) => {
+          setRAvg(response.data);
+        });
+        return;
+      }
+    }
+    let post = {
+      userId: user.id,
+      rating: n,
+    };
+    axios.post(`/api/product/rating/${id}`, post).then((response) => {});
+    axios.get(`/api/product/rating/avg/${id}`).then((response) => {
+      setRAvg(response.data);
+    });
+  };
+
+  const submitComment = (e) => {
+    e.preventDefault();
+    let post = {
+      userId: "",
+      productId: "",
+      commentId: "",
+      message: e.target.user_commment.value,
+    };
+    axios
+      .post("ruta_comentario", post)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <div className="justify-center">
@@ -128,7 +183,7 @@ export default function Product({ params: { id } }) {
             <ImageList sx={{ height: 300 }} cols={1} rowHeight={164}>
               {urls.map((e, i) => (
                 <ImageListItem key={i}>
-                  <img src={urls[i]} alt="" />
+                  <img src={urls[i].url} alt="" />
                 </ImageListItem>
               ))}
             </ImageList>
@@ -183,21 +238,20 @@ export default function Product({ params: { id } }) {
         </Grid2>
         <Card className="p-4 mt-2" elevation={10}>
           <Typography variant="body1">Rate this product</Typography>
-          <Rating
-            name="userRating"
-            value={rU}
-            onChange={(e, n) => {
-              setRU(n ?? rU);
-            }}
-          />
+          <Rating name="userRating" value={rU} onChange={changeRating} />
           <br />
-          <TextField
-            className="mt-1"
-            label="Comment"
-            variant="standard"
-            multiline
-            name="user_commment"
-          />
+          <form onSubmit={submitComment}>
+            <TextField
+              className="mt-1"
+              label="Comment"
+              variant="standard"
+              multiline
+              name="user_commment"
+            />
+            <Button variant="outlined" type="submit">
+              Post Comment
+            </Button>
+          </form>
         </Card>
         <Card className="p-4 mt-1" elevation={10}>
           <CommentTree comments={comments} />
