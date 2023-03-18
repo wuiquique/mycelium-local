@@ -12,27 +12,33 @@ import {
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import BackPage from "../../../components/BackPage";
+import { useRouter } from "next/navigation";
+import { useUser } from "../../../hooks/userContext";
 
 export default function Login() {
-  //import redwhite from '../../../assets/icons/redwhite.png;'
+  const router = useRouter();
+  const [, setUser] = useUser();
 
-  //'../../../public/redwhite.png;'
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let post = {
-      email: e.target.email_login.value,
+      username: e.target.email_login.value,
       password: e.target.password_login.value,
     };
-    axios
-      .post("ruta", post)
-      .then((response) => {
-        console.log(response.data);
-        console.log("navigate -> ?");
-      })
-      .catch((response) => {
-        console.log("error");
-      });
+    try {
+      await axios.post("/api/login", post);
+      const sessionResponse = await axios.get("/api/session");
+
+      if (!sessionResponse.data.id) {
+        // TODO: tell user;
+        return;
+      }
+
+      setUser(sessionResponse.data);
+      router.push("/");
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -55,6 +61,7 @@ export default function Login() {
               label="Password"
               variant="standard"
               name="password_login"
+              type="password"
             />
             <br />
             <Button

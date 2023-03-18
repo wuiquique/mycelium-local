@@ -9,54 +9,67 @@ import theme from "../theme";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import NavDrawer from "../components/NavDrawer";
-import { MdLogin, MdProductionQuantityLimits } from "react-icons/md";
+import { MdLogin, MdProductionQuantityLimits, MdTag } from "react-icons/md";
 import { TbReportAnalytics, TbPlugConnected } from 'react-icons/tb'
 import { AiOutlineUserSwitch, AiOutlineAppstoreAdd } from 'react-icons/ai'
 import { BiCategory } from 'react-icons/bi'
 import Footer from "../components/Footer";
+import { UserProvider } from "../hooks/userContext";
 
 const navItems = [
+  {
+    name: "Categories",
+    href: "/categories",
+    icon: <MdTag />,
+    privileges: 1,
+  },
+  {
+    name: "Carrito",
+    href: "/user/cart",
+    icon: <MdShoppingCart />,
+    privileges: 1,
+  },
   {
     name: "Login",
     href: "/auth/login",
     icon: <MdLogin size='1.5rem'/>,
-    perm: 1
+    privileges: 1
   },
   {
     name: "Users", 
     href: "/admin/users",
     icon: <AiOutlineUserSwitch size='1.5rem'/>,
-    perm: 2
+    privileges: 2
   },
   {
     name: 'New Product', 
     href: '/admin/product/create', 
     icon: <AiOutlineAppstoreAdd size='1.5rem'/>,
-    perm: 2
+    privileges: 2
   },
   {
-    name: 'Categories',
+    name: 'Category Administration',
     href: '/admin/category',
     icon: <BiCategory size='1.5rem'/>, 
-    perm: 2
+    privileges: 2
   },
   {
     name: "Orders", 
     href: '/admin/orders', 
     icon: <MdProductionQuantityLimits size='1.5rem'/>,
-    perm: 2
+    privileges: 2
   },
   {
     name: 'Reportes', 
     href: '/admin/reports', 
     icon: <TbReportAnalytics size='1.5rem'/>,
-    perm: 2
+    privileges: 2
   },
   {
     name: 'Integrations', 
     href: '/admin/integrations', 
     icon: <TbPlugConnected size='1.5rem'/>,
-    perm: 2
+    privileges: 2
   },
 ];
 
@@ -73,17 +86,19 @@ export default function Layout({ children }) {
       <body>
         <ThemeProvider theme={theme}>
           <LocalizationProvider dateAdapter={AdapterMoment}>
-            <CssBaseline />
-            <NavBar onDrawer={() => setDrawer(true)} />
-            <NavDrawer
-              open={drawer}
-              onClose={() => setDrawer(false)}
-              items={navItems}
-            />
-            <Container className="mt-[6rem]" maxWidth="lg">
-              {children}
-            </Container>
-            <Footer />
+            <UserProvider>
+              <CssBaseline />
+              <NavBar onDrawer={() => setDrawer(true)} />
+              <NavDrawer
+                open={drawer}
+                onClose={() => setDrawer(false)}
+                items={navItems}
+              />
+              <Container className="mt-[6rem]" maxWidth="lg">
+                {children}
+              </Container>
+              <Footer />
+            </UserProvider>
           </LocalizationProvider>
         </ThemeProvider>
       </body>

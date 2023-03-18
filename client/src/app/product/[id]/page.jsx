@@ -24,18 +24,11 @@ import Rating from "@mui/material/Rating";
 import CommentTree from "../../../components/comments/CommentTree";
 import Image from "next/image";
 import BackPage from "../../../components/BackPage";
+import { usePathname } from "next/navigation";
 
-export default function Product() {
-  const [prod, setProd] = useState({
-    id: 1,
-    name: "Cuchara de Oro",
-    desc: "Una cuchara de ORO",
-    brand: "Cosas de Oro S.A.",
-    weight: 50,
-    price: 50000,
-    quantity: 2,
-    categId: 1,
-  });
+export default function Product({ params: { id } }) {
+  const [prod, setProd] = useState({});
+  console.log(prod);
 
   const [urls, setUrls] = useState([
     "https://falabella.scene7.com/is/image/FalabellaPE/770197465_1?wid=800&hei=800&qlt=70",
@@ -76,10 +69,22 @@ export default function Product() {
     { author: "Test", content: "Test", votes: 10, replies: [] },
   ]);
 
+  useEffect(() => {
+    axios.get(`/api/product/${id}`).then((response) => {
+      setProd(response.data);
+      //    setUrls(response.data.urls);
+      //  setTech(response.data.tech);
+      //setComments(response.data.comments);
+    });
+    axios.get("/api/categories/").then((response) => {
+      setCategs(response.data);
+    });
+  }, [id]);
+
   const categSelect = () => {
     let temp = "";
     for (let i = 0; i < categ.length; i++) {
-      if (prod.categId === categ[i].id) {
+      if (prod.categorieId === categ[i].id) {
         temp = categ[i].name;
       }
     }
@@ -89,29 +94,17 @@ export default function Product() {
   const addCart = (e) => {
     e.preventDefault();
     let out = {
-      prodId: prod.id,
+      international: false,
+      productId: prod.id,
       quantity: parseInt(e.target.cartQuantity.value),
-      userId: 1,
     };
-    axios.post("/api/user/cart", out).then((response) => {
+    axios.put("/api/user/cart", out).then((response) => {
       console.log(response.data);
     });
   };
 
   const ratingAvg = 5;
   const [rU, setRU] = useState(0);
-
-  useEffect(() => {
-    axios.get("/api/produc/[id]").then((response) => {
-      setProd(response.data.prod);
-      setUrls(response.data.urls);
-      setTech(response.data.tech);
-      setComments(response.data.comments);
-    });
-    axios.get("/api/category").then((response) => {
-      setCategs(response.data);
-    });
-  }, []);
 
   return (
     <div className="justify-center">

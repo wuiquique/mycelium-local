@@ -1,11 +1,17 @@
 package com.mycelium.local.repository.product;
 
+import java.util.List;
+
+import com.mycelium.local.repository.categorie.Categorie;
+import com.mycelium.local.repository.picture.Picture;
+
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
+import io.micronaut.data.annotation.Relation;
 import io.micronaut.data.model.naming.NamingStrategies;
 
-@MappedEntity(value = "products", namingStrategy = NamingStrategies.Raw.class)
+@MappedEntity(namingStrategy = NamingStrategies.Raw.class)
 public class Product {
     @Id
     @GeneratedValue
@@ -17,6 +23,12 @@ public class Product {
     public int weight;
     public int quantity;
     public int price;
+
+    @Relation(value = Relation.Kind.MANY_TO_ONE)
+    public Categorie categorie;
+
+    @Relation(value = Relation.Kind.ONE_TO_MANY)
+    public List<Picture> pictures;
 
     public Integer getId() {
         return id;
@@ -80,5 +92,13 @@ public class Product {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public Categorie getCategorie() {
+        return categorie;
+    }
+
+    public void setCategorie(Categorie categorie) {
+        this.categorie = categorie;
     }
 }

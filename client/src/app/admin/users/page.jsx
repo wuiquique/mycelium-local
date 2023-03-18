@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -16,30 +17,18 @@ import {
   Card,
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
-import BackPage from "../../../components/BackPage";
 
 export default function AdminUsers() {
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      first_name: "Diego",
-      last_name: "Vallejo",
-      email: "d@gmail.com",
-      rol: "Admin",
-      rol_id: 1,
-    },
-  ]);
-  const [roles, setRoles] = useState([
-    { rol: "Admin", rol_id: 1 },
-    { rol: "User", rol_id: 2 },
-    { rol: "Emp", rol_id: 3 },
-  ]);
+  const [users, setUsers] = useState([]);
+  const [roles, setRoles] = useState([]);
 
   useEffect(() => {
-    axios.get("/api/user").then((response) => {
+    axios.get("/api/user/").then((response) => {
+      console.log(response.data);
       setUsers(response.data);
     });
-    axios.get("/api/role").then((response) => {
+    axios.get("/api/role/").then((response) => {
+      console.log(response.data);
       setRoles(response.data);
     });
   }, []);
@@ -47,37 +36,40 @@ export default function AdminUsers() {
   const changeInput = (index, camp, value) => {
     let temp = [...users];
     temp[index][camp] = value;
-    console.log(temp);
+    //console.log(temp);
     setUsers(temp);
   };
 
   const changeSelect = (index, value) => {
     let temp = [...users];
+    console.log(index);
+    console.log(value);
     for (let i of roles) {
-      if (i.rol_id === value) {
-        temp[index]["rol"] = i.rol;
-        temp[index]["rol_id"] = value;
+      if (i.id === value) {
+        temp[index]["role"] = i.name;
+        temp[index]["roleId"] = value;
       }
     }
+    console.log(temp);
     setUsers(temp);
     console.log(temp);
   };
 
   const blurSave = (id, index) => {
     let post = {
-      first_name: users[index].first_name,
-      last_name: users[index].last_name,
+      name: users[index].name,
+      lastname: users[index].lastname,
       email: users[index].email,
-      rol: users[index].rol_id,
+      roleId: users[index].roleId,
     };
-    axios.post(`/api/user/${id}`, post).then((response) => {
+    axios.put(`/api/user/${id}`, post).then((response) => {
       setUsers(response.data);
+      console.log("noise");
     });
   };
 
   return (
     <div>
-      <BackPage />
       <Grid2 container spacing={2}>
         <Grid2 lg={12}>
           <Typography variant="h3" className="text-center">
@@ -91,61 +83,66 @@ export default function AdminUsers() {
                   <TableCell>First Name</TableCell>
                   <TableCell>Last Name</TableCell>
                   <TableCell>Email</TableCell>
-                  <TableCell>Rol</TableCell>
+                  <TableCell>Role</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.map((e, i) => (
-                  <TableRow key={i}>
-                    <TableCell>
-                      <TextField
-                        defaultValue={e.first_name}
-                        variant="standard"
-                        onChange={(ev) =>
-                          changeInput(i, "first_name", ev.target.value)
-                        }
-                        onBlur={() => blurSave(e.id, i)}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <TextField
-                        defaultValue={e.last_name}
-                        variant="standard"
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <TextField
-                        defaultValue={e.email}
-                        variant="standard"
-                        onChange={(ev) =>
-                          changeInput(i, "last_name", ev.target.value)
-                        }
-                        onBlur={() => blurSave(e.id, i)}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <FormControl
-                        variant="standard"
-                        sx={{ m: 1, minWidth: 120 }}
-                      >
-                        <Select
-                          value={e.rol_id}
-                          onChange={(ev) => changeSelect(i, ev.target.value)}
+                {users.length === 0 ? (
+                  <></>
+                ) : (
+                  users.map((e, i) => (
+                    <TableRow key={i}>
+                      <TableCell>
+                        <TextField
+                          defaultValue={e.name}
+                          variant="standard"
+                          onChange={(ev) =>
+                            changeInput(i, "name", ev.target.value)
+                          }
                           onBlur={() => blurSave(e.id, i)}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <TextField
+                          defaultValue={e.lastname}
+                          variant="standard"
+                          onChange={(ev) =>
+                            changeInput(i, "lastname", ev.target.value)
+                          }
+                          onBlur={() => blurSave(e.id, i)}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <TextField
+                          defaultValue={e.email}
+                          variant="standard"
+                          onChange={(ev) =>
+                            changeInput(i, "email", ev.target.value)
+                          }
+                          onBlur={() => blurSave(e.id, i)}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <FormControl
+                          variant="standard"
+                          sx={{ m: 1, minWidth: 120 }}
                         >
-                          <MenuItem value={e.rol_id}>{e.rol}</MenuItem>
-                          {roles
-                            .filter((r) => r.rol_id !== e.rol_id)
-                            .map((el, ind) => (
-                              <MenuItem value={el.rol_id} key={ind}>
-                                {el.rol}
+                          <Select
+                            value={e.roleId}
+                            onChange={(ev) => changeSelect(i, ev.target.value)}
+                            onBlur={() => blurSave(e.id, i)}
+                          >
+                            {roles.map((el, ind) => (
+                              <MenuItem value={el.id} key={ind}>
+                                {el.name}
                               </MenuItem>
                             ))}
-                        </Select>
-                      </FormControl>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                          </Select>
+                        </FormControl>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </Card>

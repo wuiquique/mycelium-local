@@ -21,7 +21,12 @@ import {
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import { AiOutlineSearch } from "react-icons/ai";
+<<<<<<< HEAD:client/src/app/search/page.jsx
 import BackPage from "../../components/BackPage";
+=======
+import BackPage from "../../../components/BackPage";
+import Link from "next/link";
+>>>>>>> 33021a65fd253f142f245a901f07923cf75ab8b7:client/src/app/user/search/page.jsx
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -39,14 +44,7 @@ function valuetext(value) {
 }
 
 export default function Search() {
-  const [categories, setCategories] = useState([
-    "Diamante",
-    "Platino",
-    "Oro",
-    "Plata",
-    "Bronce",
-    "Hierro",
-  ]);
+  const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([
     {
       type: "local",
@@ -63,17 +61,24 @@ export default function Search() {
       ], //-> solo 1
     },
   ]);
-  /*
-    useEffect(() => {
-        axios.get('/api/categories/')
-        .then(response => {
-            setCategories(response.data)
-        })
-        .catch(error => {
-            console.log(error)
-        })
-    }, [])
-    */
+
+  useEffect(() => {
+    axios
+      .get("/api/categories/")
+      .then((response) => {
+        setCategories(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    axios.get("/api/product").then((response) => {
+      console.log(response.data);
+      setProducts(response.data);
+    });
+  }, []);
+
   const [value, setValue] = useState([20, 37]);
 
   const handleSliderChange = (event, newValue) => {
@@ -127,9 +132,9 @@ export default function Search() {
               )}
               MenuProps={MenuProps}
             >
-              {categories.map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
+              {categories.map((e, i) => (
+                <MenuItem key={i} value={e.id}>
+                  {e.name}
                 </MenuItem>
               ))}
             </Select>
@@ -150,12 +155,14 @@ export default function Search() {
         </Grid2>
         {products.map((e, i) => (
           <Grid2 lg={6} key={i}>
-            <Button>
+            <Button component={Link} href={`/product/${e.id}`}>
               <Card elevation={10} sx={{ display: "flex" }}>
                 <CardMedia
                   sx={{ width: "50%" }}
                   component="img"
-                  image={e.pictures[0]}
+                  image={
+                    "https://falabella.scene7.com/is/image/FalabellaPE/770197465_1?wid=800&hei=800&qlt=70"
+                  }
                   alt="Imagen de Producto"
                 />
                 <CardContent className="text-left">

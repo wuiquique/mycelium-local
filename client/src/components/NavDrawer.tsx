@@ -1,3 +1,4 @@
+import { useUser } from "@/hooks/userContext";
 import theme from "@/theme";
 import {
   Box,
@@ -23,8 +24,11 @@ export default function NavDrawer({
     name: string;
     href: string;
     icon: JSX.Element;
+    privileges?: number;
   }[];
 }) {
+  const [user] = useUser();
+
   return (
     <Drawer
       anchor="left"
@@ -35,20 +39,33 @@ export default function NavDrawer({
       }}
     >
       <List className="max-w-xs w-[50vw]">
-        {items.map((item, i) => (
-          <ListItem disablePadding key={i}>
-            <ListItemButton component={Link} href={item.href} onClick={onClose}>
-              <ListItemIcon>
-                <IconContext.Provider
-                  value={{ color: theme.palette.primary.contrastText }}
-                >
-                  {item.icon}
-                </IconContext.Provider>
-              </ListItemIcon>
-              <ListItemText primary={item.name} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        {items
+          .filter(
+            (m) =>
+              m.privileges === undefined ||
+              (m.privileges === 0 && user.id === null) ||
+              (user.id !== null &&
+                m.privileges > 0 &&
+                m.privileges <= user.roleId)
+          )
+          .map((item, i) => (
+            <ListItem disablePadding key={i}>
+              <ListItemButton
+                component={Link}
+                href={item.href}
+                onClick={onClose}
+              >
+                <ListItemIcon>
+                  <IconContext.Provider
+                    value={{ color: theme.palette.primary.contrastText }}
+                  >
+                    {item.icon}
+                  </IconContext.Provider>
+                </ListItemIcon>
+                <ListItemText primary={item.name} />
+              </ListItemButton>
+            </ListItem>
+          ))}
       </List>
     </Drawer>
   );
