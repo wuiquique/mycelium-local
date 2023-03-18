@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import { AiOutlineSearch } from "react-icons/ai";
-import BackPage from "../../../components/BackPage";
+import BackPage from "../../components/BackPage";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;

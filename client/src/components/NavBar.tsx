@@ -30,17 +30,35 @@ export default function NavBar({ onDrawer }: { onDrawer: () => void }) {
           >
             <MdMenu />
           </IconButton>
-          <Typography variant="h6" component="div" className="mt-2">
+          <Button 
+            variant='contained' 
+            disableElevation
+            component={Link}
+            href='/'
+          >
+            <img
+              src="/redwhite.png"
+              width='20px'
+            />
+            &nbsp;
             mycellium :)
-          </Typography>
+          </Button>
         </div>
         <div>
           <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <AiOutlineSearch size='1.8rem'/>
               <TextField
-                  sx={{ minWidth:"900px" }}
-                  variant='standard'
+                sx={{ minWidth:"900px" }}
+                variant='standard'
               />
+              <Button
+                variant='contained'
+                disableElevation
+                component={Link}
+                href="/search"
+              >
+                Search
+              </Button>
           </Box>
         </div>
         <div>
@@ -48,7 +66,7 @@ export default function NavBar({ onDrawer }: { onDrawer: () => void }) {
             Login
           </Button>
           <Button component={Link} href="/auth/register" color="inherit">
-            register
+            Register
           </Button>
         </div>
       </Toolbar>

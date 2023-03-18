@@ -9,14 +9,54 @@ import theme from "../theme";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import NavDrawer from "../components/NavDrawer";
-import { MdLogin } from "react-icons/md";
+import { MdLogin, MdProductionQuantityLimits } from "react-icons/md";
+import { TbReportAnalytics, TbPlugConnected } from 'react-icons/tb'
+import { AiOutlineUserSwitch, AiOutlineAppstoreAdd } from 'react-icons/ai'
+import { BiCategory } from 'react-icons/bi'
 import Footer from "../components/Footer";
 
 const navItems = [
   {
     name: "Login",
     href: "/auth/login",
-    icon: <MdLogin />,
+    icon: <MdLogin size='1.5rem'/>,
+    perm: 1
+  },
+  {
+    name: "Users", 
+    href: "/admin/users",
+    icon: <AiOutlineUserSwitch size='1.5rem'/>,
+    perm: 2
+  },
+  {
+    name: 'New Product', 
+    href: '/admin/product/create', 
+    icon: <AiOutlineAppstoreAdd size='1.5rem'/>,
+    perm: 2
+  },
+  {
+    name: 'Categories',
+    href: '/admin/category',
+    icon: <BiCategory size='1.5rem'/>, 
+    perm: 2
+  },
+  {
+    name: "Orders", 
+    href: '/admin/orders', 
+    icon: <MdProductionQuantityLimits size='1.5rem'/>,
+    perm: 2
+  },
+  {
+    name: 'Reportes', 
+    href: '/admin/reports', 
+    icon: <TbReportAnalytics size='1.5rem'/>,
+    perm: 2
+  },
+  {
+    name: 'Integrations', 
+    href: '/admin/integrations', 
+    icon: <TbPlugConnected size='1.5rem'/>,
+    perm: 2
   },
 ];
 
