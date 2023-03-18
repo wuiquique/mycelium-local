@@ -1,4 +1,10 @@
-import React, { createContext, useCallback, useContext, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 
 function useLocalStorage<T>(
   key: string,
@@ -61,7 +67,12 @@ export function createLocalStorageContext<T>(name: string, initialValue: T) {
       );
 
       return (
-        <InternalContext.Provider value={[storedValue, setStoredValue]}>
+        <InternalContext.Provider
+          value={useMemo(
+            () => [storedValue, setStoredValue],
+            [storedValue, setStoredValue]
+          )}
+        >
           {children}
         </InternalContext.Provider>
       );
