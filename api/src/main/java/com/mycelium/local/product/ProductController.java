@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.google.common.collect.Lists;
 import com.mycelium.local.repository.product.Product;
 import com.mycelium.local.repository.product.ProductRepo;
 import com.mycelium.local.repository.picture.Picture;
@@ -71,7 +72,7 @@ public class ProductController {
 
     @Get("/")
     public List<Product> list() {
-        return productRepo.findAll();
+        return Lists.newArrayList(productRepo.findAll());
     }
 
     @Get("/{id}")
@@ -87,8 +88,8 @@ public class ProductController {
             for (Picture picture : pictureRepo.findByProductId(product.id)) {
                 urls.add(picture.url);
             }
-            res.add(new ProductUnifiedResponse(product.id, product.name, product.desc, product.categorieId,
-            product.brand, product.weight, product.quantity, product.price, urls));
+            res.add(new ProductUnifiedResponse(product.id, product.name, product.desc, product.categorie.id,
+                    product.brand, product.weight, product.quantity, product.price, urls));
         }
         return res;
     }
@@ -96,7 +97,16 @@ public class ProductController {
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/")
     public void create(@Body ProductCreateRequest body) {
-        productRepo.create(body.name, body.desc, body.categorieId, body.brand, body.weight, body.quantity, body.price);
+        var newProduct = new Product();
+        newProduct.name = body.name;
+        newProduct.desc = body.desc;
+        newProduct.categorie.id = body.categorieId;
+        newProduct.brand = body.brand;
+        newProduct.weight = body.weight;
+        newProduct.quantity = body.quantity;
+        newProduct.price = body.price;
+
+        productRepo.save(newProduct);
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)

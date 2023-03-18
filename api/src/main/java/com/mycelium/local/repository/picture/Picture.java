@@ -14,7 +14,6 @@ public class Picture {
     @GeneratedValue
     public Integer id;
     public String url;
-    public Integer productId;
 
     @Relation(value = Relation.Kind.MANY_TO_ONE)
     public Product product;
@@ -33,14 +32,6 @@ public class Picture {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public Integer getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Integer productId) {
-        this.productId = productId;
     }
 
     public Product getProduct() {

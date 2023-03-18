@@ -2,9 +2,12 @@ package com.mycelium.local.repository.order;
 
 import java.util.Date;
 
+import com.mycelium.local.repository.user.User;
+
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
+import io.micronaut.data.annotation.Relation;
 import io.micronaut.data.model.naming.NamingStrategies;
 
 @MappedEntity(namingStrategy = NamingStrategies.Raw.class)
@@ -12,7 +15,6 @@ public class Order {
     @Id
     @GeneratedValue
     public Integer id;
-    public int userId;
     public String direction;
     public String state;
     public String city;
@@ -21,20 +23,15 @@ public class Order {
     public Date since;
     public Date till;
 
+    @Relation(value = Relation.Kind.MANY_TO_ONE)
+    public User user;
+
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     public String getDirection() {
@@ -91,6 +88,14 @@ public class Order {
 
     public void setTill(Date till) {
         this.till = till;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
 }

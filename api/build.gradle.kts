@@ -30,7 +30,7 @@ dependencies {
     runtimeOnly("com.oracle.database.jdbc:ojdbc8")
     implementation("io.micronaut:micronaut-validation")
     implementation("io.micronaut.sql:micronaut-jdbc-ucp")
-
+    implementation("com.google.guava:guava:31.1-jre")
 }
 
 

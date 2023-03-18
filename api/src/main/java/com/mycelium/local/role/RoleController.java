@@ -2,6 +2,7 @@ package com.mycelium.local.role;
 
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.mycelium.local.repository.role.Role;
 import com.mycelium.local.repository.role.RoleRepo;
 
@@ -22,6 +23,6 @@ public class RoleController {
 
     @Get("/")
     public List<Role> list() {
-        return roleRepo.findAll();
+        return Lists.newArrayList(roleRepo.findAll());
     }
 }

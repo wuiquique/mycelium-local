@@ -29,7 +29,7 @@ datasources:
     password: "12345"
     dbType: oracle
     schema: PDBADMIN
-    schemaGenerate: NONE
+    schemaGenerate: CREATE
     dialect: ORACLE
 netty:
   default:

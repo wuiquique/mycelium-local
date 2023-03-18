@@ -2,6 +2,7 @@ package com.mycelium.local.categorie;
 
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.mycelium.local.repository.categorie.Categorie;
 import com.mycelium.local.repository.categorie.CategorieRepo;
 
@@ -19,7 +20,6 @@ class CategorieCreateRequest {
 }
 
 class CategorieUpdateRequest {
-    public int id;
     public String name;
 }
 
@@ -35,7 +35,7 @@ public class CategorieController {
 
     @Get("/")
     public List<Categorie> list() {
-        return categorieRepo.findAll();
+        return Lists.newArrayList(categorieRepo.findAll());
     }
 
     @Get("/{id}")
@@ -43,22 +43,25 @@ public class CategorieController {
         return categorieRepo.findById(id).get();
     }
 
-   @Secured(SecurityRule.IS_AUTHENTICATED)
+    @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/")
-    public long create(@Body CategorieCreateRequest body) {
-        long newCategoryId = categorieRepo.create(body.name);
-        return newCategoryId;
+    public void create(@Body CategorieCreateRequest body) {
+        var newCategorie = new Categorie();
+        newCategorie.name = body.name;
+        categorieRepo.save(newCategorie);
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Put("/{id}")
-    public void update(@Body CategorieUpdateRequest body) {
-        categorieRepo.update(body.id, body.name);
+    public void update(int id, @Body CategorieUpdateRequest body) {
+        var categorie = categorieRepo.findById(id).get();
+        categorie.name = body.name;
+        categorieRepo.save(categorie);
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Delete("/{id}")
     public void delete(int id) {
-        categorieRepo.delete(id);
+        categorieRepo.deleteById(id);
     }
 }

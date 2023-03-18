@@ -2,6 +2,7 @@ package com.mycelium.local.technical;
 
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.mycelium.local.repository.technical.Technical;
 import com.mycelium.local.repository.technical.TechnicalRepo;
 
@@ -13,7 +14,6 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
-import io.micronaut.security.annotation.Secured;
 
 class TechnicalCreateRequest {
     public String type;
@@ -33,7 +33,7 @@ public class TechnicalController {
 
     @Get("/")
     public List<Technical> list() {
-        return technicalRepo.findAll();
+        return Lists.newArrayList(technicalRepo.findAll());
     }
 
     @Get("/product/{productId}")
@@ -44,7 +44,11 @@ public class TechnicalController {
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/")
     public void create(@Body TechnicalCreateRequest body) {
-        technicalRepo.create(body.type, body.value, body.productId);
+        var newTechnical = new Technical();
+        newTechnical.type = body.type;
+        newTechnical.value = body.value;
+        newTechnical.product.id = body.productId;
+        technicalRepo.save(newTechnical);
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)

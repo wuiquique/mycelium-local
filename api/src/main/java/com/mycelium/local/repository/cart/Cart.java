@@ -1,6 +1,7 @@
 package com.mycelium.local.repository.cart;
 
 import com.mycelium.local.repository.product.Product;
+import com.mycelium.local.repository.user.User;
 
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
@@ -13,9 +14,10 @@ public class Cart {
     @Id
     @GeneratedValue
     public Integer id;
-    public int productId;
     public int quantity;
-    public int userId;
+
+    @Relation(value = Relation.Kind.MANY_TO_ONE)
+    public User user;
 
     @Relation(value = Relation.Kind.MANY_TO_ONE)
     public Product product;
@@ -28,14 +30,6 @@ public class Cart {
         this.id = id;
     }
 
-    public int getProductId() {
-        return productId;
-    }
-
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
-
     public int getQuantity() {
         return quantity;
     }
@@ -44,20 +38,20 @@ public class Cart {
         this.quantity = quantity;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
     public Product getProduct() {
         return product;
     }
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
 }

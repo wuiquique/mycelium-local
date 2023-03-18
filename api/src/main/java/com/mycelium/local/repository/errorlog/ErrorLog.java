@@ -14,7 +14,6 @@ public class ErrorLog {
     @GeneratedValue
     public Integer id;
     public String message;
-    public int jsonLogId;
 
     @Relation(value = Relation.Kind.MANY_TO_ONE)
     public JsonLog jsonLog;
@@ -33,14 +32,6 @@ public class ErrorLog {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public int getJsonLogId() {
-        return jsonLogId;
-    }
-
-    public void setJsonLogId(int jsonLogId) {
-        this.jsonLogId = jsonLogId;
     }
 
     public JsonLog getJsonLog() {

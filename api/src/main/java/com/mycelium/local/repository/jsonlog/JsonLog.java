@@ -2,9 +2,12 @@ package com.mycelium.local.repository.jsonlog;
 
 import java.util.Date;
 
+import com.mycelium.local.repository.user.User;
+
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
+import io.micronaut.data.annotation.Relation;
 import io.micronaut.data.model.naming.NamingStrategies;
 
 @MappedEntity(namingStrategy = NamingStrategies.Raw.class)
@@ -12,12 +15,14 @@ public class JsonLog {
     @Id
     @GeneratedValue
     public Integer id;
-    public int userId;
     public Date when;
     public boolean operation;
     public String archiveName;
     public int success;
     public int error;
+
+    @Relation(value = Relation.Kind.MANY_TO_ONE)
+    public User user;
 
     public Integer getId() {
         return id;
@@ -25,14 +30,6 @@ public class JsonLog {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     public Date getWhen() {
@@ -73,5 +70,13 @@ public class JsonLog {
 
     public void setError(int error) {
         this.error = error;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

@@ -18,7 +18,6 @@ public class Product {
     public Integer id;
     public String name;
     public String desc;
-    public int categorieId;
     public String brand;
     public int weight;
     public int quantity;
@@ -52,14 +51,6 @@ public class Product {
 
     public void setDesc(String desc) {
         this.desc = desc;
-    }
-
-    public int getCategorieId() {
-        return categorieId;
-    }
-
-    public void setCategorieId(int categorieId) {
-        this.categorieId = categorieId;
     }
 
     public String getBrand() {
@@ -100,5 +91,13 @@ public class Product {
 
     public void setCategorie(Categorie categorie) {
         this.categorie = categorie;
+    }
+
+    public List<Picture> getPictures() {
+        return pictures;
+    }
+
+    public void setPictures(List<Picture> pictures) {
+        this.pictures = pictures;
     }
 }

@@ -1,32 +1,24 @@
 package com.mycelium.local.repository.ordermessage;
 
+import com.mycelium.local.repository.order.Order;
+import com.mycelium.local.repository.status.Status;
+
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
+import io.micronaut.data.annotation.Relation;
 import io.micronaut.data.model.naming.NamingStrategies;
 
 @MappedEntity(namingStrategy = NamingStrategies.Raw.class)
 public class OrderMessage {
-    @Id
-    public Integer orderId;
-    @Id
-    public Integer statusId;
     public String name;
 
-    public Integer getOrderId() {
-        return orderId;
-    }
+    @Id
+    @Relation(value = Relation.Kind.MANY_TO_ONE)
+    public Order order;
 
-    public void setOrderId(Integer orderId) {
-        this.orderId = orderId;
-    }
-
-    public Integer getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(Integer statusId) {
-        this.statusId = statusId;
-    }
+    @Id
+    @Relation(value = Relation.Kind.MANY_TO_ONE)
+    public Status status;
 
     public String getName() {
         return name;
@@ -34,6 +26,22 @@ public class OrderMessage {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
 }

@@ -3,6 +3,7 @@ package com.mycelium.local.comment;
 import java.util.Date;
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.mycelium.local.repository.comment.Comment;
 import com.mycelium.local.repository.comment.CommentRepo;
 
@@ -33,7 +34,7 @@ public class CommentController {
 
     @Get("/")
     public List<Comment> list() {
-        return commentRepo.findAll();
+        return Lists.newArrayList(commentRepo.findAll());
     }
 
     @Get("/{id}")
@@ -44,7 +45,14 @@ public class CommentController {
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/")
     public void create(@Body CommentCreateRequest body) {
-        commentRepo.create(body.userId, body.productId, body.commentId, body.message, new Date(), new Date());
+        var newComment = new Comment();
+        newComment.user.id = body.userId;
+        newComment.product.id = body.productId;
+        newComment.comment.id = body.commentId;
+        newComment.message = body.message;
+        newComment.created = new Date();
+        newComment.updated = new Date();
+        commentRepo.save(newComment);
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)

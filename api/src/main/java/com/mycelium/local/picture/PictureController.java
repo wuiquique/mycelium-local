@@ -2,6 +2,7 @@ package com.mycelium.local.picture;
 
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.mycelium.local.repository.picture.Picture;
 import com.mycelium.local.repository.picture.PictureRepo;
 
@@ -31,7 +32,7 @@ public class PictureController {
 
     @Get("/")
     public List<Picture> list() {
-        return pictureRepo.findAll();
+        return Lists.newArrayList(pictureRepo.findAll());
     }
 
     @Get("/product/{productId}")
@@ -42,7 +43,11 @@ public class PictureController {
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/")
     public void create(@Body PictureCreateRequest body) {
-        pictureRepo.create(body.url, body.productId);
+        var newPicture = new Picture();
+        newPicture.url = body.url;
+        newPicture.product.id = body.productId;
+
+        pictureRepo.save(newPicture);
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)

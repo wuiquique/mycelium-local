@@ -15,7 +15,6 @@ public class Technical {
     public Integer id;
     public String type;
     public String value;
-    public Integer productId;
 
     @Relation(value = Relation.Kind.MANY_TO_ONE)
     public Product product;
@@ -42,14 +41,6 @@ public class Technical {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    public Integer getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Integer productId) {
-        this.productId = productId;
     }
 
     public Product getProduct() {

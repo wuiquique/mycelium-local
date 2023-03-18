@@ -2,6 +2,7 @@ package com.mycelium.local.ordermessage;
 
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.mycelium.local.repository.ordermessage.OrderMessage;
 import com.mycelium.local.repository.ordermessage.OrderMessageRepo;
 
@@ -32,13 +33,17 @@ public class OrderMessageController {
 
     @Get("/")
     public List<OrderMessage> list() {
-        return orderMessageRepo.findAll();
+        return Lists.newArrayList(orderMessageRepo.findAll());
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/")
     public void create(@Body OrderMessageCreateRequest body) {
-        orderMessageRepo.create(body.orderId, body.statusId, body.name);
+        var newOrderMessage = new OrderMessage();
+        newOrderMessage.order.id = body.orderId;
+        newOrderMessage.status.id = body.statusId;
+        newOrderMessage.name = body.name;
+        orderMessageRepo.save(newOrderMessage);
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)

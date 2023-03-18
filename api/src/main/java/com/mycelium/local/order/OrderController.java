@@ -3,6 +3,7 @@ package com.mycelium.local.order;
 import java.util.List;
 import java.util.Date;
 
+import com.google.common.collect.Lists;
 import com.mycelium.local.repository.order.Order;
 import com.mycelium.local.repository.order.OrderRepo;
 
@@ -14,7 +15,6 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
-import io.micronaut.security.annotation.Secured;
 
 class OrderCreateRequest {
     public int userId;
@@ -39,7 +39,7 @@ public class OrderController {
 
     @Get("/")
     public List<Order> list() {
-        return orderRepo.findAll();
+        return Lists.newArrayList(orderRepo.findAll());
     }
 
     @Get("/{id}")
@@ -50,8 +50,16 @@ public class OrderController {
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/")
     public void create(@Body OrderCreateRequest body) {
-        orderRepo.create(body.userId, body.direction, body.state, body.city, body.zip, body.phone, body.since,
-                body.till);
+        var newOrder = new Order();
+        newOrder.user.id = body.userId;
+        newOrder.direction = body.direction;
+        newOrder.state = body.state;
+        newOrder.city = body.city;
+        newOrder.zip = body.zip;
+        newOrder.phone = body.phone;
+        newOrder.since = body.since;
+        newOrder.till = body.till;
+        orderRepo.save(newOrder);
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)

@@ -73,15 +73,15 @@ public class CartController {
         var userId = (int) (long) userMap.get("id");
 
         List<CartUnifiedResponse> res = new ArrayList<CartUnifiedResponse>();
-        for (Cart cart : cartRepo.findByUser(userId)) {
+        for (Cart cart : cartRepo.findByUserId(userId)) {
             // var pics = new ArrayList<String>();
             // for (var p : cart.product.pictures) {
             // pics.add(p.url);
             // }
-            res.add(new CartUnifiedResponse(cart.id, false, cart.productId, cart.product.name, cart.product.desc,
+            res.add(new CartUnifiedResponse(cart.id, false, cart.product.id, cart.product.name, cart.product.desc,
                     cart.quantity, cart.product.categorie.name, cart.product.weight, cart.product.price, List.of()));
         }
-        for (CartInteg cart : cartIntegRepo.findByUser(userId)) {
+        for (CartInteg cart : cartIntegRepo.findByUserId(userId)) {
             res.add(new CartUnifiedResponse(cart.id, true, cart.productId, "Ejemplo Internacional",
                     "Ejemplo Internacional", cart.quantity, "Ejemplo Internacional", 10, 10, List.of()));
         }
@@ -94,20 +94,32 @@ public class CartController {
         var userId = (int) (long) userMap.get("id");
 
         if (body.international) {
-            var existing = cartIntegRepo.findByUserAndProduct(userId, body.productId);
+            var existing = cartIntegRepo.findByUserIdAndProductId(userId, body.productId);
+
             for (var cart : existing) {
-                cartIntegRepo.delete(cart.id);
+                cartIntegRepo.delete(cart);
             }
+
             if (body.quantity > 0) {
-                cartIntegRepo.create(body.productId, body.quantity, userId);
+                var newCart = new CartInteg();
+                newCart.productId = body.productId;
+                newCart.quantity = body.quantity;
+                newCart.user.id = userId;
+                cartIntegRepo.save(newCart);
             }
         } else {
-            var existing = cartRepo.findByUserAndProduct(userId, body.productId);
+            var existing = cartRepo.findByUserIdAndProductId(userId, body.productId);
+
             for (var cart : existing) {
-                cartRepo.delete(cart.id);
+                cartRepo.delete(cart);
             }
+
             if (body.quantity > 0) {
-                cartRepo.create(body.productId, body.quantity, userId);
+                var newCart = new Cart();
+                newCart.product.id = body.productId;
+                newCart.quantity = body.quantity;
+                newCart.user.id = userId;
+                cartRepo.save(newCart);
             }
         }
 

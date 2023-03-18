@@ -2,6 +2,7 @@ package com.mycelium.local.rating;
 
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.mycelium.local.repository.rating.Rating;
 import com.mycelium.local.repository.rating.RatingRepo;
 
@@ -32,7 +33,7 @@ public class RatingController {
 
     @Get("/")
     public List<Rating> list() {
-        return ratingRepo.findAll();
+        return Lists.newArrayList(ratingRepo.findAll());
     }
 
     @Get("/{id}")
@@ -48,13 +49,21 @@ public class RatingController {
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/{productId}")
     public void create(int productId, @Body RatingCreateRequest body) {
-        ratingRepo.create(body.userId, productId, body.rating);
+        var newRating = new Rating();
+        newRating.user.id = body.userId;
+        newRating.product.id = body.productId;
+        newRating.rating = body.rating;
+
+        ratingRepo.save(newRating);
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Put("/{id}")
-    public void update(@Body RatingCreateRequest body) {
-        ratingRepo.update(body.rating, body.userId);
+    public void update(int id, @Body RatingCreateRequest body) {
+        var rating = ratingRepo.findById(id).get();
+        rating.user.id = body.userId;
+        rating.rating = body.rating;
+        ratingRepo.save(rating);
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)

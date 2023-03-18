@@ -54,7 +54,7 @@ public class UserController {
         List<UserDetails> res = new ArrayList<UserDetails>();
         for (User user : userRepo.findAll()) {
             res.add(new UserDetails(user.id, user.name, user.lastname, user.email,
-                    user.roleId,
+                    user.role.id,
                     user.getRole().getName()));
         }
         return res;
@@ -62,7 +62,14 @@ public class UserController {
 
     @Put("/{id}")
     public List<UserDetails> changeUser(int id, @Body EditUserDetails editUser) {
-        userRepo.update(id, editUser.name, editUser.lastname, editUser.email, editUser.roleId);
+        var user = userRepo.findById(id).get();
+
+        user.name = editUser.name;
+        user.lastname = editUser.lastname;
+        user.email = editUser.email;
+        user.role.id = editUser.roleId;
+
+        userRepo.update(user);
         return list();
     }
 

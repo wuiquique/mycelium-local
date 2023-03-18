@@ -3,6 +3,7 @@ package com.mycelium.local.session;
 import java.net.URI;
 import java.util.Map;
 
+import com.mycelium.local.repository.user.User;
 import com.mycelium.local.repository.user.UserRepo;
 
 import io.micronaut.http.HttpResponse;
@@ -62,7 +63,14 @@ public class SessionController {
             return HttpResponse.ok(Map.of("code", "fail"));
         }
 
-        this.userRepo.create(body.name, body.lastname, body.username, body.password, 1);
+        var newUser = new User();
+        newUser.name = body.name;
+        newUser.lastname = body.lastname;
+        newUser.email = body.username;
+        newUser.password = body.password;
+        newUser.role.id = 1;
+
+        this.userRepo.save(newUser);
 
         return HttpResponse.temporaryRedirect(URI.create("login"));
     }
@@ -78,7 +86,7 @@ public class SessionController {
             return SessionResponse.empty();
         } else {
             var user = userOpt.get();
-            return new SessionResponse(user.id, user.email, user.name, user.lastname, user.roleId, user.role.name);
+            return new SessionResponse(user.id, user.email, user.name, user.lastname, user.role.id, user.role.name);
         }
     }
 }

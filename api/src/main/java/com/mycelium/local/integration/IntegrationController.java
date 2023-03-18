@@ -2,6 +2,7 @@ package com.mycelium.local.integration;
 
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.mycelium.local.repository.integration.Integration;
 import com.mycelium.local.repository.integration.IntegrationRepo;
 
@@ -33,7 +34,7 @@ public class IntegrationController {
 
     @Get("/")
     public List<Integration> list() {
-        return integrationRepo.findAll();
+        return Lists.newArrayList(integrationRepo.findAll());
     }
 
     @Get("/{id}")
@@ -44,7 +45,11 @@ public class IntegrationController {
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/")
     public void create(@Body IntegrationCreateRequest body) {
-        integrationRepo.create(body.name, body.request, body.user, body.password);
+        var newIntegration = new Integration();
+        newIntegration.name = body.name;
+        newIntegration.request = body.request;
+        newIntegration.user = body.user;
+        newIntegration.password = body.password; // TODO: hash
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)

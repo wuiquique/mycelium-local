@@ -2,7 +2,9 @@ package com.mycelium.local.repository.integorderproduct;
 
 import java.util.Date;
 
-import com.mycelium.local.repository.product.Product;
+import com.mycelium.local.repository.integration.Integration;
+import com.mycelium.local.repository.order.Order;
+import com.mycelium.local.repository.status.Status;
 
 import io.micronaut.data.annotation.DateCreated;
 import io.micronaut.data.annotation.DateUpdated;
@@ -17,23 +19,28 @@ public class IntegOrderProduct {
     @Id
     @GeneratedValue
     public Integer id;
-    public int orderId;
     public int productId;
     public int quantity;
-    public int statusIntegId;
-    public int statusLocalId;
     public String trackingInteg;
     public String trackingLocal;
     public int timeInteg;
     public int timeLocal;
-    public int integOrderId;
     @DateCreated
     public Date created;
     @DateUpdated
     public Date updated;
 
     @Relation(value = Relation.Kind.MANY_TO_ONE)
-    public Product product;
+    public Order order;
+
+    @Relation(value = Relation.Kind.MANY_TO_ONE)
+    public Status statusInteg;
+
+    @Relation(value = Relation.Kind.MANY_TO_ONE)
+    public Status statusLocal;
+
+    @Relation(value = Relation.Kind.MANY_TO_ONE)
+    public Integration integration;
 
     public Integer getId() {
         return id;
@@ -41,14 +48,6 @@ public class IntegOrderProduct {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public int getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
     }
 
     public int getProductId() {
@@ -65,22 +64,6 @@ public class IntegOrderProduct {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public int getStatusIntegId() {
-        return statusIntegId;
-    }
-
-    public void setStatusIntegId(int statusIntegId) {
-        this.statusIntegId = statusIntegId;
-    }
-
-    public int getStatusLocalId() {
-        return statusLocalId;
-    }
-
-    public void setStatusLocalId(int statusLocalId) {
-        this.statusLocalId = statusLocalId;
     }
 
     public String getTrackingInteg() {
@@ -115,14 +98,6 @@ public class IntegOrderProduct {
         this.timeLocal = timeLocal;
     }
 
-    public int getIntegOrderId() {
-        return integOrderId;
-    }
-
-    public void setIntegOrderId(int integOrderId) {
-        this.integOrderId = integOrderId;
-    }
-
     public Date getCreated() {
         return created;
     }
@@ -139,12 +114,36 @@ public class IntegOrderProduct {
         this.updated = updated;
     }
 
-    public Product getProduct() {
-        return product;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public Status getStatusInteg() {
+        return statusInteg;
+    }
+
+    public void setStatusInteg(Status statusInteg) {
+        this.statusInteg = statusInteg;
+    }
+
+    public Status getStatusLocal() {
+        return statusLocal;
+    }
+
+    public void setStatusLocal(Status statusLocal) {
+        this.statusLocal = statusLocal;
+    }
+
+    public Integration getIntegration() {
+        return integration;
+    }
+
+    public void setIntegration(Integration integration) {
+        this.integration = integration;
     }
 
 }

@@ -2,7 +2,9 @@ package com.mycelium.local.repository.orderproduct;
 
 import java.util.Date;
 
+import com.mycelium.local.repository.order.Order;
 import com.mycelium.local.repository.product.Product;
+import com.mycelium.local.repository.status.Status;
 
 import io.micronaut.data.annotation.DateCreated;
 import io.micronaut.data.annotation.DateUpdated;
@@ -17,13 +19,9 @@ public class OrderProduct {
     @Id
     @GeneratedValue
     public Integer id;
-    public int orderId;
-    public int productId;
     public int quantity;
-    public int statusId;
     public String tracking;
     public int time;
-    public int integOrderId;
     @DateCreated
     public Date created;
     @DateUpdated
@@ -31,6 +29,12 @@ public class OrderProduct {
 
     @Relation(value = Relation.Kind.MANY_TO_ONE)
     public Product product;
+
+    @Relation(value = Relation.Kind.MANY_TO_ONE)
+    public Order order;
+
+    @Relation(value = Relation.Kind.MANY_TO_ONE)
+    public Status status;
 
     public Integer getId() {
         return id;
@@ -40,36 +44,12 @@ public class OrderProduct {
         this.id = id;
     }
 
-    public int getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
-
-    public int getProductId() {
-        return productId;
-    }
-
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
-
     public int getQuantity() {
         return quantity;
     }
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public int getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(int statusId) {
-        this.statusId = statusId;
     }
 
     public String getTracking() {
@@ -86,14 +66,6 @@ public class OrderProduct {
 
     public void setTime(int time) {
         this.time = time;
-    }
-
-    public int getIntegOrderId() {
-        return integOrderId;
-    }
-
-    public void setIntegOrderId(int integOrderId) {
-        this.integOrderId = integOrderId;
     }
 
     public Date getCreated() {
@@ -118,5 +90,29 @@ public class OrderProduct {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public Date getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(Date updated) {
+        this.updated = updated;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }
