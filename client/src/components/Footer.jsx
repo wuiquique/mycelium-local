@@ -1,23 +1,8 @@
 "use client";
 
-import React, { useEffect, useState, useRouter } from "react";
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Button,
-  TextField,
-  Typography,
-  CardHeader,
-  Paper,
-  Box,
-  Container,
-  Stack,
-  List,
-  ListItem,
-} from "@mui/material";
-import Grid2 from "@mui/material/Unstable_Grid2";
 import CopyrightIcon from "@mui/icons-material/Copyright";
+import { Box, Container, Typography } from "@mui/material";
+import { useState } from "react";
 
 export default function Footer() {
   const [pMeth, setPMeth] = useState([
@@ -47,7 +32,7 @@ export default function Footer() {
             ))}
           </div>
           <Typography variant="subtitle2">
-            We're your best option, what makes you, our best option.
+            We&apos;re your best option, what makes you, our best option.
           </Typography>
         </Container>
       </Box>
