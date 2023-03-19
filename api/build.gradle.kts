@@ -6,11 +6,10 @@ plugins {
 }
 
 version = "0.1"
+
 group = "com.mycelium.local"
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
 dependencies {
     annotationProcessor("io.micronaut.data:micronaut-data-processor")
@@ -31,25 +30,20 @@ dependencies {
     implementation("io.micronaut:micronaut-validation")
     implementation("io.micronaut.sql:micronaut-jdbc-ucp")
     implementation("com.google.guava:guava:31.1-jre")
+    testImplementation("io.micronaut.test:micronaut-test-rest-assured")
 }
 
+application { mainClass.set("com.mycelium.local.Application") }
 
-application {
-    mainClass.set("com.mycelium.local.Application")
-}
 java {
     sourceCompatibility = JavaVersion.toVersion("17")
     targetCompatibility = JavaVersion.toVersion("17")
 }
 
-tasks {
-    jib {
-        to {
-            image = "gcr.io/myapp/jib-image"
-        }
-    }
-}
+tasks { jib { to { image = "gcr.io/myapp/jib-image" } } }
+
 graalvmNative.toolchainDetection.set(false)
+
 micronaut {
     runtime("netty")
     testRuntime("junit5")
@@ -58,6 +52,3 @@ micronaut {
         annotations("com.mycelium.local.*")
     }
 }
-
-
-
