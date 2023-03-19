@@ -2,10 +2,13 @@ package com.mycelium.local.categorie;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.common.collect.Lists;
 import com.mycelium.local.repository.categorie.Categorie;
 import com.mycelium.local.repository.categorie.CategorieRepo;
 
+import io.micronaut.core.annotation.Introspected;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -15,6 +18,8 @@ import io.micronaut.http.annotation.Delete;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 
+@Introspected
+@JsonInclude(Include.ALWAYS)
 class CategorieCreateRequest {
     public String name;
 }
@@ -45,10 +50,11 @@ public class CategorieController {
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/")
-    public void create(@Body CategorieCreateRequest body) {
+    public int create(@Body CategorieCreateRequest body) {
         var newCategorie = new Categorie();
         newCategorie.name = body.name;
         categorieRepo.save(newCategorie);
+        return newCategorie.id;
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
@@ -56,7 +62,7 @@ public class CategorieController {
     public void update(int id, @Body CategorieUpdateRequest body) {
         var categorie = categorieRepo.findById(id).get();
         categorie.name = body.name;
-        categorieRepo.save(categorie);
+        categorieRepo.update(categorie);
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)

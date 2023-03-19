@@ -37,7 +37,6 @@ export default function Category() {
 
   const blurSave = (id, index) => {
     let post = {
-      id: categ[index].id,
       name: categ[index].name,
     };
     axios.put(`/api/categories/${id}`, post).then((response) => {
@@ -58,14 +57,11 @@ export default function Category() {
     /*let temp = [...categ];
     temp.push({ id: categ.length + 1, name: "" });
     setCategs(temp);*/
-    let post = { name: "" };
+    let post = { name: "New Category" };
     axios.post(`/api/categories/`, post).then((response) => {
       let temp = [...categ];
-      temp.push({ id: response.data, name: "" });
+      temp.push({ id: response.data, name: "New Category" });
       setCategs(temp);
-    });
-    axios.get("/api/categories/").then((response) => {
-      setCategs(response.data);
     });
   };
 
