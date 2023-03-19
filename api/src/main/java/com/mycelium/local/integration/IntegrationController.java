@@ -44,23 +44,31 @@ public class IntegrationController {
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/")
-    public void create(@Body IntegrationCreateRequest body) {
+    public List<Integration> create(@Body IntegrationCreateRequest body) {
         var newIntegration = new Integration();
         newIntegration.name = body.name;
         newIntegration.request = body.request;
         newIntegration.user = body.user;
         newIntegration.password = body.password; // TODO: hash
+        integrationRepo.save(newIntegration);
+        return list();
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
-    @Put("/")
-    public void update() {
-        // TODO
+    @Put("/{id}")
+    public void update(int id, @Body IntegrationCreateRequest body) {
+        var integration = integrationRepo.findById(id).get();
+        integration.name = body.name;
+        integration.request = body.request;
+        integration.user = body.user;
+        integration.password = body.password; // TODO: hash
+        integrationRepo.update(integration);
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Delete("/{id}")
-    public void delete(int id) {
-        // TODO
+    public List<Integration> delete(int id) {
+        integrationRepo.deleteById(id);
+        return list();
     }
 }

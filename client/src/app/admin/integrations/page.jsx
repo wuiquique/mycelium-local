@@ -1,117 +1,134 @@
 "use client";
 
-import React, { useEffect, useState, useTheme } from "react";
-import axios from "axios";
 import {
-  Card,
-  CardMedia,
-  CardContent,
-  Typography,
   Button,
-  TextField,
+  Card,
+  CardContent,
   FormControl,
-  InputLabel,
-  Select,
-  OutlinedInput,
-  MenuItem,
-  Box,
-  Chip,
-  Slider,
-  Rating,
+  TextField,
+  Typography,
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
-import { AiOutlineSearch } from "react-icons/ai";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import BackPage from "../../../components/BackPage";
 
 export default function Integrations() {
+  const [integ, setInteg] = useState([
+    {
+      id: 1,
+      name: "Amazon",
+      user: "neim",
+      pass: "paseworl",
+      request: "http://lol.com",
+    },
+  ]);
+  const [showPass, setShowPass] = useState(false);
 
-    const [integ, setInteg] = useState([
-        {
-            name: 'Amazon', 
-            username: 'neim', 
-            pass: 'paseworl',
-            ref: 'http://lol.com', 
-        }
-    ])
+  useEffect(() => {
+    axios.get("/api/integration/").then((response) => {
+      console.log(response.data);
+      setInteg(response.data);
+    });
+  }, []);
 
-    useEffect(() => {
-        axios.get('ruta')
-        .then((response) => {
-            setInteg(response.data)
-        })
-    }, [])
+  const submitInt = (e) => {
+    e.preventDefault();
 
-    return (
-        <div>
-            <BackPage/>
-            <Typography variant='h3' className="text-center">
-                Integrations
-            </Typography>
-            <br/>
-            <Grid2 container spacing={2}>
-                <Grid2 lg={12}>
-                    <Card elevation={10}>
-                        <CardContent>
-                            <div className="flex justify-between">
-                                <TextField 
-                                    sx={{ minWidth: '33%'}}
-                                    variant="standard"
-                                    label="Nombre"
-                                />
-                                <TextField
-                                    sx={{ minWidth: '33%'}}
-                                    variant="standard"
-                                    label="Usuario"
-                                />
-                                <TextField
-                                    sx={{ minWidth: '33%'}}
-                                    variant="standard"
-                                    label="Contraseña"
-                                />
-                            </div>
-                            <br/>
-                            <TextField
-                                sx={{ minWidth: '100%' }}
-                                variant='standard'
-                                label='Ruta'
-                            />
-                            <div className="flex justify-center">
-                                <Button
-                                    className="mt-2 "
-                                    variant='outlined'
-                                >
-                                    Guardar
-                                </Button>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </Grid2>
-                {
-                integ.map((e, i) => (
-                    <Grid2 key={i} lg={6}>
-                        <Card elevation={10}> 
-                            <CardContent>
-                                <div className="p-2">
-                                    <Typography variant="h4">
-                                        {e.name}
-                                    </Typography>
-                                    <Typography variant="h5">
-                                        Credentials: {e.username}
-                                    </Typography>
-                                    <Typography variant="h6">
-                                        API Route: {e.ref}
-                                    </Typography>
-                                </div>
-                                <Button>
-                                    Remove
-                                </Button>
-                            </CardContent>
-                        </Card>
-                    </Grid2>
-                ))
-                }
-            </Grid2>
-        </div>
+    let post = {
+      name: e.target.int_name.value,
+      request: e.target.int_ref.value,
+      user: e.target.int_user.value,
+      password: e.target.int_pass.value,
+    };
 
-    )
+    axios.post("/api/integration/").then((response) => {
+      console.log(response.data);
+      setInteg(response.data);
+    });
+  };
+
+  const deleteInt = (id) => {
+    axios.delete(`/api/integration/${id}`).then((response) => {
+      setInteg(response.data);
+    });
+  };
+
+  const editInt = (obj) => {
+    axios.put(`/api/integration/${id}`, obj).then((response) => {
+      setInteg(response.data);
+    });
+  };
+
+  return (
+    <div>
+      <BackPage />
+      <Typography variant="h3" className="text-center">
+        Integrations
+      </Typography>
+      <br />
+      <Grid2 container spacing={2}>
+        <Grid2 lg={12}>
+          <Card elevation={10}>
+            <CardContent>
+              <form onSubmit={submitInt}>
+                <div className="flex justify-between">
+                  <TextField
+                    sx={{ minWidth: "33%" }}
+                    variant="standard"
+                    label="Nombre"
+                    name="int_name"
+                  />
+                  <TextField
+                    sx={{ minWidth: "33%" }}
+                    variant="standard"
+                    label="Usuario"
+                    name="int_user"
+                  />
+                  <TextField
+                    sx={{ minWidth: "33%" }}
+                    variant="standard"
+                    label="Contraseña"
+                    name="int_pass"
+                  />
+                </div>
+                <br />
+                <TextField
+                  sx={{ minWidth: "100%" }}
+                  variant="standard"
+                  label="Ruta"
+                  name="int_ref"
+                />
+                <div className="flex justify-center">
+                  <Button className="mt-2 " variant="outlined" type="submit">
+                    Guardar
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </Grid2>
+        {integ.map((e, i) => (
+          <Grid2 key={i} lg={6}>
+            <Card elevation={10}>
+              <CardContent>
+                <form>
+                  <div className="p-2">
+                    <TextField variant="standard" defaultValue={e.name} />
+                    <TextField defaultValue={e.user} variant="standard" />
+                    <TextField defaultValue={e.request} variant="standard" />
+                    <FormControl defaultValue={e.password} variant="standard" />
+                  </div>
+                </form>
+                <div>
+                  <Button onClick={() => {}}>Update</Button>
+                  <Button>Remove</Button>
+                </div>
+              </CardContent>
+            </Card>
+          </Grid2>
+        ))}
+      </Grid2>
+    </div>
+  );
 }
