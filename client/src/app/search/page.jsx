@@ -21,12 +21,8 @@ import {
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import { AiOutlineSearch } from "react-icons/ai";
-<<<<<<< HEAD:client/src/app/search/page.jsx
 import BackPage from "../../components/BackPage";
-=======
-import BackPage from "../../../components/BackPage";
 import Link from "next/link";
->>>>>>> 33021a65fd253f142f245a901f07923cf75ab8b7:client/src/app/user/search/page.jsx
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
