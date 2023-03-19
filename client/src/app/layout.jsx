@@ -9,10 +9,15 @@ import theme from "../theme";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import NavDrawer from "../components/NavDrawer";
-import { MdLogin, MdProductionQuantityLimits, MdTag, MdShoppingCart } from "react-icons/md";
-import { TbReportAnalytics, TbPlugConnected } from 'react-icons/tb'
-import { AiOutlineUserSwitch, AiOutlineAppstoreAdd } from 'react-icons/ai'
-import { BiCategory } from 'react-icons/bi'
+import {
+  MdLogin,
+  MdProductionQuantityLimits,
+  MdTag,
+  MdShoppingCart,
+} from "react-icons/md";
+import { TbReportAnalytics, TbPlugConnected } from "react-icons/tb";
+import { AiOutlineUserSwitch, AiOutlineAppstoreAdd } from "react-icons/ai";
+import { BiCategory } from "react-icons/bi";
 import Footer from "../components/Footer";
 import { UserProvider } from "../hooks/userContext";
 
@@ -29,50 +34,52 @@ const navItems = [
     privileges: 1,
   },
   {
+    name: "Users",
+    href: "/admin/users",
+    icon: <AiOutlineUserSwitch />,
+    privileges: 2,
+  },
+  {
+    name: "New Product",
+    href: "/admin/product/create",
+    icon: <AiOutlineAppstoreAdd />,
+    privileges: 2,
+  },
+  {
+    name: "Category Administration",
+    href: "/admin/category",
+    icon: <BiCategory />,
+    privileges: 2,
+  },
+  {
+    name: "Orders Administration",
+    href: "/admin/orders",
+    icon: <MdProductionQuantityLimits />,
+    privileges: 2,
+  },
+  {
+    name: "Reports",
+    href: "/admin/reports",
+    icon: <TbReportAnalytics />,
+    privileges: 2,
+  },
+  {
+    name: "Integrations",
+    href: "/admin/integrations",
+    icon: <TbPlugConnected />,
+    privileges: 2,
+  },
+  {
     name: "Login",
     href: "/auth/login",
-    icon: <MdLogin size='1.5rem'/>,
+    icon: <MdLogin />,
+    privileges: 0,
   },
   {
     name: "Register",
     href: "/auth/register",
-    icon: <MdLogin size='1.5rem'/>,
-  },
-  {
-    name: "Users", 
-    href: "/admin/users",
-    icon: <AiOutlineUserSwitch size='1.5rem'/>,
-    privileges: 2
-  },
-  {
-    name: 'New Product', 
-    href: '/admin/product/create', 
-    icon: <AiOutlineAppstoreAdd size='1.5rem'/>,
-    privileges: 2
-  },
-  {
-    name: 'Category Administration',
-    href: '/admin/category',
-    icon: <BiCategory size='1.5rem'/>, 
-    privileges: 2
-  },
-  {
-    name: "Orders Administration", 
-    href: '/admin/orders', 
-    icon: <MdProductionQuantityLimits size='1.5rem'/>,
-    privileges: 2
-  },
-  {
-    name: 'Reports', 
-    href: '/admin/reports', 
-    icon: <TbReportAnalytics size='1.5rem'/>,
-    privileges: 2
-  },
-  {
-    name: 'Integrations', 
-    href: '/admin/integrations', 
-    icon: <TbPlugConnected size='1.5rem'/>,
-    privileges: 2
+    icon: <MdLogin />,
+    privileges: 0,
   },
 ];
 
