@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Inter } from "@next/font/google";
+import { Inter } from "next/font/google";
 import styles from "./page.module.css";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
