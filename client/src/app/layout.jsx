@@ -1,26 +1,27 @@
 "use client";
 import "./globals.css";
 
-import React, { useState } from "react";
+import { TextProvider } from "@/hooks/textContext";
 import { Container, CssBaseline } from "@mui/material";
-import NavBar from "../components/NavBar";
 import { ThemeProvider } from "@mui/material/styles";
-import theme from "../theme";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
-import NavDrawer from "../components/NavDrawer";
+import { useState } from "react";
+import { AiOutlineAppstoreAdd, AiOutlineUserSwitch } from "react-icons/ai";
+import { BiCategory } from "react-icons/bi";
 import {
   MdLogin,
   MdProductionQuantityLimits,
-  MdTag,
   MdShoppingCart,
+  MdTag,
 } from "react-icons/md";
-import { TbReportAnalytics, TbPlugConnected } from "react-icons/tb";
-import { AiOutlineUserSwitch, AiOutlineAppstoreAdd } from "react-icons/ai";
-import { BiCategory } from "react-icons/bi";
+import { TbPlugConnected, TbReportAnalytics } from "react-icons/tb";
+import { VscSymbolString } from "react-icons/vsc";
 import Footer from "../components/Footer";
+import NavBar from "../components/NavBar";
+import NavDrawer from "../components/NavDrawer";
 import { UserProvider } from "../hooks/userContext";
-import { TextProvider } from "@/hooks/textContext";
+import theme from "../theme";
 
 const navItems = [
   {
@@ -47,8 +48,8 @@ const navItems = [
     privileges: 2,
   },
   {
-    name: "Product Administration", 
-    href: "/admin/product", 
+    name: "Product Administration",
+    href: "/admin/product",
     icon: <BiCategory />,
     privileges: 2,
   },
@@ -74,6 +75,12 @@ const navItems = [
     name: "Integrations",
     href: "/admin/integrations",
     icon: <TbPlugConnected />,
+    privileges: 2,
+  },
+  {
+    name: "Text Administration",
+    href: "/admin/text",
+    icon: <VscSymbolString />,
     privileges: 2,
   },
   {
