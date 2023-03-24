@@ -1,22 +1,22 @@
 // @ts-nocheck
 "use client";
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
 import {
+  Card,
+  FormControl,
+  MenuItem,
+  Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
   TextField,
   Typography,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  Select,
-  MenuItem,
-  FormControl,
-  Card,
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
@@ -24,11 +24,9 @@ export default function AdminUsers() {
 
   useEffect(() => {
     axios.get("/api/user/").then((response) => {
-      console.log(response.data);
       setUsers(response.data);
     });
     axios.get("/api/role/").then((response) => {
-      console.log(response.data);
       setRoles(response.data);
     });
   }, []);
@@ -36,23 +34,20 @@ export default function AdminUsers() {
   const changeInput = (index, camp, value) => {
     let temp = [...users];
     temp[index][camp] = value;
-    //console.log(temp);
     setUsers(temp);
   };
 
   const changeSelect = (index, value) => {
     let temp = [...users];
-    console.log(index);
-    console.log(value);
+
     for (let i of roles) {
       if (i.id === value) {
         temp[index]["role"] = i.name;
         temp[index]["roleId"] = value;
       }
     }
-    console.log(temp);
+
     setUsers(temp);
-    console.log(temp);
   };
 
   const blurSave = (id, index) => {
@@ -64,7 +59,7 @@ export default function AdminUsers() {
     };
     axios.put(`/api/user/${id}`, post).then((response) => {
       setUsers(response.data);
-      console.log("noise");
+      //console.log("noise");
     });
   };
 
