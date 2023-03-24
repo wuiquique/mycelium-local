@@ -7,7 +7,7 @@ import React, {
   useState,
 } from "react";
 
-function useLocalStorage<T>(
+export function useLocalStorage<T>(
   key: string,
   initialValue: T
 ): [T, (state: T | ((prevState: T) => T)) => void] {

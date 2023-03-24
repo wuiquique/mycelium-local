@@ -1,23 +1,22 @@
 "use client";
 
-import React from "react";
+import { useTexts } from "@/hooks/textContext";
+import { useUser } from "@/hooks/userContext";
 import {
   AppBar,
+  Box,
   Button,
   IconButton,
-  Toolbar,
-  Typography,
   TextField,
-  Box,
+  Toolbar,
 } from "@mui/material";
-import { red } from "@mui/material/colors";
-import { MdMenu } from "react-icons/md";
 import Link from "next/link";
 import { AiOutlineSearch } from "react-icons/ai";
-import { useUser } from "@/hooks/userContext";
+import { MdMenu } from "react-icons/md";
 
 export default function NavBar({ onDrawer }: { onDrawer: () => void }) {
   const [user] = useUser();
+  const texts = useTexts();
 
   const styles = () => ({
     notchedOutline: {
@@ -40,50 +39,45 @@ export default function NavBar({ onDrawer }: { onDrawer: () => void }) {
           >
             <MdMenu />
           </IconButton>
-          <Button 
-            variant='contained' 
+          <Button
+            variant="contained"
             disableElevation
             component={Link}
-            href='/'
+            href="/"
           >
-            <img
-              src="/redwhite.png"
-              width='20px'
-            />
+            <img src="/redwhite.png" width="20px" />
             &nbsp;
-            mycellium :)
+            {texts.global.shopname}
           </Button>
         </div>
         <div>
-          <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-              <AiOutlineSearch size='1.8rem'/>
-              <TextField
-                sx={{ minWidth:"900px" }}
-                variant='standard'
-              />
-              <Button
-                variant='contained'
-                disableElevation
-                component={Link}
-                href="/search"
-              >
-                Search
-              </Button>
+          <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+            <AiOutlineSearch size="1.8rem" />
+            <TextField sx={{ minWidth: "900px" }} variant="standard" />
+            <Button
+              variant="contained"
+              disableElevation
+              component={Link}
+              href="/search"
+            >
+              {texts.header.searchbutton}
+            </Button>
           </Box>
         </div>
         <div>
           {user.id === null ? (
             <>
               <Button component={Link} href="/login" color="inherit">
-                Login
+                {texts.header.loginbutton}
               </Button>
               <Button component={Link} href="/register" color="inherit">
-                register
+                {texts.header.registerbutton}
               </Button>
             </>
           ) : (
             <>
-              Welcome, {user.name} {user.lastname}
+              {texts.header.welcometext}
+              {user.name} {user.lastname}
             </>
           )}
         </div>

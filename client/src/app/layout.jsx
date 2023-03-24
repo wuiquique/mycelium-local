@@ -20,6 +20,7 @@ import { AiOutlineUserSwitch, AiOutlineAppstoreAdd } from "react-icons/ai";
 import { BiCategory } from "react-icons/bi";
 import Footer from "../components/Footer";
 import { UserProvider } from "../hooks/userContext";
+import { TextProvider } from "@/hooks/textContext";
 
 const navItems = [
   {
@@ -103,17 +104,19 @@ export default function Layout({ children }) {
         <ThemeProvider theme={theme}>
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <UserProvider>
-              <CssBaseline />
-              <NavBar onDrawer={() => setDrawer(true)} />
-              <NavDrawer
-                open={drawer}
-                onClose={() => setDrawer(false)}
-                items={navItems}
-              />
-              <Container className="mt-[6rem]" maxWidth="lg">
-                {children}
-              </Container>
-              <Footer />
+              <TextProvider>
+                <CssBaseline />
+                <NavBar onDrawer={() => setDrawer(true)} />
+                <NavDrawer
+                  open={drawer}
+                  onClose={() => setDrawer(false)}
+                  items={navItems}
+                />
+                <Container className="mt-[6rem]" maxWidth="lg">
+                  {children}
+                </Container>
+                <Footer />
+              </TextProvider>
             </UserProvider>
           </LocalizationProvider>
         </ThemeProvider>
