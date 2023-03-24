@@ -74,10 +74,10 @@ export default function NavBar({ onDrawer }: { onDrawer: () => void }) {
         <div>
           {user.id === null ? (
             <>
-              <Button component={Link} href="/auth/login" color="inherit">
+              <Button component={Link} href="/login" color="inherit">
                 Login
               </Button>
-              <Button component={Link} href="/auth/register" color="inherit">
+              <Button component={Link} href="/register" color="inherit">
                 register
               </Button>
             </>

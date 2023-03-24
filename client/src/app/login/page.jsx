@@ -11,9 +11,9 @@ import {
   Typography,
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
-import BackPage from "../../../components/BackPage";
+import BackPage from "../../components/BackPage";
 import { useRouter } from "next/navigation";
-import { useUser } from "../../../hooks/userContext";
+import { useUser } from "../../hooks/userContext";
 
 export default function Login() {
   const router = useRouter();

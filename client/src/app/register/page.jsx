@@ -4,9 +4,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Card, CardMedia, Button, TextField, Typography } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
-import BackPage from "../../../components/BackPage";
+import BackPage from "../../components/BackPage";
 import { useRouter } from "next/navigation";
-import { useUser } from "../../../hooks/userContext";
+import { useUser } from "../../hooks/userContext";
 
 export default function Register() {
   const router = useRouter();
