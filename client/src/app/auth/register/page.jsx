@@ -71,7 +71,7 @@ export default function Register() {
               variant="outlined"
               disableElevation
               color="secondary"
-              type="submit"
+              type="submit"f
             >
               Register
             </Button>

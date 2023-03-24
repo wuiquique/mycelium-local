@@ -46,6 +46,12 @@ const navItems = [
     privileges: 2,
   },
   {
+    name: "Product Administration", 
+    href: "/admin/product", 
+    icon: <BiCategory />,
+    privileges: 2,
+  },
+  {
     name: "Category Administration",
     href: "/admin/category",
     icon: <BiCategory />,

@@ -42,7 +42,7 @@ export default function Integrations() {
       password: e.target.int_pass.value,
     };
 
-    axios.post("/api/integration/").then((response) => {
+    axios.post("/api/integration/", post).then((response) => {
       console.log(response.data);
       setInteg(response.data);
     });
@@ -54,8 +54,17 @@ export default function Integrations() {
     });
   };
 
-  const editInt = (obj) => {
-    axios.put(`/api/integration/${id}`, obj).then((response) => {
+  const editInt = (e) => {
+    e.preventDefault();
+
+    let post = {
+      name: e.target.int_name.value,
+      request: e.target.int_ref.value,
+      user: e.target.int_user.value,
+      password: e.target.int_pass.value,
+    };
+
+    axios.put(`/api/integration/${id}`, post).then((response) => {
       setInteg(response.data);
     });
   };
@@ -112,16 +121,33 @@ export default function Integrations() {
           <Grid2 key={i} lg={6}>
             <Card elevation={10}>
               <CardContent>
-                <form>
+                <form onSubmit={editInt}>
                   <div className="p-2">
-                    <TextField variant="standard" defaultValue={e.name} />
-                    <TextField defaultValue={e.user} variant="standard" />
-                    <TextField defaultValue={e.request} variant="standard" />
-                    <FormControl defaultValue={e.password} variant="standard" />
+                    <TextField 
+                      variant="standard" 
+                      defaultValue={e.name} 
+                      name="int_name"
+                    />
+                    <TextField 
+                      defaultValue={e.user} 
+                      variant="standard" 
+                      name='int_user'
+                    />
+                    <TextField 
+                      defaultValue={e.request} 
+                      variant="standard" 
+                      name='int_ref'
+                    />
+                    <FormControl 
+                      defaultValue={e.password} 
+                      variant="standard" 
+                      name='int_pass'
+                    />
+                    <Button type='submit'>Update</Button>
                   </div>
                 </form>
                 <div>
-                  <Button onClick={() => {}}>Update</Button>
+                  <Button onClick={() => {deleteInt(e.id)}}>Update</Button>
                   <Button>Remove</Button>
                 </div>
               </CardContent>
