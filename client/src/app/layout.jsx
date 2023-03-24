@@ -77,13 +77,13 @@ const navItems = [
   },
   {
     name: "Login",
-    href: "/auth/login",
+    href: "/login",
     icon: <MdLogin />,
     privileges: 0,
   },
   {
     name: "Register",
-    href: "/auth/register",
+    href: "/register",
     icon: <MdLogin />,
     privileges: 0,
   },
