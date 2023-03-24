@@ -1,42 +1,33 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Button,
-  TextField,
-  Typography,
-} from "@mui/material";
-import Grid2 from "@mui/material/Unstable_Grid2";
-import CardHeader from "@mui/material/CardHeader";
-import Avatar from "@mui/material/Avatar";
-import { red } from "@mui/material/colors";
+import { Button, Card, CardMedia, TextField, Typography } from "@mui/material";
+import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
+import type { SelectChangeEvent } from "@mui/material/Select";
 import Select from "@mui/material/Select";
+import Grid2 from "@mui/material/Unstable_Grid2";
+import axios from "axios";
+import { FormEvent, useState } from "react";
 import BackPage from "../../../../components/BackPage";
 
 export default function Create() {
   const [tech, setTech] = useState([{ type: "", value: "" }]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let out = {
-      name: e.target.product_name.value,
-      desc: e.target.product_desc.value,
-      categId: e.target.product_categorie.value,
-      brand: e.target.product_brand.value,
-      weight: e.target.product_weight.value,
-      quantity: e.target.product_quantity.value,
-      price: e.target.product_price.value,
+      name: e.currentTarget.product_name.value,
+      desc: e.currentTarget.product_desc.value,
+      categId: e.currentTarget.product_categorie.value,
+      brand: e.currentTarget.product_brand.value,
+      weight: e.currentTarget.product_weight.value,
+      quantity: e.currentTarget.product_quantity.value,
+      price: e.currentTarget.product_price.value,
       urls: [
-        e.target.product_img1.value,
-        e.target.product_img2.value,
-        e.target.product_img3.value,
+        e.currentTarget.product_img1.value,
+        e.currentTarget.product_img2.value,
+        e.currentTarget.product_img3.value,
       ],
       tech: [...tech],
     };
@@ -50,23 +41,23 @@ export default function Create() {
 
   const [age, setAge] = useState("");
 
-  const handleChange = (e) => {
+  const handleChange = (e: SelectChangeEvent<string>) => {
     setAge(e.target.value);
   };
 
-  const addRow = (e) => {
+  const addRow = (e: React.MouseEvent<HTMLButtonElement>) => {
     let temp = [...tech];
     temp.push({ type: "", value: "" });
     setTech(temp);
   };
 
-  const deleteRow = (e, i) => {
+  const deleteRow = (e: React.MouseEvent<HTMLButtonElement>, i: number) => {
     let temp = [...tech];
     temp.splice(i, 1);
     setTech(temp);
   };
 
-  const changeInput = (i, c, v) => {
+  const changeInput = (i: number, c: "type" | "value", v: string) => {
     let temp = [...tech];
     temp[i][c] = v;
     setTech(temp);
@@ -83,7 +74,7 @@ export default function Create() {
     { id: 2, name: "NonGOD" },
   ]);
 
-  const changeImg = (i, u) => {
+  const changeImg = (i: number, u: string) => {
     let temp = [...urls];
     temp[i] = u;
     setUrls(temp);
