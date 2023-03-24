@@ -3,27 +3,63 @@
 import {
   Button,
   Card,
-  CardContent,
-  FormControl,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
   TextField,
   Typography,
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import axios from "axios";
-import { useEffect, useState } from "react";
-import BackPage from "../../../components/BackPage";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 
-export default function page() {
-    
-    const [products, setProducts] = useState([])
+export default function AdminProduct() {
+  const [products, setProducts] = useState([
+    {
+      id: null,
+      name: "",
+      desc: "",
+      categorie: {
+        id: 0,
+      },
+      brand: "",
+      weight: "",
+      quantity: "",
+      price: "",
+    },
+  ]);
 
-    const changeInput = () => {
-        return 0
-    }
+  useEffect(() => {
+    axios.get("/api/product").then((response) => {
+      setProducts(response.data);
+      console.log(response.data);
+    });
+  }, []);
 
-    const blurSave = () => {
-        return 0
-    }
+  const changeInput = (index, camp, value) => {
+    let temp = [...products];
+    temp[index][camp] = value;
+    setProducts(temp);
+  };
+
+  const blurSave = (id, index) => {
+    let post = {
+      name: products[index].name,
+      desc: products[index].desc,
+      categorieId: products[index].categorie.id,
+      brand: products[index].brand,
+      weight: products[index].weight,
+      quantity: products[index].quantity,
+      price: products[index].price,
+    };
+    axios.put(`/api/product/${id}`, post).then((response) => {
+      setProducts(response.data);
+      console.log(response.data);
+    });
+  };
 
   return (
     <div>
@@ -41,62 +77,68 @@ export default function page() {
                   <TableCell>Description</TableCell>
                   <TableCell>Quantity</TableCell>
                   <TableCell>Price</TableCell>
+                  <TableCell>Details</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {products.length === 0 ? (
-                  <></>
-                ) : (
-                  products.map((e, i) => (
-                    <TableRow key={i}>
-                      <TableCell>
-                        <TextField
-                          defaultValue={e.name}
-                          variant="standard"
-                          onChange={(ev) =>
-                            changeInput(i, "name", ev.target.value)
-                          }
-                          onBlur={() => blurSave(e.id, i)}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <TextField
-                          defaultValue={e.lastname}
-                          variant="standard"
-                          onChange={(ev) =>
-                            changeInput(i, "lastname", ev.target.value)
-                          }
-                          onBlur={() => blurSave(e.id, i)}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <TextField
-                          defaultValue={e.email}
-                          variant="standard"
-                          onChange={(ev) =>
-                            changeInput(i, "email", ev.target.value)
-                          }
-                          onBlur={() => blurSave(e.id, i)}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <TextField
-                            defaultValue={e.email}
-                            variant="standard"
-                            onChange={(ev) =>
-                                changeInput(i, "email", ev.target.value)
-                            }
-                            onBlur={() => blurSave(e.id, i)}
-                            />
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
+                {products.map((e, i) => (
+                  <TableRow key={e.id}>
+                    <TableCell>
+                      <TextField
+                        defaultValue={e.name}
+                        variant="standard"
+                        onChange={(ev) =>
+                          changeInput(i, "name", ev.target.value)
+                        }
+                        onBlur={() => blurSave(e.id, i)}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <TextField
+                        defaultValue={e.desc}
+                        variant="standard"
+                        onChange={(ev) =>
+                          changeInput(i, "desc", ev.target.value)
+                        }
+                        onBlur={() => blurSave(e.id, i)}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <TextField
+                        defaultValue={e.quantity}
+                        variant="standard"
+                        onChange={(ev) =>
+                          changeInput(i, "quantity", ev.target.value)
+                        }
+                        onBlur={() => blurSave(e.id, i)}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <TextField
+                        defaultValue={e.price}
+                        variant="standard"
+                        onChange={(ev) =>
+                          changeInput(i, "price", ev.target.value)
+                        }
+                        onBlur={() => blurSave(e.id, i)}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="text"
+                        component={Link}
+                        href={`/admin/product/${e.id}/update`}
+                      >
+                        Details
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </Card>
         </Grid2>
       </Grid2>
     </div>
-  )
+  );
 }

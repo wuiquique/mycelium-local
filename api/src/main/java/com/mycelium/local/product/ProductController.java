@@ -6,10 +6,11 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.common.collect.Lists;
-import com.mycelium.local.repository.product.Product;
-import com.mycelium.local.repository.product.ProductRepo;
+import com.mycelium.local.repository.categorie.CategorieRepo;
 import com.mycelium.local.repository.picture.Picture;
 import com.mycelium.local.repository.picture.PictureRepo;
+import com.mycelium.local.repository.product.Product;
+import com.mycelium.local.repository.product.ProductRepo;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.http.annotation.Body;
@@ -64,10 +65,12 @@ public class ProductController {
 
     private ProductRepo productRepo;
     private PictureRepo pictureRepo;
+    private CategorieRepo categorieRepo;
 
-    public ProductController(ProductRepo productRepo, PictureRepo pictureRepo) {
+    public ProductController(ProductRepo productRepo, PictureRepo pictureRepo, CategorieRepo categorieRepo) {
         this.productRepo = productRepo;
         this.pictureRepo = pictureRepo;
+        this.categorieRepo = categorieRepo;
     }
 
     @Get("/")
@@ -98,9 +101,10 @@ public class ProductController {
     @Post("/")
     public void create(@Body ProductCreateRequest body) {
         var newProduct = new Product();
+
         newProduct.name = body.name;
         newProduct.desc = body.desc;
-        newProduct.categorie.id = body.categorieId;
+        newProduct.categorie = categorieRepo.findById(body.categorieId).get();
         newProduct.brand = body.brand;
         newProduct.weight = body.weight;
         newProduct.quantity = body.quantity;
@@ -110,9 +114,21 @@ public class ProductController {
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
-    @Put("/")
-    public void update() {
-        // TODO
+    @Put("/{id}")
+    public List<Product> update(int id, @Body ProductCreateRequest body) {
+        var prod = productRepo.findById(id).get();
+
+        prod.name = body.name;
+        prod.desc = body.desc;
+        prod.categorie = categorieRepo.findById(body.categorieId).get();
+        prod.brand = body.brand;
+        prod.weight = body.weight;
+        prod.quantity = body.quantity;
+        prod.price = body.price;
+
+        productRepo.update(prod);
+
+        return list();
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
