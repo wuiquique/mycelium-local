@@ -1,42 +1,17 @@
 "use client";
 
-import Image from "next/image";
-import { Inter } from "@next/font/google";
-import styles from "./page.module.css";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Button,
-  TextField,
-  Typography,
-  Paper,
-  Grid,
-  ImageList,
-  ImageListItem,
-} from "@mui/material";
-import Grid2 from "@mui/material/Unstable_Grid2";
-import CardHeader from "@mui/material/CardHeader";
-import Avatar from "@mui/material/Avatar";
-import { red } from "@mui/material/colors";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import Carousel from "react-material-ui-carousel";
-import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
 import PaymentIcon from "@mui/icons-material/Payment";
-import Stack from "@mui/material/Stack";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import { Card, CardMedia, Paper, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import Box from "@mui/material/Box";
-import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
-import Footer from "../components/Footer";
-
-const inter = Inter({ subsets: ["latin"] });
+import Stack from "@mui/material/Stack";
+import Grid2 from "@mui/material/Unstable_Grid2";
+import { useState } from "react";
+import Carousel from "react-material-ui-carousel";
 
 export default function Home() {
   const [prods, setProds] = useState([

@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { Button, Card, CardMedia, TextField, Typography } from "@mui/material";
 import axios from "axios";
-import { Card, CardMedia, Button, TextField, Typography } from "@mui/material";
-import Grid2 from "@mui/material/Unstable_Grid2";
-import BackPage from "../../components/BackPage";
 import { useRouter } from "next/navigation";
+import React from "react";
+import BackPage from "../../components/BackPage";
 import { useUser } from "../../hooks/userContext";
 
 export default function Register() {
@@ -71,7 +70,7 @@ export default function Register() {
               variant="outlined"
               disableElevation
               color="secondary"
-              type="submit"f
+              type="submit"
             >
               Register
             </Button>
