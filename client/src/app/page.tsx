@@ -1,5 +1,6 @@
 "use client";
 
+import { useTexts } from "@/hooks/textContext";
 import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
 import PaymentIcon from "@mui/icons-material/Payment";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
@@ -16,6 +17,8 @@ import axios from "axios";
 import Link from "next/link";
 
 export default function Home() {
+  const texts = useTexts();
+
   useEffect(() => {
     axios.get(`/api/product/topSales`).then((response) => {
       setProds(response.data);
@@ -48,10 +51,10 @@ export default function Home() {
           />
         </div>
         <Typography variant="h4" mt={2}>
-          Mycelium
+          {texts.global.shopname}
         </Typography>
         <Typography variant="h6" m={1}>
-          Home
+          {texts.homepage.title}
         </Typography>
         <Card className="m-4" elevation={10}>
           <Grid2 container spacing={2}>
@@ -65,10 +68,10 @@ export default function Home() {
                 <Grid2 lg={9}>
                   <div className="text-left">
                     <Typography variant="body1" mt={2}>
-                      <b>Warranty</b>
+                      <b>{texts.homepage.promo1title}</b>
                     </Typography>
                     <Typography variant="body2">
-                      Guaranteed quality and support in each purchase
+                      {texts.homepage.promo1text}
                     </Typography>
                   </div>
                 </Grid2>
@@ -84,10 +87,10 @@ export default function Home() {
                 <Grid2 lg={9}>
                   <div className="text-left">
                     <Typography variant="body1" mt={2}>
-                      <b>Payment</b>
+                      <b>{texts.homepage.promo2title}</b>
                     </Typography>
                     <Typography variant="body2">
-                      Variety of payment options for your convenience
+                      {texts.homepage.promo2text}
                     </Typography>
                   </div>
                 </Grid2>
@@ -106,10 +109,10 @@ export default function Home() {
                 <Grid2 lg={9}>
                   <div className="text-left">
                     <Typography variant="body1" mt={2}>
-                      <b>Shipment</b>
+                      <b>{texts.homepage.promo3title}</b>
                     </Typography>
                     <Typography variant="body2">
-                      Enjoy our home delivery
+                      {texts.homepage.promo3text}
                     </Typography>
                   </div>
                 </Grid2>

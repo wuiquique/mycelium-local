@@ -1,5 +1,6 @@
 "use client";
 
+import { useTexts } from "@/hooks/textContext";
 import { Button, Card, CardMedia, TextField, Typography } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -12,6 +13,8 @@ import { FormEvent, useEffect, useState } from "react";
 import BackPage from "../../../../components/BackPage";
 
 export default function Create() {
+  const texts = useTexts();
+
   const [tech, setTech] = useState([{ type: "", value: "" }]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -24,16 +27,17 @@ export default function Create() {
       weight: e.currentTarget.product_weight.value,
       quantity: e.currentTarget.product_quantity.value,
       price: e.currentTarget.product_price.value,
-      // urls: [
-      //   e.currentTarget.product_img0.value,
-      //   e.currentTarget.product_img1.value,
-      //   e.currentTarget.product_img2.value,
-      // ],
-      // tech: [...tech],
+      pictures: [
+        e.currentTarget.product_img0.value,
+        e.currentTarget.product_img1.value,
+        e.currentTarget.product_img2.value,
+      ],
+      technical: [...tech],
     };
+
     axios.post("/api/product", out).then((response) => {
       console.log(response.data);
-      if (response.data === "Succes") {
+      if (response.data === "Success") {
         location.reload();
       }
     });
@@ -104,7 +108,7 @@ export default function Create() {
               />
             </div>
             <Typography variant="h5" mt={2} className="text-center">
-              Create a new product
+              {texts.newproductpage.title}
             </Typography>
             <form className="mt-8 mb-11" onSubmit={handleSubmit}>
               <Grid2 container spacing={2}>
@@ -116,21 +120,21 @@ export default function Create() {
                   >
                     <TextField
                       className="mt-1 w-full"
-                      label="Name"
+                      label={texts.product.name}
                       variant="standard"
                       name="product_name"
                     />
                     <br />
                     <TextField
                       className="mt-1 w-full"
-                      label="Description"
+                      label={texts.product.description}
                       variant="standard"
                       name="product_desc"
                     />
                     <br />
                     <TextField
                       className="mt-1 w-full"
-                      label="Brand"
+                      label={texts.product.brand}
                       variant="standard"
                       name="product_brand"
                     />
@@ -144,26 +148,28 @@ export default function Create() {
                   >
                     <TextField
                       className="mt-1 w-full"
-                      label="Weight"
+                      label={texts.product.weight}
                       variant="standard"
                       name="product_weight"
                     />
                     <br />
                     <TextField
                       className="mt-1 w-full"
-                      label="Price"
+                      label={texts.product.price}
                       variant="standard"
                       name="product_price"
                     />
                     <br />
                     <FormControl className="mt-1 w-full" variant="standard">
-                      <InputLabel id="form-id-categorie">Categorie</InputLabel>
+                      <InputLabel id="form-id-categorie">
+                        {texts.product.category}
+                      </InputLabel>
                       <Select
                         labelId="form-id-categorie"
                         name="product_categorie"
                         value={age}
                         onChange={handleChange}
-                        label="Categories"
+                        label={texts.product.category}
                       >
                         {categ.map((e, i) => (
                           <MenuItem key={i} value={e.id}>
@@ -188,7 +194,7 @@ export default function Create() {
                             />
                             <TextField
                               className="mt-1"
-                              label="URL"
+                              label={texts.product.pictureurl}
                               variant="standard"
                               name={"product_img" + i}
                               value={url}
@@ -204,20 +210,20 @@ export default function Create() {
                   <Card className="p-4" elevation={10}>
                     <div className="justify-center text-center">
                       <TextField
-                        label="Quantity"
+                        label={texts.product.quantity}
                         type="number"
                         variant="standard"
                         name="product_quantity"
                       />
                       <Typography variant="body1" mt={6}>
-                        Technical Specifications
+                        {texts.product.technical}
                       </Typography>
                     </div>
                     {tech.map((e, i) => (
                       <div key={i} className="justify-center text-center">
                         <TextField
                           className="m-1"
-                          label="Type"
+                          label={texts.product.type}
                           variant="standard"
                           value={e.type}
                           onChange={(e) =>
@@ -226,7 +232,7 @@ export default function Create() {
                         />
                         <TextField
                           className="m-1"
-                          label="Value"
+                          label={texts.product.value}
                           variant="standard"
                           value={e.value}
                           onChange={(e) =>
@@ -263,7 +269,7 @@ export default function Create() {
                       color="secondary"
                       type="submit"
                     >
-                      Create
+                      {texts.newproductpage.createbutton}
                     </Button>
                   </div>
                 </Grid2>

@@ -1,34 +1,19 @@
 "use client";
 
-import { useTexts } from "@/hooks/textContext";
-import {
-  Button,
-  Card,
-  CardContent,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  TextField,
-} from "@mui/material";
+import type { TextMap } from "@/hooks/textContext";
+import { defaultKeys, useTexts } from "@/hooks/textContext";
+import { Button, Card, CardContent, TextField } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MdAdd } from "react-icons/md";
 
-export default function AdminTexts(props: any) {
+export default function AdminTexts() {
   const texts = useTexts();
 
-  const [dbTexts, setTexts] = useState<Record<
-    string,
-    Record<string, string>
-  > | null>(null);
+  const valueRef = useRef<HTMLInputElement | null>(null);
 
-  useEffect(() => {
-    axios.get("/api/text").then((res) => {
-      setTexts(res.data);
-    });
-  }, []);
+  const [dbTexts, setTexts] = useState<TextMap | null>(null);
 
   const flattened = useMemo(
     () =>
@@ -50,6 +35,15 @@ export default function AdminTexts(props: any) {
     value: "",
   });
 
+  const editValue = useCallback(
+    (v: { component: string; key: string; value: string }) => {
+      if (valueRef.current === null) return;
+      setUnsavedText({ ...v });
+      valueRef.current.focus();
+    },
+    []
+  );
+
   const saveText = useCallback(async () => {
     if (unsavedText.component.trim() === "" || unsavedText.key.trim() === "")
       return;
@@ -62,78 +56,115 @@ export default function AdminTexts(props: any) {
     });
 
     const listRes = await axios.get("/api/text");
-    setTexts(listRes.data);
+    const texts: TextMap = { ...defaultKeys, ...listRes.data };
+    for (let [component, compmap] of Object.entries(texts)) {
+      texts[component] = {
+        ...defaultKeys[component as keyof typeof defaultKeys],
+        ...compmap,
+      };
+    }
+    setTexts(texts);
   }, [unsavedText]);
+
+  useEffect(() => {
+    axios.get("/api/text").then((res) => {
+      const texts: TextMap = { ...defaultKeys, ...res.data };
+      for (let [component, compmap] of Object.entries(texts)) {
+        texts[component] = {
+          ...defaultKeys[component as keyof typeof defaultKeys],
+          ...compmap,
+        };
+      }
+      setTexts(texts);
+    });
+  }, []);
 
   return (
     <Card>
       <CardContent>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>{texts.admintext.component}</TableCell>
-              <TableCell>{texts.admintext.key}</TableCell>
-              <TableCell>{texts.admintext.value}</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {flattened.map((v) => (
-              <TableRow key={`${v.component}.${v.key}`}>
-                <TableCell>{v.component}</TableCell>
-                <TableCell>{v.key}</TableCell>
-                <TableCell>{v.value}</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-            ))}
-            <TableRow>
-              <TableCell>
-                <TextField
-                  label={texts.admintext.component}
-                  variant="standard"
-                  value={unsavedText.component}
-                  onChange={(e) =>
-                    setUnsavedText({
-                      ...unsavedText,
-                      component: e.currentTarget.value,
-                    })
-                  }
-                />
-              </TableCell>
-              <TableCell>
-                <TextField
-                  label={texts.admintext.key}
-                  variant="standard"
-                  value={unsavedText.key}
-                  onChange={(e) =>
-                    setUnsavedText({
-                      ...unsavedText,
-                      key: e.currentTarget.value,
-                    })
-                  }
-                />
-              </TableCell>
-              <TableCell>
-                <TextField
-                  label={texts.admintext.value}
-                  variant="standard"
-                  value={unsavedText.value}
-                  onChange={(e) =>
-                    setUnsavedText({
-                      ...unsavedText,
-                      value: e.currentTarget.value,
-                    })
-                  }
-                />
-              </TableCell>
-              <TableCell>
-                <Button onClick={saveText}>
-                  <MdAdd />
-                </Button>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+        <DataGrid
+          columns={[
+            {
+              field: "component",
+              headerName: texts.admintextpage.component,
+              flex: 0.5,
+            },
+            {
+              field: "key",
+              headerName: texts.admintextpage.key,
+              flex: 0.5,
+            },
+            {
+              field: "value",
+              headerName: texts.admintextpage.value,
+              flex: 1,
+            },
+          ]}
+          autoHeight
+          rows={flattened}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 5,
+              },
+            },
+          }}
+          pageSizeOptions={[5, 10, 15]}
+          getRowId={(t) => `${t.component}.${t.key}`}
+          rowSelection={false}
+          onRowClick={(v) => editValue(v.row)}
+        />
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!e.currentTarget.checkValidity()) {
+              e.currentTarget.reportValidity();
+              return;
+            }
+            saveText();
+          }}
+        >
+          <TextField
+            label={texts.admintextpage.component}
+            variant="standard"
+            required
+            value={unsavedText.component}
+            onChange={(e) =>
+              setUnsavedText({
+                ...unsavedText,
+                component: e.currentTarget.value,
+              })
+            }
+          />
+          <TextField
+            label={texts.admintextpage.key}
+            variant="standard"
+            required
+            value={unsavedText.key}
+            onChange={(e) =>
+              setUnsavedText({
+                ...unsavedText,
+                key: e.currentTarget.value,
+              })
+            }
+          />
+          <TextField
+            inputRef={valueRef}
+            label={texts.admintextpage.value}
+            variant="standard"
+            value={unsavedText.value}
+            onChange={(e) =>
+              setUnsavedText({
+                ...unsavedText,
+                value: e.currentTarget.value,
+              })
+            }
+          />
+          <Button type="submit">
+            <MdAdd />
+          </Button>
+        </form>
       </CardContent>
     </Card>
   );
