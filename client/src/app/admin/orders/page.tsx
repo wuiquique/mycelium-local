@@ -1,43 +1,38 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
 import {
-  Card,
-  Typography,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
   Button,
+  Card,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
-import { BiPaperPlane } from "react-icons/bi";
+import axios from "axios";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { BiPaperPlane } from "react-icons/bi";
 import BackPage from "../../../components/BackPage";
 
 export default function Orders() {
-  const [orders, setOrders] = useState([
+  const [orders, setOrders] = useState<
     {
-      id: 1,
-      first_name: "Diego",
-      last_name: "Vallejo",
-      product_count: 18,
-      since: "2023-02-23",
-      till: "2023-02-25",
-    },
-  ]);
+      id: number;
+      first_name: string;
+      last_name: string;
+      product_count: number;
+      since: number;
+      till: number;
+    }[]
+  >([]);
 
   useEffect(() => {
-    axios
-      .get(`admin/orders/`)
-      .then((response) => {
-        setOrders(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    axios.get(`/api/admin/orders/`).then((response) => {
+      setOrders(response.data);
+    });
   }, []);
 
   return (
@@ -52,24 +47,26 @@ export default function Orders() {
           <Card elevation={10} sx={{ minHeight: 300 }}>
             <Table>
               <TableHead>
-                <TableCell>Name</TableCell>
-                <TableCell>Product_Count</TableCell>
-                <TableCell>Since</TableCell>
-                <TableCell>Till</TableCell>
-                <TableCell>Details</TableCell>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Product_Count</TableCell>
+                  <TableCell>Since</TableCell>
+                  <TableCell>Till</TableCell>
+                  <TableCell>Details</TableCell>
+                </TableRow>
               </TableHead>
               <TableBody>
-                {orders.map((e, i) => (
+                {orders.map((o, i) => (
                   <TableRow key={i}>
-                    <TableCell>{`${e.first_name} ${e.last_name}`}</TableCell>
-                    <TableCell>{e.product_count}</TableCell>
-                    <TableCell>{e.since}</TableCell>
-                    <TableCell>{e.till}</TableCell>
+                    <TableCell>{`${o.first_name} ${o.last_name}`}</TableCell>
+                    <TableCell>{o.product_count}</TableCell>
+                    <TableCell>{o.since}</TableCell>
+                    <TableCell>{o.till}</TableCell>
                     <TableCell>
                       <Button
                         variant="text"
                         component={Link}
-                        href={`/admin/orders/${e.id}`}
+                        href={`/admin/orders/${o.id}`}
                       >
                         <BiPaperPlane size="1.6rem" />
                       </Button>
