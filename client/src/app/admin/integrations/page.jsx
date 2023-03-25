@@ -4,7 +4,6 @@ import {
   Button,
   Card,
   CardContent,
-  FormControl,
   TextField,
   Typography,
 } from "@mui/material";
@@ -14,15 +13,7 @@ import { useEffect, useState } from "react";
 import BackPage from "../../../components/BackPage";
 
 export default function Integrations() {
-  const [integ, setInteg] = useState([
-    {
-      id: 1,
-      name: "Amazon",
-      user: "neim",
-      pass: "paseworl",
-      request: "http://lol.com",
-    },
-  ]);
+  const [integ, setInteg] = useState([]);
   const [showPass, setShowPass] = useState(false);
 
   useEffect(() => {
@@ -45,6 +36,7 @@ export default function Integrations() {
     axios.post("/api/integration/", post).then((response) => {
       console.log(response.data);
       setInteg(response.data);
+      e.target.reset();
     });
   };
 
@@ -54,7 +46,7 @@ export default function Integrations() {
     });
   };
 
-  const editInt = (e) => {
+  const editInt = (e, id) => {
     e.preventDefault();
 
     let post = {
@@ -99,6 +91,7 @@ export default function Integrations() {
                     variant="standard"
                     label="Contraseña"
                     name="int_pass"
+                    type="password"
                   />
                 </div>
                 <br />
@@ -109,7 +102,7 @@ export default function Integrations() {
                   name="int_ref"
                 />
                 <div className="flex justify-center">
-                  <Button className="mt-2 " variant="outlined" type="submit">
+                  <Button className="mt-3" variant="outlined" type="submit">
                     Guardar
                   </Button>
                 </div>
@@ -121,35 +114,45 @@ export default function Integrations() {
           <Grid2 key={i} lg={6}>
             <Card elevation={10}>
               <CardContent>
-                <form onSubmit={editInt}>
-                  <div className="p-2">
-                    <TextField 
-                      variant="standard" 
-                      defaultValue={e.name} 
+                <form onSubmit={(ev) => editInt(ev, e.id)}>
+                  <div className="p-2 flex justify-between">
+                    <TextField
+                      variant="standard"
+                      defaultValue={e.name}
                       name="int_name"
                     />
-                    <TextField 
-                      defaultValue={e.user} 
-                      variant="standard" 
-                      name='int_user'
+                    &nbsp;
+                    <TextField
+                      defaultValue={e.user}
+                      variant="standard"
+                      name="int_user"
                     />
-                    <TextField 
-                      defaultValue={e.request} 
-                      variant="standard" 
-                      name='int_ref'
+                    &nbsp;
+                    <TextField
+                      defaultValue={e.password}
+                      variant="standard"
+                      name="int_pass"
+                      type="password"
                     />
-                    <FormControl 
-                      defaultValue={e.password} 
-                      variant="standard" 
-                      name='int_pass'
-                    />
-                    <Button type='submit'>Update</Button>
+                  </div>
+                  <TextField
+                    sx={{ minWidth: "100%" }}
+                    defaultValue={e.request}
+                    variant="standard"
+                    name="int_ref"
+                  />
+                  <br />
+                  <div className="flex justify-center">
+                    <Button type="submit">Update</Button>
+                    <Button
+                      onClick={() => {
+                        deleteInt(e.id);
+                      }}
+                    >
+                      Remove
+                    </Button>
                   </div>
                 </form>
-                <div>
-                  <Button onClick={() => {deleteInt(e.id)}}>Update</Button>
-                  <Button>Remove</Button>
-                </div>
               </CardContent>
             </Card>
           </Grid2>
