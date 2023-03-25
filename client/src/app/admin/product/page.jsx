@@ -36,7 +36,7 @@ export default function AdminProduct() {
     let post = {
       name: products[index].name,
       desc: products[index].desc,
-      categorieId: products[index].categorie.id,
+      categorieId: products[index].categorieId,
       brand: products[index].brand,
       weight: products[index].weight,
       quantity: products[index].quantity,
