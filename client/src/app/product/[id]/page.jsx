@@ -81,18 +81,23 @@ export default function Product({ params: { id } }) {
     axios.get(`/api/technical/product/${id}`).then((response) => {
       setTech(response.data);
     });
-    axios.get(`/api/product/rating/${id}`).then((response) => {
-      setRatings(response.data);
-      for (const rat of response.data) {
-        if (rat.userId === user.id) {
-          setRU(rat.rating);
-        }
-      }
-    });
     axios.get(`/api/product/rating/avg/${id}`).then((response) => {
       setRAvg(response.data);
     });
   }, [id]);
+
+  useEffect(() => {
+    axios.get(`/api/product/rating/${id}`).then((response) => {
+      setRatings(response.data);
+      console.log(response.data);
+      console.log(user);
+      for (const rat of response.data) {
+        if (rat.user.id === user.id) {
+          setRU(rat.rating);
+        }
+      }
+    });
+  }, [id, user]);
 
   const categSelect = () => {
     let temp = "";
@@ -121,12 +126,12 @@ export default function Product({ params: { id } }) {
   const changeRating = (e, n) => {
     setRU(n ?? rU);
     for (const rat of ratings) {
-      if (rat.userId === user.id) {
+      if (rat.user.id === user.id) {
         let temp = {
           userId: user.id,
           rating: n,
         };
-        axios.put(`/api/product/rating/${id}`, temp).then((response) => {});
+        axios.put(`/api/product/rating/${rat.id}`, temp).then((response) => {});
         axios.get(`/api/product/rating/avg/${id}`).then((response) => {
           setRAvg(response.data);
         });
@@ -135,9 +140,10 @@ export default function Product({ params: { id } }) {
     }
     let post = {
       userId: user.id,
+      productId: id,
       rating: n,
     };
-    axios.post(`/api/product/rating/${id}`, post).then((response) => {});
+    axios.post(`/api/product/rating/`, post).then((response) => {});
     axios.get(`/api/product/rating/avg/${id}`).then((response) => {
       setRAvg(response.data);
     });

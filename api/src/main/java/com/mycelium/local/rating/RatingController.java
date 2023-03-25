@@ -5,6 +5,10 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.mycelium.local.repository.rating.Rating;
 import com.mycelium.local.repository.rating.RatingRepo;
+import com.mycelium.local.repository.user.User;
+import com.mycelium.local.repository.user.UserRepo;
+import com.mycelium.local.repository.product.Product;
+import com.mycelium.local.repository.product.ProductRepo;
 
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -26,9 +30,13 @@ class RatingCreateRequest {
 public class RatingController {
 
     private RatingRepo ratingRepo;
+    private UserRepo userRepo;
+    private ProductRepo productRepo;
 
-    public RatingController(RatingRepo ratingRepo) {
+    public RatingController(RatingRepo ratingRepo, UserRepo userRepo, ProductRepo productRepo) {
         this.ratingRepo = ratingRepo;
+        this.userRepo = userRepo;
+        this.productRepo = productRepo;
     }
 
     @Get("/")
@@ -47,11 +55,11 @@ public class RatingController {
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
-    @Post("/{productId}")
+    @Post("/")
     public void create(int productId, @Body RatingCreateRequest body) {
         var newRating = new Rating();
-        newRating.user.id = body.userId;
-        newRating.product.id = body.productId;
+        newRating.user = userRepo.findById(body.userId).get();
+        newRating.product = productRepo.findById(body.productId).get();
         newRating.rating = body.rating;
 
         ratingRepo.save(newRating);
@@ -63,7 +71,7 @@ public class RatingController {
         var rating = ratingRepo.findById(id).get();
         rating.user.id = body.userId;
         rating.rating = body.rating;
-        ratingRepo.save(rating);
+        ratingRepo.update(rating);
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)

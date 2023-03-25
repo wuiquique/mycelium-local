@@ -97,6 +97,34 @@ public class ProductController {
         return res;
     }
 
+    @Get("/topSales")
+    public List<ProductUnifiedResponse> listSales() {
+        List<ProductUnifiedResponse> res = new ArrayList<ProductUnifiedResponse>();
+        for (Product product : productRepo.findTop3Sales()) {
+            List<String> urls = new ArrayList<String>();
+            for (Picture picture : pictureRepo.findByProductId(product.id)) {
+                urls.add(picture.url);
+            }
+            res.add(new ProductUnifiedResponse(product.id, product.name, product.desc, product.categorie.id,
+                    product.brand, product.weight, product.quantity, product.price, urls));
+        }
+        return res;
+    }
+
+    @Get("/lastBought")
+    public List<ProductUnifiedResponse> listLast() {
+        List<ProductUnifiedResponse> res = new ArrayList<ProductUnifiedResponse>();
+        for (Product product : productRepo.findLastBought()) {
+            List<String> urls = new ArrayList<String>();
+            for (Picture picture : pictureRepo.findByProductId(product.id)) {
+                urls.add(picture.url);
+            }
+            res.add(new ProductUnifiedResponse(product.id, product.name, product.desc, product.categorie.id,
+                    product.brand, product.weight, product.quantity, product.price, urls));
+        }
+        return res;
+    }
+
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/")
     public void create(@Body ProductCreateRequest body) {

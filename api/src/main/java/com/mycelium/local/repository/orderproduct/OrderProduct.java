@@ -76,14 +76,6 @@ public class OrderProduct {
         this.created = created;
     }
 
-    public Date getUdpated() {
-        return updated;
-    }
-
-    public void setUdpated(Date updated) {
-        this.updated = updated;
-    }
-
     public Product getProduct() {
         return product;
     }

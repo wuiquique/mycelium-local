@@ -11,6 +11,6 @@ import io.micronaut.data.repository.CrudRepository;
 @Repository("default")
 @JdbcRepository(dialect = Dialect.ORACLE)
 public interface PictureRepo extends CrudRepository<Picture, Integer> {
-    @Query("SELECT * FROM \"pictures\" WHERE \"productId\" = :productId")
+    @Query("SELECT * FROM PICTURE WHERE PRODUCTID = :productId")
     List<Picture> findByProductId(Integer productId);
 }

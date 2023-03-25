@@ -10,130 +10,29 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import Stack from "@mui/material/Stack";
 import Grid2 from "@mui/material/Unstable_Grid2";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Carousel from "react-material-ui-carousel";
+import axios from "axios";
+import Link from "next/link";
 
 export default function Home() {
-  const [prods, setProds] = useState([
-    {
-      id: 1,
-      name: "Cuchara de Oro",
-      desc: "Una cuchara de ORO",
-      brand: "Cosas de Oro S.A.",
-      weight: 50,
-      price: 50000,
-      quantity: 2,
-      categId: 1,
-      url: "https://falabella.scene7.com/is/image/FalabellaPE/770197465_1?wid=800&hei=800&qlt=70",
-    },
-    {
-      id: 2,
-      name: "Cuchara de Plata",
-      desc: "Una cuchara de Plata",
-      brand: "Cosas NO de Oro S.A.",
-      weight: 40,
-      price: 5000,
-      quantity: 20,
-      categId: 2,
-      url: "https://m.media-amazon.com/images/I/41X8dYTqnKL.jpg",
-    },
-    {
-      id: 3,
-      name: "Cuchara de Bronce",
-      desc: "Una cuchara de Bronce",
-      brand: "Cosas NO de Oro S.A.",
-      weight: 30,
-      price: 500,
-      quantity: 200,
-      categId: 2,
-      url: "https://thumbs.dreamstime.com/b/cuchara-de-bronce-con-el-emblema-del-coraz%C3%B3n-en-la-manija-47338611.jpg",
-    },
-  ]);
+  useEffect(() => {
+    axios.get(`/api/product/topSales`).then((response) => {
+      setProds(response.data);
+    });
+    axios.get(`/api/product/lastBought`).then((response) => {
+      setNewP(response.data);
+    });
+  }, []);
+
+  const [prods, setProds] = useState<any[]>([]);
 
   const [categ, setCategs] = useState([
     { id: 1, name: "GOD" },
     { id: 2, name: "NonGOD" },
   ]);
 
-  const [newp, setNewP] = useState([
-    {
-      id: 1,
-      name: "Dummy",
-      desc: "Dummy Desc",
-      brand: "Dummy Brand",
-      weight: 1212,
-      price: 232,
-      quantity: 300,
-      categId: 2,
-      url: "/default.jpg",
-    },
-    {
-      id: 2,
-      name: "Dummy",
-      desc: "Dummy Desc",
-      brand: "Dummy Brand",
-      weight: 1212,
-      price: 232,
-      quantity: 300,
-      categId: 2,
-      url: "/default.jpg",
-    },
-    {
-      id: 3,
-      name: "Dummy",
-      desc: "Dummy Desc",
-      brand: "Dummy Brand",
-      weight: 1212,
-      price: 232,
-      quantity: 300,
-      categId: 2,
-      url: "/default.jpg",
-    },
-    {
-      id: 4,
-      name: "Dummy",
-      desc: "Dummy Desc",
-      brand: "Dummy Brand",
-      weight: 1212,
-      price: 232,
-      quantity: 300,
-      categId: 2,
-      url: "/default.jpg",
-    },
-    {
-      id: 5,
-      name: "Dummy",
-      desc: "Dummy Desc",
-      brand: "Dummy Brand",
-      weight: 1212,
-      price: 232,
-      quantity: 300,
-      categId: 2,
-      url: "/default.jpg",
-    },
-    {
-      id: 6,
-      name: "Dummy",
-      desc: "Dummy Desc",
-      brand: "Dummy Brand",
-      weight: 1212,
-      price: 232,
-      quantity: 300,
-      categId: 2,
-      url: "/default.jpg",
-    },
-    {
-      id: 7,
-      name: "Dummy",
-      desc: "Dummy Desc",
-      brand: "Dummy Brand",
-      weight: 1212,
-      price: 232,
-      quantity: 300,
-      categId: 2,
-      url: "/default.jpg",
-    },
-  ]);
+  const [newp, setNewP] = useState<any[]>([]);
 
   return (
     <div className="justify-center text-center">
@@ -225,10 +124,14 @@ export default function Home() {
           {prods.map((e, i) => (
             <div key={i}>
               <Paper className="h-80">
-                <ListItemButton>
+                <ListItemButton component={Link} href={`/product/${e.id}`}>
                   <Grid2 container spacing={12}>
                     <Grid2 lg={4}>
-                      <CardMedia component="img" height="100%" image={e.url} />
+                      <CardMedia
+                        component="img"
+                        height="100%"
+                        image={e.pictures[0]}
+                      />
                     </Grid2>
                     <Grid2 lg={8}>
                       <div className="text-left">
@@ -267,24 +170,19 @@ export default function Home() {
           className="mt-4"
           sx={{ borderRadius: "16px" }}
         />
+        <br />
 
         <Box className="overflow-x-auto">
-          <List component={Stack} direction="row" height={400} width={3060}>
+          <List component={Stack} direction="row" height={400} width={1600}>
             {newp.map((e, i) => (
-              <ListItem disablePadding key={i}>
-                <ListItemButton>
-                  <Card elevation={10} className="p-4">
-                    <CardMedia
-                      component="img"
-                      height="100%"
-                      image={newp[i].url}
-                    />
-                    <Typography variant="h6">{newp[i].name}</Typography>
-                    <Typography variant="body1">
-                      Q. {newp[i].price}.00
-                    </Typography>
+              <ListItem disablePadding key={i} sx={{ maxWidth: "500px" }}>
+                <ListItemButton component={Link} href={`/product/${e.id}`}>
+                  <Card elevation={10} className="p-4" sx={{ width: 1 }}>
+                    <CardMedia image={e.pictures[0]} sx={{ height: 240 }} />
+                    <Typography variant="h6">{e.name}</Typography>
+                    <Typography variant="body1">Q. {e.price}.00</Typography>
                     <Typography variant="subtitle2">
-                      Quantity: {newp[i].quantity}
+                      Quantity: {e.quantity}
                     </Typography>
                   </Card>
                 </ListItemButton>
