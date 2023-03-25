@@ -1,5 +1,6 @@
 package com.mycelium.local.product;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -128,29 +129,19 @@ public class ProductController {
     }
 
     @Get("/topSales")
-    public List<ProductUnifiedResponse> listSales() {
-        List<ProductUnifiedResponse> res = new ArrayList<ProductUnifiedResponse>();
+    public List<ProductResponse> listSales() {
+        List<ProductResponse> res = new ArrayList<ProductResponse>();
         for (Product product : productRepo.findTop3Sales()) {
-            List<String> urls = new ArrayList<String>();
-            for (Picture picture : pictureRepo.findByProductId(product.id)) {
-                urls.add(picture.url);
-            }
-            res.add(new ProductUnifiedResponse(product.id, product.name, product.desc, product.categorie.id,
-                    product.brand, product.weight, product.quantity, product.price, urls));
+            res.add(ProductResponse.fromProduct(product));
         }
         return res;
     }
 
     @Get("/lastBought")
-    public List<ProductUnifiedResponse> listLast() {
-        List<ProductUnifiedResponse> res = new ArrayList<ProductUnifiedResponse>();
+    public List<ProductResponse> listLast() {
+        List<ProductResponse> res = new ArrayList<ProductResponse>();
         for (Product product : productRepo.findLastBought()) {
-            List<String> urls = new ArrayList<String>();
-            for (Picture picture : pictureRepo.findByProductId(product.id)) {
-                urls.add(picture.url);
-            }
-            res.add(new ProductUnifiedResponse(product.id, product.name, product.desc, product.categorie.id,
-                    product.brand, product.weight, product.quantity, product.price, urls));
+            res.add(ProductResponse.fromProduct(product));
         }
         return res;
     }
