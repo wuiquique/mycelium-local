@@ -1,49 +1,54 @@
+// @ts-nocheck
 "use client";
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Button,
-  TextField,
-  Typography,
-} from "@mui/material";
-import Grid2 from "@mui/material/Unstable_Grid2";
-import CardHeader from "@mui/material/CardHeader";
-import Avatar from "@mui/material/Avatar";
-import { red } from "@mui/material/colors";
+import { Button, Card, CardMedia, TextField, Typography } from "@mui/material";
+import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import Grid2 from "@mui/material/Unstable_Grid2";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import BackPage from "../../../../../components/BackPage";
 
-export default function Create() {
-  const [tech, setTech] = useState([
-    { type: "Longitud", value: "20cm" },
-    { type: "Color", value: "Dorado obviamente xdddd" },
-  ]);
+export default function Update({ params: { id } }) {
+  const [categ, setCategs] = useState([]);
+  const [prod, setProd] = useState(null);
+  const [pictures, setPictures] = useState([]);
+  const [technical, setTechnical] = useState([]);
+
+  useEffect(() => {
+    axios.get(`/api/product/${id}`).then((response) => {
+      console.log(response.data);
+      setProd(response.data);
+      setPictures(response.data.pictures);
+      setTechnical(response.data.technical);
+    });
+    axios.get("/api/categories").then((response) => {
+      console.log(response.data);
+      setCategs(response.data);
+    });
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     let out = {
-      name: e.target.product_name.value,
-      desc: e.target.product_desc.value,
-      categId: e.target.product_categorie.value,
-      brand: e.target.product_brand.value,
-      weight: e.target.product_weight.value,
-      quantity: e.target.product_quantity.value,
-      price: e.target.product_price.value,
-      urls: [
-        e.target.product_img1.value,
-        e.target.product_img2.value,
-        e.target.product_img3.value,
+      name: e.currentTarget.product_name.value,
+      desc: e.currentTarget.product_desc.value,
+      categorieId: e.currentTarget.product_categorie.value,
+      brand: e.currentTarget.product_brand.value,
+      weight: e.currentTarget.product_weight.value,
+      quantity: e.currentTarget.product_quantity.value,
+      price: e.currentTarget.product_price.value,
+      pictures: [
+        e.currentTarget.product_img0.value,
+        e.currentTarget.product_img1.value,
+        e.currentTarget.product_img2.value,
       ],
-      tech: [...tech],
+      technical: [...technical],
     };
-    axios.post("/api/product/[id]", out).then((response) => {
+    console.log(out);
+    axios.put(`/api/product/${id}`, out).then((response) => {
       console.log(response.data);
       if (response.data === "Success") {
         location.reload();
@@ -55,66 +60,34 @@ export default function Create() {
 
   const handleChange = (e) => {
     let temp = { ...prod };
-    temp.categId = e.target.value;
+    temp.categorieId = e.target.value;
     setProd(temp);
     console.log(temp);
   };
 
   const addRow = (e) => {
-    let temp = [...tech];
+    let temp = [...technical];
     temp.push({ type: "", value: "" });
-    setTech(temp);
+    setTechnical(temp);
   };
 
   const deleteRow = (e, i) => {
-    let temp = [...tech];
+    let temp = [...technical];
     temp.splice(i, 1);
-    setTech(temp);
+    setTechnical(temp);
   };
 
   const changeInput = (i, c, v) => {
-    let temp = [...tech];
+    let temp = [...technical];
     temp[i][c] = v;
-    setTech(temp);
+    setTechnical(temp);
   };
-
-  const [prod, setProd] = useState({
-    name: "Cuchara de Oro",
-    desc: "Una cuchara de ORO",
-    brand: "Cosas de Oro S.A.",
-    weight: 50,
-    price: 50000,
-    quantity: 2,
-    categId: 1,
-  });
-
-  const [urls, setUrls] = useState([
-    "https://falabella.scene7.com/is/image/FalabellaPE/770197465_1?wid=800&hei=800&qlt=70",
-    "https://m.media-amazon.com/images/I/71g0Vo7zJUL.__AC_SY300_SX300_QL70_FMwebp_.jpg",
-    "https://media.istockphoto.com/id/1136230616/es/foto/cuchara-dorada-aislada-sobre-fondo-blanco.jpg?s=612x612&w=0&k=20&c=v9lFtWCJWSflVyvkzx-GOvPTENDIh2uyLLyhEVTqwZY=",
-  ]);
-
-  const [categ, setCategs] = useState([
-    { id: 1, name: "GOD" },
-    { id: 2, name: "NonGOD" },
-  ]);
 
   const changeImg = (i, u) => {
-    let temp = [...urls];
+    let temp = [...pictures];
     temp[i] = u;
-    setUrls(temp);
+    setPictures(temp);
   };
-
-  useEffect(() => {
-    axios.get("/apis/product/[id]").then((response) => {
-      setProd(response.data.prod);
-      setUrls(response.data.urls);
-      setTech(response.data.tech);
-    });
-    axios.get("/api/category").then((response) => {
-      setCategs(response.data);
-    });
-  }, []);
 
   return (
     <div>
@@ -134,201 +107,179 @@ export default function Create() {
             <Typography variant="h5" mt={2}>
               Update product
             </Typography>
-            <form className="mt-8 mb-11" onSubmit={handleSubmit}>
-              <Grid2 container spacing={2}>
-                <Grid2 xs={12} md={6}>
-                  <Card className="p-4" elevation={10} sx={{ height: 200 }}>
-                    <TextField
-                      className="mt-1"
-                      label="Name"
-                      variant="standard"
-                      name="product_name"
-                      defaultValue={prod.name}
-                    />
-                    <br />
-                    <TextField
-                      className="mt-1"
-                      label="Description"
-                      variant="standard"
-                      name="product_desc"
-                      defaultValue={prod.desc}
-                    />
-                    <br />
-                    <TextField
-                      className="mt-1"
-                      label="Brand"
-                      variant="standard"
-                      name="product_brand"
-                      defaultValue={prod.brand}
-                    />
-                  </Card>
-                </Grid2>
-                <Grid2 xs={12} md={6}>
-                  <Card className="p-4" elevation={10} sx={{ height: 200 }}>
-                    <TextField
-                      className="mt-1"
-                      label="Weight"
-                      variant="standard"
-                      name="product_weight"
-                      defaultValue={prod.weight}
-                    />
-                    <br />
-                    <TextField
-                      className="mt-1"
-                      label="Price"
-                      variant="standard"
-                      name="product_price"
-                      defaultValue={prod.price}
-                    />
-                    <br />
-                    <FormControl
-                      variant="standard"
-                      sx={{ m: 1, minWidth: 215 }}
-                    >
-                      <InputLabel id="form-id-categorie">Categorie</InputLabel>
-                      <Select
-                        labelId="form-id-categorie"
-                        name="product_categorie"
-                        value={prod.categId}
-                        onChange={handleChange}
-                        label="Categories"
-                      >
-                        {categ.map((e, i) => (
-                          <MenuItem key={i} value={e.id}>
-                            {e.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Card>
-                </Grid2>
-                <Grid2 lg={12}>
-                  <Card className="p-4" elevation={10}>
-                    <Grid2 container spacing={2}>
-                      <Grid2 lg={4}>
-                        <div className="p-4">
-                          <CardMedia
-                            component="img"
-                            height="100%"
-                            image={urls[0]}
-                            alt="Img1"
-                          />
-                          <TextField
-                            className="mt-1"
-                            label="URL"
-                            variant="standard"
-                            name="product_img1"
-                            value={urls[0]}
-                            onChange={(e) => changeImg(0, e.target.value)}
-                          />
-                        </div>
-                      </Grid2>
-                      <Grid2 lg={4}>
-                        <div className="p-4">
-                          <CardMedia
-                            component="img"
-                            height="100%"
-                            image={urls[1]}
-                            alt="Img2"
-                          />
-                          <TextField
-                            className="mt-1"
-                            label="URL"
-                            variant="standard"
-                            name="product_img2"
-                            value={urls[1]}
-                            onChange={(e) => changeImg(1, e.target.value)}
-                          />
-                        </div>
-                      </Grid2>
-                      <Grid2 lg={4}>
-                        <div className="p-4">
-                          <CardMedia
-                            component="img"
-                            height="100%"
-                            image={urls[2]}
-                            alt="Img3"
-                          />
-                          <TextField
-                            className="mt-1"
-                            label="URL"
-                            variant="standard"
-                            name="product_img3"
-                            value={urls[2]}
-                            onChange={(e) => changeImg(2, e.target.value)}
-                          />
-                        </div>
-                      </Grid2>
-                    </Grid2>
-                  </Card>
-                </Grid2>
-                <Grid2 lg={12}>
-                  <Card className="p-4" elevation={10}>
-                    <div>
+            {prod !== null ? (
+              <form className="mt-8 mb-11" onSubmit={handleSubmit}>
+                <Grid2 container spacing={2}>
+                  <Grid2 xs={12} md={6}>
+                    <Card className="p-4" elevation={10} sx={{ height: 200 }}>
                       <TextField
-                        label="Quantity"
-                        type="number"
+                        className="mt-1"
+                        label="Name"
                         variant="standard"
-                        defaultValue={prod.quantity}
+                        name="product_name"
+                        defaultValue={prod.name}
                       />
-                      <Typography variant="body1" mt={6}>
-                        Technical Specifications
-                      </Typography>
-                    </div>
-                    {tech.map((e, i) => (
-                      <div key={i}>
+                      <br />
+                      <TextField
+                        className="mt-1"
+                        label="Description"
+                        variant="standard"
+                        name="product_desc"
+                        defaultValue={prod.desc}
+                      />
+                      <br />
+                      <TextField
+                        className="mt-1"
+                        label="Brand"
+                        variant="standard"
+                        name="product_brand"
+                        defaultValue={prod.brand}
+                      />
+                    </Card>
+                  </Grid2>
+                  <Grid2 xs={12} md={6}>
+                    <Card className="p-4" elevation={10} sx={{ height: 200 }}>
+                      <TextField
+                        className="mt-1"
+                        label="Weight"
+                        variant="standard"
+                        name="product_weight"
+                        defaultValue={prod.weight}
+                      />
+                      <br />
+                      <TextField
+                        className="mt-1"
+                        label="Price"
+                        variant="standard"
+                        name="product_price"
+                        defaultValue={prod.price}
+                      />
+                      <br />
+                      <FormControl
+                        variant="standard"
+                        sx={{ m: 1, minWidth: 215 }}
+                      >
+                        <InputLabel id="form-id-categorie">
+                          Categorie
+                        </InputLabel>
+                        <Select
+                          labelId="form-id-categorie"
+                          name="product_categorie"
+                          defaultValue={prod.categorieId}
+                          onChange={handleChange}
+                          label="Categories"
+                        >
+                          {categ.map((e, i) => (
+                            <MenuItem key={i} value={e.id}>
+                              {e.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Card>
+                  </Grid2>
+                  <Grid2 lg={12}>
+                    <Card className="p-4" elevation={10}>
+                      <Grid2 container spacing={2}>
+                        {[
+                          ...pictures,
+                          { url: "/default.jpg" },
+                          { url: "/default.jpg" },
+                          { url: "/default.jpg" },
+                        ]
+                          .slice(0, 3)
+                          .map((p, i) => (
+                            <Grid2 lg={4} key={i}>
+                              <div className="p-4">
+                                <CardMedia
+                                  component="img"
+                                  height="100%"
+                                  image={p}
+                                  alt="Img2"
+                                />
+                                <TextField
+                                  className="mt-1"
+                                  label="URL"
+                                  variant="standard"
+                                  name={"product_img" + i.toString()}
+                                  defaultValue={p}
+                                  onChange={(e) => changeImg(1, e.target.value)}
+                                />
+                              </div>
+                            </Grid2>
+                          ))}
+                      </Grid2>
+                    </Card>
+                  </Grid2>
+                  <Grid2 lg={12}>
+                    <Card className="p-4" elevation={10}>
+                      <div>
                         <TextField
-                          className="m-1"
-                          label="Type"
+                          label="Quantity"
+                          type="number"
                           variant="standard"
-                          value={e.type}
-                          onChange={(e) =>
-                            changeInput(i, "type", e.target.value)
-                          }
+                          defaultValue={prod.quantity}
+                          name="product_quantity"
                         />
-                        <TextField
-                          className="m-1"
-                          label="Value"
-                          variant="standard"
-                          value={e.value}
-                          onChange={(e) =>
-                            changeInput(i, "value", e.target.value)
-                          }
-                        />
+                        <Typography variant="body1" mt={6}>
+                          Technical Specifications
+                        </Typography>
+                      </div>
+                      {technical.map((e, i) => (
+                        <div key={i}>
+                          <TextField
+                            className="m-1"
+                            label="Type"
+                            variant="standard"
+                            value={e.type}
+                            onChange={(e) =>
+                              changeInput(i, "type", e.target.value)
+                            }
+                          />
+                          <TextField
+                            className="m-1"
+                            label="Value"
+                            variant="standard"
+                            value={e.value}
+                            onChange={(e) =>
+                              changeInput(i, "value", e.target.value)
+                            }
+                          />
+                          <Button
+                            className="mt-6"
+                            variant="outlined"
+                            color="primary"
+                            onClick={(e) => deleteRow(e, i)}
+                          >
+                            -
+                          </Button>
+                        </div>
+                      ))}
+                      <div>
                         <Button
                           className="mt-6"
                           variant="outlined"
                           color="primary"
-                          onClick={(e) => deleteRow(e, i)}
+                          onClick={addRow}
                         >
-                          -
+                          +
                         </Button>
                       </div>
-                    ))}
-                    <div>
-                      <Button
-                        className="mt-6"
-                        variant="outlined"
-                        color="primary"
-                        onClick={addRow}
-                      >
-                        +
-                      </Button>
-                    </div>
-                  </Card>
+                    </Card>
+                  </Grid2>
+                  <Grid2 xs={12}>
+                    <Button
+                      className="mt-6"
+                      variant="outlined"
+                      color="secondary"
+                      type="submit"
+                    >
+                      Update
+                    </Button>
+                  </Grid2>
                 </Grid2>
-                <Grid2 xs={12}>
-                  <Button
-                    className="mt-6"
-                    variant="outlined"
-                    color="secondary"
-                    type="submit"
-                  >
-                    Create
-                  </Button>
-                </Grid2>
-              </Grid2>
-            </form>
+              </form>
+            ) : null}
           </Card>
         </div>
       </Grid2>

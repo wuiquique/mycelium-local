@@ -203,7 +203,7 @@ public class ProductController {
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Put("/{id}")
-    public List<ProductResponse> update(int id, @Body ProductCreateRequest body) {
+    public String update(int id, @Body ProductCreateRequest body) {
         var prod = productRepo.findById(id).get();
 
         prod.name = body.name;
@@ -216,7 +216,28 @@ public class ProductController {
 
         productRepo.update(prod);
 
-        return list();
+        for (var pic : prod.pictures) {
+            pictureRepo.delete(pic);
+        }
+        for (int i = 0; i < body.pictures.size(); i++) {
+            var newPic = new Picture();
+            newPic.url = body.pictures.get(i);
+            newPic.product = prod;
+            pictureRepo.save(newPic);
+        }
+
+        for (var tech : prod.technical) {
+            technicalRepo.delete(tech);
+        }
+        for (int i = 0; i < body.technical.size(); i++) {
+            var newTech = new Technical();
+            newTech.type = body.technical.get(i).type;
+            newTech.value = body.technical.get(i).value;
+            newTech.product = prod;
+            technicalRepo.save(newTech);
+        }
+
+        return "Success";
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
