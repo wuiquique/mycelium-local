@@ -1,4 +1,4 @@
-package com.mycelium.local.text;
+package com.mycelium.local.controller.text;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.mycelium.local.comment;
+package com.mycelium.local.controller.comment;
 
 import java.util.Date;
 import java.util.List;

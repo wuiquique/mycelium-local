@@ -1,4 +1,4 @@
-package com.mycelium.local.technical;
+package com.mycelium.local.controller.technical;
 
 import java.util.List;
 

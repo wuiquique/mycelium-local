@@ -1,4 +1,4 @@
-package com.mycelium.local.picture;
+package com.mycelium.local.controller.picture;
 
 import java.util.List;
 

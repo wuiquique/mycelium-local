@@ -1,4 +1,4 @@
-package com.mycelium.local.categorie;
+package com.mycelium.local.controller.categorie;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.mycelium.local.integration;
+package com.mycelium.local.controller.integration;
 
 import java.util.List;
 

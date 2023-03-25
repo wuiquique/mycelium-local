@@ -1,4 +1,4 @@
-package com.mycelium.local.role;
+package com.mycelium.local.controller.role;
 
 import java.util.List;
 

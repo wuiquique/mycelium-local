@@ -1,4 +1,4 @@
-package com.mycelium.local.session;
+package com.mycelium.local.controller.session;
 
 import java.net.URI;
 import java.util.Map;

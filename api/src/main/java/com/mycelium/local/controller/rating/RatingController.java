@@ -1,4 +1,4 @@
-package com.mycelium.local.rating;
+package com.mycelium.local.controller.rating;
 
 import java.util.List;
 

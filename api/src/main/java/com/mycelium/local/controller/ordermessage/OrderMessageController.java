@@ -1,4 +1,4 @@
-package com.mycelium.local.ordermessage;
+package com.mycelium.local.controller.ordermessage;
 
 import java.util.List;
 

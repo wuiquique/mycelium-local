@@ -1,4 +1,4 @@
-package com.mycelium.local.user;
+package com.mycelium.local.controller.user;
 
 import java.util.ArrayList;
 import java.util.List;
