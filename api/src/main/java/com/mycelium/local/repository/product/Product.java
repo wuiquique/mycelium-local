@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mycelium.local.repository.categorie.Categorie;
 import com.mycelium.local.repository.picture.Picture;
+import com.mycelium.local.repository.technical.Technical;
 
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
@@ -26,8 +27,11 @@ public class Product {
     @Relation(value = Relation.Kind.MANY_TO_ONE)
     public Categorie categorie;
 
-    @Relation(value = Relation.Kind.ONE_TO_MANY)
+    @Relation(value = Relation.Kind.ONE_TO_MANY, mappedBy = "product")
     public List<Picture> pictures;
+
+    @Relation(value = Relation.Kind.ONE_TO_MANY, mappedBy = "product")
+    public List<Technical> technical;
 
     public Integer getId() {
         return id;
@@ -99,5 +103,13 @@ public class Product {
 
     public void setPictures(List<Picture> pictures) {
         this.pictures = pictures;
+    }
+
+    public List<Technical> getTechnical() {
+        return technical;
+    }
+
+    public void setTechnical(List<Technical> technical) {
+        this.technical = technical;
     }
 }

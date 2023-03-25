@@ -17,20 +17,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 export default function AdminProduct() {
-  const [products, setProducts] = useState([
-    {
-      id: null,
-      name: "",
-      desc: "",
-      categorie: {
-        id: 0,
-      },
-      brand: "",
-      weight: "",
-      quantity: "",
-      price: "",
-    },
-  ]);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     axios.get("/api/product").then((response) => {
