@@ -60,6 +60,13 @@ class ProductResponse {
     public List<String> pictures;
     public List<BasicTechnical> technical;
 
+    static public ProductResponse fromProductBasic(Product prod) {
+        List<String> pics = Lists.newArrayList();
+        List<BasicTechnical> techs = Lists.newArrayList();
+        return new ProductResponse(prod.id, prod.name, prod.desc, prod.categorie.id, prod.brand, prod.weight,
+                prod.quantity, prod.price, pics, techs);
+    }
+
     public ProductResponse(Integer id, String name, String desc, int categorieId,
             String brand, int weight, int quantity, int price, List<String> pictures, List<BasicTechnical> technical) {
         this.id = id;
@@ -132,7 +139,12 @@ public class ProductController {
     public List<ProductResponse> listSales() {
         List<ProductResponse> res = new ArrayList<ProductResponse>();
         for (Product product : productRepo.findTop3Sales()) {
-            res.add(ProductResponse.fromProduct(product));
+            List<String> urls = new ArrayList<String>();
+            for (Picture picture : pictureRepo.findByProductId(product.id)) {
+                urls.add(picture.url);
+            }
+            res.add(new ProductResponse(product.id, product.name, product.desc, product.categorie.id,
+                    product.brand, product.weight, product.quantity, product.price, urls, Lists.newArrayList()));
         }
         return res;
     }
@@ -141,7 +153,12 @@ public class ProductController {
     public List<ProductResponse> listLast() {
         List<ProductResponse> res = new ArrayList<ProductResponse>();
         for (Product product : productRepo.findLastBought()) {
-            res.add(ProductResponse.fromProduct(product));
+            List<String> urls = new ArrayList<String>();
+            for (Picture picture : pictureRepo.findByProductId(product.id)) {
+                urls.add(picture.url);
+            }
+            res.add(new ProductResponse(product.id, product.name, product.desc, product.categorie.id,
+                    product.brand, product.weight, product.quantity, product.price, urls, Lists.newArrayList()));
         }
         return res;
     }
