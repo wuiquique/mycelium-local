@@ -39,6 +39,8 @@ function valuetext(value) {
   return `${value}.00`;
 }
 
+const minDistance = 10;
+
 export default function Search() {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([
@@ -75,7 +77,7 @@ export default function Search() {
     });
   }, []);
 
-  const [value, setValue] = useState([20, 37]);
+  const [value, setValue] = useState([0, 1000]);
 
   const handleSliderChange = (event, newValue) => {
     setValue(newValue);
@@ -111,7 +113,7 @@ export default function Search() {
             Category Filter
           </Typography>
           <FormControl sx={{ width: "100%" }}>
-            <InputLabel id="demo-multiple-chip-label">Chip</InputLabel>
+            <InputLabel id="demo-multiple-chip-label">Categories</InputLabel>
             <Select
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
@@ -122,7 +124,10 @@ export default function Search() {
               renderValue={(selected) => (
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                   {selected.map((value) => (
-                    <Chip key={value} label={value} />
+                    <Chip
+                      key={value}
+                      label={categories.find((c) => c.id === value).name}
+                    />
                   ))}
                 </Box>
               )}
