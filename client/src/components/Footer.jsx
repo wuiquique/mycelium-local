@@ -1,5 +1,3 @@
-"use client";
-
 import CopyrightIcon from "@mui/icons-material/Copyright";
 import { Box, Container, Typography } from "@mui/material";
 import { useState } from "react";

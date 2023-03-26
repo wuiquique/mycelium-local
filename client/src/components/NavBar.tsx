@@ -1,5 +1,3 @@
-"use client";
-
 import { useTexts } from "@/hooks/textContext";
 import { useUser } from "@/hooks/userContext";
 import {
@@ -11,11 +9,10 @@ import {
   TextField,
   Toolbar,
 } from "@mui/material";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { MdMenu } from "react-icons/md";
+import { navigate } from "vite-plugin-ssr/client/router";
 
 export default function NavBar({
   onDrawer,
@@ -26,7 +23,6 @@ export default function NavBar({
 }) {
   const [user] = useUser();
   const texts = useTexts();
-  const router = useRouter();
 
   const [searchQuery, setSearchQuery] = useState(defaultSearchQuery);
 
@@ -51,12 +47,7 @@ export default function NavBar({
           >
             <MdMenu />
           </IconButton>
-          <Button
-            variant="contained"
-            disableElevation
-            component={Link}
-            href="/"
-          >
+          <Button variant="contained" disableElevation component="a" href="/">
             <img src="/redwhite.png" width="20px" />
             &nbsp;
             {texts.global.shopname}
@@ -66,7 +57,7 @@ export default function NavBar({
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              router.push(`/search?q=${searchQuery}`);
+              navigate(`/search?q=${searchQuery}`);
             }}
           >
             <Box
@@ -97,7 +88,7 @@ export default function NavBar({
               <Button
                 variant="contained"
                 disableElevation
-                component={Link}
+                component="a"
                 href={`/search?q=${searchQuery}`}
               >
                 {texts.header.searchbutton}
@@ -109,10 +100,10 @@ export default function NavBar({
         <div>
           {user.id === null ? (
             <>
-              <Button component={Link} href="/login" color="inherit">
+              <Button component="a" href="/login" color="inherit">
                 {texts.header.loginbutton}
               </Button>
-              <Button component={Link} href="/register" color="inherit">
+              <Button component="a" href="/register" color="inherit">
                 {texts.header.registerbutton}
               </Button>
             </>

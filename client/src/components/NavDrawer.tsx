@@ -1,7 +1,6 @@
 import { useUser } from "@/hooks/userContext";
 import theme from "@/theme";
 import {
-  Box,
   Drawer,
   List,
   ListItem,
@@ -9,8 +8,6 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import Link from "next/link";
-import React from "react";
 import { IconContext } from "react-icons";
 
 export default function NavDrawer({
@@ -50,11 +47,7 @@ export default function NavDrawer({
           )
           .map((item, i) => (
             <ListItem disablePadding key={i}>
-              <ListItemButton
-                component={Link}
-                href={item.href}
-                onClick={onClose}
-              >
+              <ListItemButton component="a" href={item.href} onClick={onClose}>
                 <ListItemIcon>
                   <IconContext.Provider
                     value={{ color: theme.palette.primary.contrastText }}

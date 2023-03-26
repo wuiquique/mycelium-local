@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Button,
   Card,
@@ -27,7 +25,6 @@ export default function UserCart({
     axios
       .put(`/api/user/cart/`, { ...product, quantity: 0 })
       .then((response) => {
-        console.log(response.data);
         onChange(response.data);
       });
   };
@@ -42,7 +39,6 @@ export default function UserCart({
     axios
       .patch(`/api/admin/orders/${orderId}`)
       .then((response) => {
-        console.log(response.data);
         onChange(response.data);
       })
       .catch((error) => {
@@ -94,7 +90,7 @@ export default function UserCart({
             <div className="text-right p-5">
               {cartOrCheckout === "cart" ? (
                 <Button variant="outlined" onClick={() => handleDeleteItem(e)}>
-                  Delete
+                  Eliminar
                 </Button>
               ) : (
                 <></>

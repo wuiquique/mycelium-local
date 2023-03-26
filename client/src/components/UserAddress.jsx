@@ -1,7 +1,3 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
-import axios from "axios";
 import {
   Button,
   Card,
@@ -10,55 +6,71 @@ import {
   Typography,
 } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers";
+import axios from "axios";
+import { useState } from "react";
 
 export default function UserAddress({ products }) {
   const [date1, setDate1] = useState("2014-08-18T21:11:54");
   const [date2, setDate2] = useState("2014-08-18T21:11:54");
 
-
   const handleSubmit = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     let dirHolder = {
-      direction: event.target.direction.value, 
-      state: event.target.state.value, 
+      direction: event.target.direction.value,
+      state: event.target.state.value,
       city: event.target.city.value,
-      zip: event.target.zip.value, 
+      zip: event.target.zip.value,
       phone: event.target.phone.value,
-      since: date1, 
-      till: date2
-    }
-    let prodHolder = products
-    console.log({dir: dirHolder, products: prodHolder})
-    //no se como se va a ser el body pero aca ta adelantado 
-    axios.post('url', {dir: dirHolder, products: prodHolder})
-    .then(response => {
-      console.log('si')
-    })
-  }
+      since: date1,
+      till: date2,
+    };
+    let prodHolder = products;
+    console.log({ dir: dirHolder, products: prodHolder });
+    //no se como se va a ser el body pero aca ta adelantado
+    axios
+      .post("url", { dir: dirHolder, products: prodHolder })
+      .then((response) => {
+        console.log("si");
+      });
+  };
 
   return (
     <div>
       <Card className="p-4" elevation={10}>
         <CardContent>
-          <Typography variant="h4" className='text-center'>Mailing Address</Typography>
+          <Typography variant="h4" className="text-center">
+            Mailing Address
+          </Typography>
           <form onSubmit={handleSubmit}>
             <TextField
               sx={{ minWidth: "100%" }}
               label="Address"
               variant="standard"
-              name='direction'
+              name="direction"
             />
             <div>
-              <TextField label="State" variant="standard" className="mr-1" name='state'/>
-              <TextField label="City" variant="standard" name='city'/>
+              <TextField
+                label="State"
+                variant="standard"
+                className="mr-1"
+                name="state"
+              />
+              <TextField label="City" variant="standard" name="city" />
             </div>
             <div>
-              <TextField label="Zip" variant="standard" className="mr-1" name='zip'/>
-              <TextField label="Phone" variant="standard" name='phone'/>
+              <TextField
+                label="Zip"
+                variant="standard"
+                className="mr-1"
+                name="zip"
+              />
+              <TextField label="Phone" variant="standard" name="phone" />
             </div>
-            <br/>
-            <Typography variant='h5' className='text-center'>Delivery Time Range</Typography>
-            <br/>
+            <br />
+            <Typography variant="h5" className="text-center">
+              Delivery Time Range
+            </Typography>
+            <br />
             <div className="flex">
               <DateTimePicker
                 renderInput={(props) => <TextField {...props} />}
@@ -67,7 +79,8 @@ export default function UserAddress({ products }) {
                 onChange={(newValue) => {
                   setDate1(newValue);
                 }}
-              /> &nbsp;
+              />{" "}
+              &nbsp;
               <DateTimePicker
                 renderInput={(props) => <TextField {...props} />}
                 label="To"
@@ -78,10 +91,7 @@ export default function UserAddress({ products }) {
               />
             </div>
             <div className="text-center mt-3">
-              <Button
-                type='submit'
-                variant='outlined'
-              >
+              <Button type="submit" variant="outlined">
                 Place Order
               </Button>
             </div>
