@@ -3,6 +3,7 @@ package com.mycelium.local.repository.product;
 import java.util.List;
 
 import com.mycelium.local.repository.categorie.Categorie;
+import com.mycelium.local.repository.orderproduct.OrderProduct;
 import com.mycelium.local.repository.picture.Picture;
 import com.mycelium.local.repository.technical.Technical;
 
@@ -32,6 +33,9 @@ public class Product {
 
     @Relation(value = Relation.Kind.ONE_TO_MANY, mappedBy = "product")
     public List<Technical> technical;
+
+    @Relation(value = Relation.Kind.ONE_TO_MANY, mappedBy = "product")
+    public List<OrderProduct> orderProducts;
 
     public Integer getId() {
         return id;
@@ -111,5 +115,13 @@ public class Product {
 
     public void setTechnical(List<Technical> technical) {
         this.technical = technical;
+    }
+
+    public List<OrderProduct> getOrderProducts() {
+        return orderProducts;
+    }
+
+    public void setOrderProducts(List<OrderProduct> orderProducts) {
+        this.orderProducts = orderProducts;
     }
 }

@@ -27,6 +27,10 @@ public interface ProductRepo extends CrudRepository<Product, Integer> {
     @Join(value = "technical", type = Join.Type.LEFT_FETCH)
     List<Product> findByCategorieId(Integer categorieId);
 
+    @Join(value = "pictures", type = Join.Type.LEFT_FETCH)
+    @Join(value = "technical", type = Join.Type.LEFT_FETCH)
+    List<Product> findByIdInList(List<Integer> ids);
+
     @Query("SELECT * FROM (SELECT p.id, sum(o.QUANTITY) AS suma FROM ORDERPRODUCT o JOIN PRODUCT p ON o.PRODUCTID = p.ID GROUP BY p.ID ORDER BY suma DESC) a JOIN PRODUCT p2 ON a.id = p2.ID")
     List<Product> findTop3Sales();
 

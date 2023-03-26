@@ -11,6 +11,8 @@ import com.mycelium.local.repository.picture.Picture;
 import com.mycelium.local.repository.picture.PictureRepo;
 import com.mycelium.local.repository.product.Product;
 import com.mycelium.local.repository.product.ProductRepo;
+import com.mycelium.local.repository.product.SearchCriteria;
+import com.mycelium.local.repository.product.SearchManager;
 import com.mycelium.local.repository.technical.Technical;
 import com.mycelium.local.repository.technical.TechnicalRepo;
 
@@ -21,8 +23,10 @@ import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
+import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
+import jakarta.annotation.Nullable;
 
 class ProductCreateRequest {
     public String name;
@@ -60,13 +64,6 @@ class ProductResponse {
     public List<String> pictures;
     public List<BasicTechnical> technical;
 
-    static public ProductResponse fromProductBasic(Product prod) {
-        List<String> pics = Lists.newArrayList();
-        List<BasicTechnical> techs = Lists.newArrayList();
-        return new ProductResponse(prod.id, prod.name, prod.desc, prod.categorie.id, prod.brand, prod.weight,
-                prod.quantity, prod.price, pics, techs);
-    }
-
     public ProductResponse(Integer id, String name, String desc, int categorieId,
             String brand, int weight, int quantity, int price, List<String> pictures, List<BasicTechnical> technical) {
         this.id = id;
@@ -93,6 +90,21 @@ class ProductResponse {
         return new ProductResponse(prod.id, prod.name, prod.desc, prod.categorie.id, prod.brand, prod.weight,
                 prod.quantity, prod.price, pics, techs);
     }
+
+    static public ProductResponse fromProductBasic(Product prod) {
+        List<String> pics = Lists.newArrayList();
+        List<BasicTechnical> techs = Lists.newArrayList();
+        return new ProductResponse(prod.id, prod.name, prod.desc, prod.categorie.id, prod.brand, prod.weight,
+                prod.quantity, prod.price, pics, techs);
+    }
+
+    static public List<ProductResponse> fromProductList(Iterable<Product> products) {
+        List<ProductResponse> res = Lists.newArrayList();
+        for (Product product : products) {
+            res.add(ProductResponse.fromProduct(product));
+        }
+        return res;
+    }
 }
 
 @Secured(SecurityRule.IS_ANONYMOUS)
@@ -103,22 +115,20 @@ public class ProductController {
     private PictureRepo pictureRepo;
     private CategorieRepo categorieRepo;
     private TechnicalRepo technicalRepo;
+    private SearchManager searchManager;
 
     public ProductController(ProductRepo productRepo, PictureRepo pictureRepo, CategorieRepo categorieRepo,
-            TechnicalRepo technicalRepo) {
+            TechnicalRepo technicalRepo, SearchManager searchManager) {
         this.productRepo = productRepo;
         this.pictureRepo = pictureRepo;
         this.categorieRepo = categorieRepo;
         this.technicalRepo = technicalRepo;
+        this.searchManager = searchManager;
     }
 
     @Get("/")
     public List<ProductResponse> list() {
-        List<ProductResponse> res = Lists.newArrayList();
-        for (var prod : productRepo.findAll()) {
-            res.add(ProductResponse.fromProduct(prod));
-        }
-        return res;
+        return ProductResponse.fromProductList(productRepo.findAll());
     }
 
     @Get("/{id}")
@@ -128,11 +138,7 @@ public class ProductController {
 
     @Get("/byCategory/{categorieId}")
     public List<ProductResponse> listPCategorie(int categorieId) {
-        List<ProductResponse> res = Lists.newArrayList();
-        for (Product product : productRepo.findByCategorieId(categorieId)) {
-            res.add(ProductResponse.fromProduct(product));
-        }
-        return res;
+        return ProductResponse.fromProductList(productRepo.findByCategorieId(categorieId));
     }
 
     @Get("/topSales")
@@ -244,5 +250,36 @@ public class ProductController {
     @Delete("/{id}")
     public void delete(int id) {
         // TODO
+    }
+
+    @Get("/search")
+    public List<ProductResponse> search(@Nullable @QueryValue(value = "q", defaultValue = "") String query,
+            @Nullable @QueryValue(value = "pricemin", defaultValue = "") String priceMinStr,
+            @Nullable @QueryValue(value = "pricemax", defaultValue = "") String priceMaxStr,
+            @Nullable @QueryValue(value = "categories", defaultValue = "") String categoriesStr) {
+        List<SearchCriteria> criteria = Lists.newArrayList();
+        if (query.trim() != "") {
+            criteria.add(new SearchCriteria.TextContains(query.trim()));
+        }
+        if (priceMinStr.trim() != "" && priceMaxStr.trim() != "") {
+            try {
+                criteria.add(new SearchCriteria.PriceBetween(Integer.parseInt(priceMinStr.trim()),
+                        Integer.parseInt(priceMaxStr.trim())));
+            } catch (NumberFormatException e) {
+                // Do nothing
+            }
+        }
+        if (categoriesStr.trim() != "") {
+            List<Integer> ids = Lists.newArrayList();
+            for (var categId : categoriesStr.split(",")) {
+                try {
+                    ids.add(Integer.parseInt(categId));
+                } catch (NumberFormatException e) {
+                    // Do nothing
+                }
+            }
+            criteria.add(new SearchCriteria.CategoryIn(ids));
+        }
+        return ProductResponse.fromProductList(searchManager.search(criteria));
     }
 }
