@@ -16,6 +16,7 @@ export const defaultKeys = {
   header: {
     loginbutton: "",
     registerbutton: "",
+    logoutbutton: "",
     welcometext: "",
     searchbutton: "",
   },

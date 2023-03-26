@@ -9,7 +9,8 @@ import {
   TextField,
   Toolbar,
 } from "@mui/material";
-import { useState } from "react";
+import axios from "axios";
+import { useCallback, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { MdMenu } from "react-icons/md";
 import { navigate } from "vite-plugin-ssr/client/router";
@@ -21,7 +22,7 @@ export default function NavBar({
   onDrawer: () => void;
   defaultSearchQuery: string;
 }) {
-  const [user] = useUser();
+  const [user, setUser] = useUser();
   const texts = useTexts();
 
   const [searchQuery, setSearchQuery] = useState(defaultSearchQuery);
@@ -32,6 +33,11 @@ export default function NavBar({
       borderColor: "yellow !important",
     },
   });
+
+  const logout = useCallback(() => {
+    axios.post("/api/logout");
+    setUser({ id: null });
+  }, []);
 
   return (
     <AppBar>
@@ -111,6 +117,9 @@ export default function NavBar({
             <>
               {texts.header.welcometext}
               {user.name} {user.lastname}
+              <Button color="inherit" onClick={logout}>
+                {texts.header.logoutbutton}
+              </Button>
             </>
           )}
         </div>
