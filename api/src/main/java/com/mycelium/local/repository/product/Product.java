@@ -2,6 +2,7 @@ package com.mycelium.local.repository.product;
 
 import java.util.List;
 
+import com.mycelium.local.repository.cart.Cart;
 import com.mycelium.local.repository.categorie.Categorie;
 import com.mycelium.local.repository.orderproduct.OrderProduct;
 import com.mycelium.local.repository.picture.Picture;
@@ -36,6 +37,9 @@ public class Product {
 
     @Relation(value = Relation.Kind.ONE_TO_MANY, mappedBy = "product")
     public List<OrderProduct> orderProducts;
+
+    @Relation(value = Relation.Kind.ONE_TO_MANY, mappedBy = "product")
+    public List<Cart> cartProducts;
 
     public Integer getId() {
         return id;
