@@ -1,28 +1,29 @@
 "use client";
 
-import React, { useEffect, useState, useTheme } from "react";
-import axios from "axios";
 import {
-  Card,
-  CardMedia,
-  CardContent,
-  Typography,
+  Box,
   Button,
-  TextField,
+  Card,
+  CardContent,
+  CardMedia,
+  Chip,
   FormControl,
   InputLabel,
-  Select,
-  OutlinedInput,
   MenuItem,
-  Box,
-  Chip,
-  Slider,
+  OutlinedInput,
   Rating,
+  Select,
+  SelectChangeEvent,
+  Slider,
+  TextField,
+  Typography,
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
+import axios from "axios";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import BackPage from "../../components/BackPage";
-import Link from "next/link";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -35,30 +36,34 @@ const MenuProps = {
   },
 };
 
-function valuetext(value) {
+function valuetext(value: number) {
   return `${value}.00`;
 }
 
-const minDistance = 10;
-
 export default function Search() {
-  const [categories, setCategories] = useState([]);
-  const [products, setProducts] = useState([
+  const [categories, setCategories] = useState<
     {
-      type: "local",
-      id: "1",
-      name: "Cuchara de Oro",
-      description: "Muy Fina",
-      quantity: "3",
-      category: "Oro", //-> nombre
-      brand: "Dioro",
-      weight: "23",
-      price: 75,
-      pictures: [
-        "https://falabella.scene7.com/is/image/FalabellaPE/770197465_1?wid=800&hei=800&qlt=70",
-      ], //-> solo 1
-    },
-  ]);
+      id: number;
+      name: string;
+    }[]
+  >([]);
+  const [products, setProducts] = useState<
+    {
+      id: number;
+      name: string;
+      desc: string;
+      categorieId: number;
+      brand: string;
+      weight: number;
+      quantity: number;
+      price: number;
+      pictures: string[];
+      technical: {
+        type: string;
+        value: string;
+      }[];
+    }[]
+  >([]);
 
   useEffect(() => {
     axios
@@ -79,18 +84,23 @@ export default function Search() {
 
   const [value, setValue] = useState([0, 1000]);
 
-  const handleSliderChange = (event, newValue) => {
+  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+    if (!Array.isArray(newValue)) return;
     setValue(newValue);
   };
-  const [personName, setPersonName] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
 
-  const handleChange = (event) => {
+  const handleChange = (
+    event: SelectChangeEvent<typeof selectedCategories>
+  ) => {
     const {
       target: { value },
     } = event;
-    setPersonName(
+    setSelectedCategories(
       // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
+      typeof value === "string"
+        ? value.split(",").map((s) => parseInt(s, 10))
+        : value
     );
   };
 
@@ -118,7 +128,7 @@ export default function Search() {
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
               multiple
-              value={personName}
+              value={selectedCategories}
               onChange={handleChange}
               input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
               renderValue={(selected) => (
@@ -126,7 +136,7 @@ export default function Search() {
                   {selected.map((value) => (
                     <Chip
                       key={value}
-                      label={categories.find((c) => c.id === value).name}
+                      label={categories.find((c) => c.id === value)?.name ?? ""}
                     />
                   ))}
                 </Box>
@@ -168,7 +178,7 @@ export default function Search() {
                 />
                 <CardContent className="text-left">
                   <Typography variant="h5">{e.name}</Typography>
-                  <Typography variant="h6">{e.description}</Typography>
+                  <Typography variant="h6">{e.desc}</Typography>
                   <Typography variant="body1">
                     <strong>{e.brand}</strong>
                   </Typography>
