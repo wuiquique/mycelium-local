@@ -30,7 +30,7 @@ export default function Cart() {
   const getTotal = () => {
     let total = 0;
     for (let i of products) {
-      total += i.price;
+      total += i.price * i.quantity;
     }
     return total;
   };
