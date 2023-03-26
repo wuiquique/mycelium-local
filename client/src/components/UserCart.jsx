@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
 import {
-  Card,
-  CardMedia,
-  CardContent,
-  Typography,
   Button,
+  Card,
+  CardContent,
+  CardMedia,
   TextField,
+  Typography,
 } from "@mui/material";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function UserCart({
   products,
@@ -27,6 +27,7 @@ export default function UserCart({
     axios
       .put(`/api/user/cart/`, { ...product, quantity: 0 })
       .then((response) => {
+        console.log(response.data);
         onChange(response.data);
       });
   };
@@ -41,6 +42,7 @@ export default function UserCart({
     axios
       .patch(`/api/admin/orders/${orderId}`)
       .then((response) => {
+        console.log(response.data);
         onChange(response.data);
       })
       .catch((error) => {

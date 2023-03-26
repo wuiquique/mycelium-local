@@ -9,6 +9,8 @@ import com.mycelium.local.repository.cart.Cart;
 import com.mycelium.local.repository.cart.CartRepo;
 import com.mycelium.local.repository.cartinteg.CartInteg;
 import com.mycelium.local.repository.cartinteg.CartIntegRepo;
+import com.mycelium.local.repository.product.ProductRepo;
+import com.mycelium.local.repository.user.UserRepo;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.http.annotation.Body;
@@ -61,10 +63,14 @@ public class CartController {
 
     private CartRepo cartRepo;
     private CartIntegRepo cartIntegRepo;
+    private UserRepo userRepo;
+    private ProductRepo productRepo;
 
-    public CartController(CartRepo cartRepo, CartIntegRepo cartIntegRepo) {
+    public CartController(CartRepo cartRepo, CartIntegRepo cartIntegRepo, UserRepo userRepo, ProductRepo productRepo) {
         this.cartRepo = cartRepo;
         this.cartIntegRepo = cartIntegRepo;
+        this.userRepo = userRepo;
+        this.productRepo = productRepo;
     }
 
     @Get("/")
@@ -104,7 +110,7 @@ public class CartController {
                 var newCart = new CartInteg();
                 newCart.productId = body.productId;
                 newCart.quantity = body.quantity;
-                newCart.user.id = userId;
+                newCart.user = userRepo.findById(userId).get();
                 cartIntegRepo.save(newCart);
             }
         } else {
@@ -116,9 +122,9 @@ public class CartController {
 
             if (body.quantity > 0) {
                 var newCart = new Cart();
-                newCart.product.id = body.productId;
+                newCart.product = productRepo.findById(body.productId).get();
                 newCart.quantity = body.quantity;
-                newCart.user.id = userId;
+                newCart.user = userRepo.findById(userId).get();
                 cartRepo.save(newCart);
             }
         }

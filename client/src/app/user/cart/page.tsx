@@ -1,19 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
 import {
-  Typography,
   Button,
   Card,
-  CardMedia,
   CardContent,
-  Box,
+  CardMedia,
+  Typography,
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
+import axios from "axios";
 import Link from "next/link";
-import UserCart from "../../../components/UserCart";
+import { useEffect, useState } from "react";
 import BackPage from "../../../components/BackPage";
+import UserCart from "../../../components/UserCart";
 
 export default function Cart() {
   const [products, setProducts] = useState<any[]>([]);
@@ -22,6 +21,7 @@ export default function Cart() {
     axios
       .get("/api/user/cart")
       .then((response) => {
+        console.log(response.data);
         setProducts(response.data);
       })
       .catch((error) => {});
@@ -39,7 +39,7 @@ export default function Cart() {
     <div>
       <BackPage />
       <Typography variant="h3" className="text-center">
-        mycelium cart :)
+        Your Cart
       </Typography>
       <br />
       <Grid2 container spacing={2}>
