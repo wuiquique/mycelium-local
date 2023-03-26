@@ -5,59 +5,16 @@ import { useEffect, useState } from "react";
 import BackPage from "../../../../components/BackPage";
 import UserCart from "../../../../components/UserCart";
 
-export function Page() {
-  let id = 1;
-
-  const [products, setProducts] = useState([
-    {
-      status: "In Transit",
-      comment: "",
-      type: "local",
-      id: "1",
-      name: "Cuchara de Oro",
-      description: "Muy fina",
-      quantity: "3",
-      category: "Oro", //-> nombre
-      brand: "Dioro",
-      weight: "23",
-      price: 75,
-      pictures: [
-        "https://falabella.scene7.com/is/image/FalabellaPE/770197465_1?wid=800&hei=800&qlt=70",
-      ], //-> solo 1
-    },
-    {
-      status: "In Transit",
-      comment: "",
-      type: "local",
-      id: "1",
-      name: "Cuchara de Bronce",
-      description: "Muy fina",
-      quantity: "5",
-      category: "Bronce", //-> nombre
-      brand: "Dioro",
-      weight: "23",
-      price: 55,
-      pictures: [
-        "https://falabella.scene7.com/is/image/FalabellaPE/770197465_1?wid=800&hei=800&qlt=70",
-      ], //-> solo 1
-    },
-  ]);
-  const [orderDetails, setOrderDetails] = useState({
-    id: 1,
-    direction: "Guatemala zona 10",
-    state: "Guatemala",
-    city: "Guatemala",
-    zip: "01062",
-    phone: "09091212",
-    since: "2023-02-23",
-    till: "2023-02-25",
-  });
+export function Page({ params: { id } }) {
+  const [products, setProducts] = useState([]);
+  const [orderDetails, setOrderDetails] = useState({});
 
   useEffect(() => {
     axios
-      .get(`/api/admin/orders/${id}`)
+      .get(`/api/user/order/${id}`)
       .then((response) => {
-        setProducts(response.data.products);
+        console.log(response.data);
+        setProducts(response.data.productList);
         setOrderDetails(response.data);
       })
       .catch((error) => {

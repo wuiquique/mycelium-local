@@ -1,3 +1,4 @@
+import { useUser } from "@/hooks/userContext";
 import {
   Button,
   Card,
@@ -12,10 +13,12 @@ import { useState } from "react";
 export default function UserAddress({ products }) {
   const [date1, setDate1] = useState("2014-08-18T21:11:54");
   const [date2, setDate2] = useState("2014-08-18T21:11:54");
+  const user = useUser();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     let dirHolder = {
+      userId: user.id,
       direction: event.target.direction.value,
       state: event.target.state.value,
       city: event.target.city.value,
@@ -25,13 +28,10 @@ export default function UserAddress({ products }) {
       till: date2,
     };
     let prodHolder = products;
-    console.log({ dir: dirHolder, products: prodHolder });
     //no se como se va a ser el body pero aca ta adelantado
-    axios
-      .post("url", { dir: dirHolder, products: prodHolder })
-      .then((response) => {
-        console.log("si");
-      });
+    axios.post("/api/user/order/", dirHolder).then((response) => {
+      console.log(response.data);
+    });
   };
 
   return (

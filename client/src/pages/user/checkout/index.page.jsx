@@ -7,22 +7,7 @@ import UserAddress from "../../../components/UserAddress";
 import UserCart from "../../../components/UserCart";
 
 export function Page() {
-  const [products, setProducts] = useState([
-    {
-      type: "local",
-      id: "1",
-      name: "Cuchara de Oro",
-      description: "Muy Fina",
-      quantity: "3",
-      category: "Oro", //-> nombre
-      brand: "Dioro",
-      weight: "23",
-      price: 75,
-      pictures: [
-        "https://falabella.scene7.com/is/image/FalabellaPE/770197465_1?wid=800&hei=800&qlt=70",
-      ], //-> solo 1
-    },
-  ]);
+  const [products, setProducts] = useState([]);
   const [address, setAddress] = useState({});
 
   useEffect(() => {

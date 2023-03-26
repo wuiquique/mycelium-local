@@ -1,6 +1,5 @@
 package com.mycelium.local.controller.order;
 
-import java.nio.charset.Charset;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -202,8 +201,13 @@ public class OrderController {
             integOrderProductRepo.save(newIntegOrderProduct);
         }
 
-        var existing = cartIntegRepo.findByUserId(userId);
-        for (var cart : existing) {
+        var existingL = cartRepo.findByUserId(userId);
+        for (var cart : existingL) {
+            cartRepo.delete(cart);
+        }
+
+        var existingI = cartIntegRepo.findByUserId(userId);
+        for (var cart : existingI) {
             cartIntegRepo.delete(cart);
         }
 
@@ -223,9 +227,15 @@ public class OrderController {
     }
 
     public String trackingNumberString() {
-        byte[] array = new byte[10]; // length is bounded by 7
-        new Random().nextBytes(array);
-        String generatedString = new String(array, Charset.forName("UTF-8"));
+        int leftLimit = 97; // letter 'a'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 10;
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
 
         return generatedString;
     }

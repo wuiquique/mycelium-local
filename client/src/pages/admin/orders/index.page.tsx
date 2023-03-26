@@ -18,19 +18,49 @@ export function Page() {
   const [orders, setOrders] = useState<
     {
       id: number;
-      first_name: string;
-      last_name: string;
-      product_count: number;
+      city: string;
+      direction: string;
+      state: string;
+      phone: number;
       since: number;
       till: number;
+      zip: number;
     }[]
   >([]);
 
   useEffect(() => {
-    axios.get(`/api/admin/orders/`).then((response) => {
+    axios.get(`/api/user/order/`).then((response) => {
+      console.log(response.data);
       setOrders(response.data);
     });
   }, []);
+
+  const timeFormat = (secs: number) => {
+    var a = new Date(secs * 1000);
+    var months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    var hour = a.getHours();
+    var min = a.getMinutes() < 10 ? "0" + a.getMinutes() : a.getMinutes();
+    var sec = a.getSeconds() < 10 ? "0" + a.getSeconds() : a.getSeconds();
+    var time =
+      date + " " + month + " " + year + " " + hour + ":" + min + ":" + sec;
+    return time;
+  };
 
   return (
     <div>
@@ -45,8 +75,8 @@ export function Page() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Product_Count</TableCell>
+                  <TableCell>Id</TableCell>
+                  <TableCell>Address</TableCell>
                   <TableCell>Since</TableCell>
                   <TableCell>Till</TableCell>
                   <TableCell>Details</TableCell>
@@ -55,10 +85,20 @@ export function Page() {
               <TableBody>
                 {orders.map((o, i) => (
                   <TableRow key={i}>
-                    <TableCell>{`${o.first_name} ${o.last_name}`}</TableCell>
-                    <TableCell>{o.product_count}</TableCell>
-                    <TableCell>{o.since}</TableCell>
-                    <TableCell>{o.till}</TableCell>
+                    <TableCell>{o.id}</TableCell>
+                    <TableCell>{`${o.direction}, ${o.city}, ${o.state}, ${o.zip}`}</TableCell>
+                    <TableCell>
+                      {new Date(o.since * 1000)
+                        .toISOString()
+                        .slice(0, 19)
+                        .replace("T", " ")}
+                    </TableCell>
+                    <TableCell>
+                      {new Date(o.till * 1000)
+                        .toISOString()
+                        .slice(0, 19)
+                        .replace("T", " ")}
+                    </TableCell>
                     <TableCell>
                       <Button
                         variant="text"
