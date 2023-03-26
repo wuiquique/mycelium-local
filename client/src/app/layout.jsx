@@ -6,6 +6,7 @@ import { Container, CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { AiOutlineAppstoreAdd, AiOutlineUserSwitch } from "react-icons/ai";
 import { BiCategory } from "react-icons/bi";
@@ -30,7 +31,7 @@ const navItems = [
     icon: <MdTag />,
   },
   {
-    name: "Carrito",
+    name: "Cart",
     href: "/user/cart",
     icon: <MdShoppingCart />,
     privileges: 1,
@@ -99,6 +100,7 @@ const navItems = [
 
 export default function Layout({ children }) {
   const [drawer, setDrawer] = useState(false);
+  const searchParams = useSearchParams();
 
   return (
     <html lang="en">
@@ -113,7 +115,10 @@ export default function Layout({ children }) {
             <UserProvider>
               <TextProvider>
                 <CssBaseline />
-                <NavBar onDrawer={() => setDrawer(true)} />
+                <NavBar
+                  onDrawer={() => setDrawer(true)}
+                  defaultSearchQuery={searchParams.get("q") ?? ""}
+                />
                 <NavDrawer
                   open={drawer}
                   onClose={() => setDrawer(false)}

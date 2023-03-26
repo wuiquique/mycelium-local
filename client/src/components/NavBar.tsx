@@ -7,16 +7,28 @@ import {
   Box,
   Button,
   IconButton,
+  InputAdornment,
   TextField,
   Toolbar,
 } from "@mui/material";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { MdMenu } from "react-icons/md";
 
-export default function NavBar({ onDrawer }: { onDrawer: () => void }) {
+export default function NavBar({
+  onDrawer,
+  defaultSearchQuery,
+}: {
+  onDrawer: () => void;
+  defaultSearchQuery: string;
+}) {
   const [user] = useUser();
   const texts = useTexts();
+  const router = useRouter();
+
+  const [searchQuery, setSearchQuery] = useState(defaultSearchQuery);
 
   const styles = () => ({
     notchedOutline: {
@@ -51,18 +63,48 @@ export default function NavBar({ onDrawer }: { onDrawer: () => void }) {
           </Button>
         </div>
         <div>
-          <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-            <AiOutlineSearch size="1.8rem" />
-            <TextField sx={{ minWidth: "900px" }} variant="standard" />
-            <Button
-              variant="contained"
-              disableElevation
-              component={Link}
-              href="/search"
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              router.push(`/search?q=${searchQuery}`);
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+              }}
             >
-              {texts.header.searchbutton}
-            </Button>
-          </Box>
+              <Box
+                sx={{
+                  backgroundColor: "white",
+                  borderRadius: "0.25rem",
+                }}
+              >
+                <TextField
+                  sx={{ width: "50vw", maxWidth: "900px" }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <AiOutlineSearch size="1.5rem" />
+                      </InputAdornment>
+                    ),
+                  }}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.currentTarget.value)}
+                  size="small"
+                />
+              </Box>
+              <Button
+                variant="contained"
+                disableElevation
+                component={Link}
+                href={`/search?q=${searchQuery}`}
+              >
+                {texts.header.searchbutton}
+              </Button>
+              <button hidden type="submit"></button>
+            </Box>
+          </form>
         </div>
         <div>
           {user.id === null ? (

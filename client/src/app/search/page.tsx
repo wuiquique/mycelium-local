@@ -15,14 +15,12 @@ import {
   Select,
   SelectChangeEvent,
   Slider,
-  TextField,
   Typography,
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { AiOutlineSearch } from "react-icons/ai";
 import BackPage from "../../components/BackPage";
 
 const ITEM_HEIGHT = 48;
@@ -40,14 +38,19 @@ function valuetext(value: number) {
   return `${value}.00`;
 }
 
-export default function Search() {
+export default function Search({
+  searchParams: { q },
+}: {
+  searchParams: { q: string };
+}) {
   const [categories, setCategories] = useState<
     {
       id: number;
       name: string;
     }[]
   >([]);
-  const [products, setProducts] = useState<
+
+  const [results, setResults] = useState<
     {
       id: number;
       name: string;
@@ -65,30 +68,19 @@ export default function Search() {
     }[]
   >([]);
 
-  useEffect(() => {
-    axios
-      .get("/api/categories/")
-      .then((response) => {
-        setCategories(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    axios.get("/api/product").then((response) => {
-      console.log(response.data);
-      setProducts(response.data);
-    });
-  }, []);
-
-  const [value, setValue] = useState([0, 1000]);
-
-  const handleSliderChange = (event: Event, newValue: number | number[]) => {
-    if (!Array.isArray(newValue)) return;
-    setValue(newValue);
-  };
+  const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [selectedPriceRange, setSelectedPriceRange] = useState([0, 1000]);
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+
+  const handleSliderChange = (event: unknown, newValue: number | number[]) => {
+    if (!Array.isArray(newValue)) return;
+    setPriceRange(newValue);
+  };
+
+  const handleSliderCommit = (event: unknown, newValue: number | number[]) => {
+    if (!Array.isArray(newValue)) return;
+    setSelectedPriceRange(newValue);
+  };
 
   const handleChange = (
     event: SelectChangeEvent<typeof selectedCategories>
@@ -104,6 +96,29 @@ export default function Search() {
     );
   };
 
+  useEffect(() => {
+    axios
+      .get("/api/categories/")
+      .then((response) => {
+        setCategories(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    const url = new URL("/api/product/search", location.href);
+    url.searchParams.set("q", q);
+    url.searchParams.set("pricemin", selectedPriceRange[0].toString());
+    url.searchParams.set("pricemax", selectedPriceRange[1].toString());
+    url.searchParams.set("categories", selectedCategories.join(","));
+    axios.get(url.toString()).then((response) => {
+      setResults(response.data);
+    });
+  }, [q, selectedPriceRange, selectedCategories]);
+
   return (
     <div>
       <BackPage />
@@ -112,12 +127,6 @@ export default function Search() {
       </Typography>
       <br />
       <Grid2 container spacing={2}>
-        <Grid2 lg={12}>
-          <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-            <AiOutlineSearch size="2rem" />
-            <TextField sx={{ width: "100%" }} variant="standard" />
-          </Box>
-        </Grid2>
         <Grid2 lg={6}>
           <Typography variant="h6" className="text-center">
             Category Filter
@@ -130,7 +139,9 @@ export default function Search() {
               multiple
               value={selectedCategories}
               onChange={handleChange}
-              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+              input={
+                <OutlinedInput id="select-multiple-chip" label="Categories" />
+              }
               renderValue={(selected) => (
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                   {selected.map((value) => (
@@ -157,14 +168,15 @@ export default function Search() {
           </Typography>
           <Slider
             className="mt-2"
-            value={value}
+            value={priceRange}
             onChange={handleSliderChange}
             valueLabelDisplay="auto"
             getAriaValueText={valuetext}
             max={1000}
+            onChangeCommitted={handleSliderCommit}
           />
         </Grid2>
-        {products.map((e, i) => (
+        {results.map((e, i) => (
           <Grid2 lg={6} key={i}>
             <Button component={Link} href={`/product/${e.id}`}>
               <Card elevation={10} sx={{ display: "flex" }}>
