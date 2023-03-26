@@ -1,6 +1,7 @@
 package com.mycelium.local.controller.order;
 
 import java.nio.charset.Charset;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +21,7 @@ import com.mycelium.local.repository.order.OrderRepo;
 import com.mycelium.local.repository.orderproduct.OrderProduct;
 import com.mycelium.local.repository.orderproduct.OrderProductRepo;
 import com.mycelium.local.repository.status.StatusRepo;
+import com.mycelium.local.repository.user.UserRepo;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.http.annotation.Body;
@@ -33,14 +35,13 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
 
 class OrderCreateRequest {
-    public int userId;
     public String direction;
     public String state;
     public String city;
     public int zip;
     public int phone;
-    public Date since;
-    public Date till;
+    public Timestamp since;
+    public Timestamp till;
 }
 
 @Introspected
@@ -106,16 +107,18 @@ public class OrderController {
     private CartIntegRepo cartIntegRepo;
     private IntegOrderProductRepo integOrderProductRepo;
     private StatusRepo statusRepo;
+    private UserRepo userRepo;
 
     public OrderController(OrderRepo orderRepo, OrderProductRepo orderProductRepo,
             CartRepo cartRepo, CartIntegRepo cartIntegRepo, IntegOrderProductRepo integOrderProductRepo,
-            StatusRepo statusRepo) {
+            StatusRepo statusRepo, UserRepo userRepo) {
         this.orderRepo = orderRepo;
         this.orderProductRepo = orderProductRepo;
         this.cartRepo = cartRepo;
         this.cartIntegRepo = cartIntegRepo;
         this.integOrderProductRepo = integOrderProductRepo;
         this.statusRepo = statusRepo;
+        this.userRepo = userRepo;
     }
 
     @Get("/")
@@ -157,12 +160,12 @@ public class OrderController {
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/")
-    public void create(@Body OrderCreateRequest body, Authentication auth) {
+    public String create(@Body OrderCreateRequest body, Authentication auth) {
         var userMap = auth.getAttributes();
         var userId = (int) (long) userMap.get("id");
 
         var newOrder = new Order();
-        newOrder.user.id = body.userId;
+        newOrder.user = userRepo.findById(userId).get();
         newOrder.direction = body.direction;
         newOrder.state = body.state;
         newOrder.city = body.city;
@@ -203,6 +206,8 @@ public class OrderController {
         for (var cart : existing) {
             cartIntegRepo.delete(cart);
         }
+
+        return "Success";
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)

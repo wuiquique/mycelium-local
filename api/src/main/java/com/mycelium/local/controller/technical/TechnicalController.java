@@ -3,6 +3,7 @@ package com.mycelium.local.controller.technical;
 import java.util.List;
 
 import com.google.common.collect.Lists;
+import com.mycelium.local.repository.product.ProductRepo;
 import com.mycelium.local.repository.technical.Technical;
 import com.mycelium.local.repository.technical.TechnicalRepo;
 
@@ -26,9 +27,11 @@ class TechnicalCreateRequest {
 public class TechnicalController {
 
     private TechnicalRepo technicalRepo;
+    private ProductRepo productRepo;
 
-    public TechnicalController(TechnicalRepo technicalRepo) {
+    public TechnicalController(TechnicalRepo technicalRepo, ProductRepo productRepo) {
         this.technicalRepo = technicalRepo;
+        this.productRepo = productRepo;
     }
 
     @Get("/")
@@ -47,7 +50,7 @@ public class TechnicalController {
         var newTechnical = new Technical();
         newTechnical.type = body.type;
         newTechnical.value = body.value;
-        newTechnical.product.id = body.productId;
+        newTechnical.product = productRepo.findById(body.productId).get();
         technicalRepo.save(newTechnical);
     }
 

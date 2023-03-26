@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.mycelium.local.repository.picture.Picture;
 import com.mycelium.local.repository.picture.PictureRepo;
+import com.mycelium.local.repository.product.ProductRepo;
 
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -25,9 +26,11 @@ class PictureCreateRequest {
 public class PictureController {
 
     private PictureRepo pictureRepo;
+    private ProductRepo productRepo;
 
-    public PictureController(PictureRepo pictureRepo) {
+    public PictureController(PictureRepo pictureRepo, ProductRepo productRepo) {
         this.pictureRepo = pictureRepo;
+        this.productRepo = productRepo;
     }
 
     @Get("/")
@@ -45,7 +48,7 @@ public class PictureController {
     public void create(@Body PictureCreateRequest body) {
         var newPicture = new Picture();
         newPicture.url = body.url;
-        newPicture.product.id = body.productId;
+        newPicture.product = productRepo.findById(body.productId).get();
 
         pictureRepo.save(newPicture);
     }

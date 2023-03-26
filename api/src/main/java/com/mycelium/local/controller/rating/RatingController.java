@@ -3,12 +3,10 @@ package com.mycelium.local.controller.rating;
 import java.util.List;
 
 import com.google.common.collect.Lists;
+import com.mycelium.local.repository.product.ProductRepo;
 import com.mycelium.local.repository.rating.Rating;
 import com.mycelium.local.repository.rating.RatingRepo;
-import com.mycelium.local.repository.user.User;
 import com.mycelium.local.repository.user.UserRepo;
-import com.mycelium.local.repository.product.Product;
-import com.mycelium.local.repository.product.ProductRepo;
 
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -69,7 +67,7 @@ public class RatingController {
     @Put("/{id}")
     public void update(int id, @Body RatingCreateRequest body) {
         var rating = ratingRepo.findById(id).get();
-        rating.user.id = body.userId;
+        rating.user = userRepo.findById(body.userId).get();
         rating.rating = body.rating;
         ratingRepo.update(rating);
     }

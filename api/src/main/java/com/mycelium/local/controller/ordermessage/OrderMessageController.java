@@ -3,8 +3,10 @@ package com.mycelium.local.controller.ordermessage;
 import java.util.List;
 
 import com.google.common.collect.Lists;
+import com.mycelium.local.repository.order.OrderRepo;
 import com.mycelium.local.repository.ordermessage.OrderMessage;
 import com.mycelium.local.repository.ordermessage.OrderMessageRepo;
+import com.mycelium.local.repository.status.StatusRepo;
 
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -26,9 +28,13 @@ class OrderMessageCreateRequest {
 public class OrderMessageController {
 
     private OrderMessageRepo orderMessageRepo;
+    private OrderRepo orderRepo;
+    private StatusRepo statusRepo;
 
-    public OrderMessageController(OrderMessageRepo orderMessageRepo) {
+    public OrderMessageController(OrderMessageRepo orderMessageRepo, OrderRepo orderRepo, StatusRepo statusRepo) {
         this.orderMessageRepo = orderMessageRepo;
+        this.orderRepo = orderRepo;
+        this.statusRepo = statusRepo;
     }
 
     @Get("/")
@@ -40,8 +46,8 @@ public class OrderMessageController {
     @Post("/")
     public void create(@Body OrderMessageCreateRequest body) {
         var newOrderMessage = new OrderMessage();
-        newOrderMessage.order.id = body.orderId;
-        newOrderMessage.status.id = body.statusId;
+        newOrderMessage.order = orderRepo.findById(body.orderId).get();
+        newOrderMessage.status = statusRepo.findById(body.statusId).get();
         newOrderMessage.name = body.name;
         orderMessageRepo.save(newOrderMessage);
     }

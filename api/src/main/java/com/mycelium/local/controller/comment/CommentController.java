@@ -6,6 +6,8 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.mycelium.local.repository.comment.Comment;
 import com.mycelium.local.repository.comment.CommentRepo;
+import com.mycelium.local.repository.product.ProductRepo;
+import com.mycelium.local.repository.user.UserRepo;
 
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -27,6 +29,8 @@ class CommentCreateRequest {
 public class CommentController {
 
     private CommentRepo commentRepo;
+    private UserRepo userRepo;
+    private ProductRepo productRepo;
 
     public CommentController(CommentRepo commentRepo) {
         this.commentRepo = commentRepo;
@@ -46,9 +50,9 @@ public class CommentController {
     @Post("/")
     public void create(@Body CommentCreateRequest body) {
         var newComment = new Comment();
-        newComment.user.id = body.userId;
-        newComment.product.id = body.productId;
-        newComment.comment.id = body.commentId;
+        newComment.user = userRepo.findById(body.userId).get();
+        newComment.product = productRepo.findById(body.productId).get();
+        newComment.comment = commentRepo.findById(body.commentId).orElse(null);
         newComment.message = body.message;
         newComment.created = new Date();
         newComment.updated = new Date();

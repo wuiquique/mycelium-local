@@ -3,6 +3,7 @@ package com.mycelium.local.controller.user;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mycelium.local.repository.role.RoleRepo;
 import com.mycelium.local.repository.user.User;
 import com.mycelium.local.repository.user.UserRepo;
 
@@ -44,9 +45,11 @@ class UserDetails {
 public class UserController {
 
     private UserRepo userRepo;
+    private RoleRepo roleRepo;
 
-    public UserController(UserRepo userRepo) {
+    public UserController(UserRepo userRepo, RoleRepo roleRepo) {
         this.userRepo = userRepo;
+        this.roleRepo = roleRepo;
     }
 
     @Get("/")
@@ -67,7 +70,7 @@ public class UserController {
         user.name = editUser.name;
         user.lastname = editUser.lastname;
         user.email = editUser.email;
-        user.role.id = editUser.roleId;
+        user.role = roleRepo.findById(editUser.roleId).get();
 
         userRepo.update(user);
         return list();

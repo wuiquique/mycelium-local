@@ -3,6 +3,7 @@ package com.mycelium.local.controller.session;
 import java.net.URI;
 import java.util.Map;
 
+import com.mycelium.local.repository.role.RoleRepo;
 import com.mycelium.local.repository.user.User;
 import com.mycelium.local.repository.user.UserRepo;
 
@@ -49,10 +50,11 @@ class SessionResponse {
 public class SessionController {
 
     private UserRepo userRepo;
+    private RoleRepo roleRepo;
 
-    public SessionController(UserRepo userRepo) {
-        super();
+    public SessionController(UserRepo userRepo, RoleRepo roleRepo) {
         this.userRepo = userRepo;
+        this.roleRepo = roleRepo;
     }
 
     @Post("/register")
@@ -68,7 +70,7 @@ public class SessionController {
         newUser.lastname = body.lastname;
         newUser.email = body.username;
         newUser.password = body.password;
-        newUser.role.id = 1;
+        newUser.role = roleRepo.findById(1).get();
 
         this.userRepo.save(newUser);
 

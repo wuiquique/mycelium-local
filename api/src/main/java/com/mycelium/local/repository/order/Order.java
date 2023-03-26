@@ -1,6 +1,6 @@
 package com.mycelium.local.repository.order;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 import com.mycelium.local.repository.user.User;
 
@@ -20,8 +20,8 @@ public class Order {
     public String city;
     public int zip;
     public int phone;
-    public Date since;
-    public Date till;
+    public Timestamp since;
+    public Timestamp till;
 
     @Relation(value = Relation.Kind.MANY_TO_ONE)
     public User user;
@@ -74,19 +74,19 @@ public class Order {
         this.phone = phone;
     }
 
-    public Date getSince() {
+    public Timestamp getSince() {
         return since;
     }
 
-    public void setSince(Date since) {
+    public void setSince(Timestamp since) {
         this.since = since;
     }
 
-    public Date getTill() {
+    public Timestamp getTill() {
         return till;
     }
 
-    public void setTill(Date till) {
+    public void setTill(Timestamp till) {
         this.till = till;
     }
 
