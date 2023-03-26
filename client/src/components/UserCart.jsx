@@ -94,7 +94,7 @@ export default function UserCart({
             <div className="text-right p-5">
               {cartOrCheckout === "cart" ? (
                 <Button variant="outlined" onClick={() => handleDeleteItem(e)}>
-                  Eliminar
+                  Delete
                 </Button>
               ) : (
                 <></>

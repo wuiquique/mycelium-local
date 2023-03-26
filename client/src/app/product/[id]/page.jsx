@@ -1,30 +1,14 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Button,
-  TextField,
-  Typography,
-} from "@mui/material";
-import Grid2 from "@mui/material/Unstable_Grid2";
-import CardHeader from "@mui/material/CardHeader";
-import Avatar from "@mui/material/Avatar";
-import { red } from "@mui/material/colors";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import { Button, Card, CardMedia, TextField, Typography } from "@mui/material";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import Rating from "@mui/material/Rating";
-import CommentTree from "../../../components/comments/CommentTree";
-import Image from "next/image";
+import Grid2 from "@mui/material/Unstable_Grid2";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import BackPage from "../../../components/BackPage";
-import { usePathname } from "next/navigation";
+import CommentTree from "../../../components/comments/CommentTree";
 import { useUser } from "../../../hooks/userContext";
 
 export default function Product({ params: { id } }) {
@@ -68,6 +52,7 @@ export default function Product({ params: { id } }) {
   useEffect(() => {
     axios.get(`/api/product/${id}`).then((response) => {
       setProd(response.data);
+      console.log(response.data);
       //    setUrls(response.data.urls);
       //  setTech(response.data.tech);
       //setComments(response.data.comments);
@@ -89,8 +74,8 @@ export default function Product({ params: { id } }) {
   useEffect(() => {
     axios.get(`/api/product/rating/${id}`).then((response) => {
       setRatings(response.data);
-      console.log(response.data);
-      console.log(user);
+      //console.log(response.data);
+      //console.log(user);
       for (const rat of response.data) {
         if (rat.user.id === user.id) {
           setRU(rat.rating);
