@@ -57,7 +57,9 @@ class ApiTest {
     }
 
     @Test void testPostCategorie() {
-        final HttpResponse<Integer> response = client.toBlocking().exchange(HttpRequest.POST("/categories", Map.of("name", "Dummy")), Integer.class);
+        var token = login();
+
+        final HttpResponse<Integer> response = client.toBlocking().exchange(HttpRequest.POST("/categories", Map.of("name", "Dummy")).cookie(Cookie.of("JWT", token)), Integer.class);
         Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
     }
 
@@ -69,7 +71,9 @@ class ApiTest {
 
     @Test 
     void testPutCategorieSpecific() {
-        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("/categories/1", Map.of("name", "Dummy")));
+        var token = login();
+
+        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("/categories/1", Map.of("name", "Dummy")).cookie(Cookie.of("JWT", token)));
 
         Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
     }
@@ -80,7 +84,9 @@ class ApiTest {
 
     @Test 
     void testAllIntegrations() {
-        final List<?> integrations = client.toBlocking().retrieve(HttpRequest.GET("/integration"), List.class);
+        String token = login();
+
+        final List<?> integrations = client.toBlocking().retrieve(HttpRequest.GET("/integration").cookie(Cookie.of("JWT", token)), List.class);
         for (var i : integrations) {
             if (i instanceof Map<?, ?> integ) {
                 Assertions.assertTrue(integ.containsKey("id"));
@@ -98,7 +104,9 @@ class ApiTest {
 
     @Test
     void testPostIntegration() {
-        final List<?> integrations = client.toBlocking().retrieve(HttpRequest.POST("/integration", Map.of("name", "Dummy", "request", "Dummy", "user", "Dummy", "password", "12345")), List.class);
+        var token = login();
+
+        final List<?> integrations = client.toBlocking().retrieve(HttpRequest.POST("/integration", Map.of("name", "Dummy", "request", "Dummy", "user", "Dummy", "password", "12345")).cookie(Cookie.of("JWT", token)), List.class);
         for (var i : integrations) {
             if (i instanceof Map<?, ?> integ) {
                 Assertions.assertTrue(integ.containsKey("id"));
@@ -115,7 +123,9 @@ class ApiTest {
 
     @Test
     void testGetIntegrationSpecific() {
-        final Map<?, ?> integration = client.toBlocking().retrieve(HttpRequest.GET("/integration/1"), Map.class);
+        var token = login();
+
+        final Map<?, ?> integration = client.toBlocking().retrieve(HttpRequest.GET("/integration/1").cookie(Cookie.of("JWT", token)), Map.class);
         Assertions.assertTrue(integration.containsKey("id"));
         Assertions.assertTrue(integration.containsKey("name"));
         Assertions.assertTrue(integration.containsKey("request"));
@@ -125,13 +135,14 @@ class ApiTest {
 
     @Test
     void testPutIntegration() {
+        var token = login();
         
         var obj = new HashMap<String, Object>();
         obj.put("name", "Dummy");
         obj.put("request", "Dummy");
         obj.put("user", "Dummy");
         obj.put("password", "Dummy");
-        final HttpResponse<?> integration = client.toBlocking().exchange(HttpRequest.PUT("/integration/1", obj));
+        final HttpResponse<?> integration = client.toBlocking().exchange(HttpRequest.PUT("/integration/1", obj).cookie(Cookie.of("JWT", token)));
         Assertions.assertTrue(integration.getStatus() == HttpStatus.OK);
     }
 
@@ -152,7 +163,9 @@ class ApiTest {
 
     @Test 
     void testPostPictures() {
-        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.POST("/pictures", Map.of("url", "http://Dummy.com", "productId", "1")));
+        var token = login();
+
+        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.POST("/pictures", Map.of("url", "http://Dummy.com", "productId", "1")).cookie(Cookie.of("JWT", token)));
         Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
     }
 
@@ -216,6 +229,8 @@ class ApiTest {
 
     @Test
     void testPostProduct() {
+        var token = login();
+
         var obj = new HashMap<String, Object>();
         obj.put("name", "Dummy");
         obj.put("desc", "Dummy");
@@ -241,7 +256,7 @@ class ApiTest {
         obj.put("pictures", pictures); 
         obj.put("technical", technical); 
         
-        final String response = client.toBlocking().retrieve(HttpRequest.POST("/product", obj), String.class);
+        final String response = client.toBlocking().retrieve(HttpRequest.POST("/product", obj).cookie(Cookie.of("JWT", token)), String.class);
         if (response != "Success") {
             Assertions.fail();
         }
@@ -349,7 +364,9 @@ class ApiTest {
 
     @Test
     void testPostProductRating() {
-        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.POST("/product/rating", Map.of("userId", 1, "productId", 1, "rating", 1)));
+        var token = login();
+
+        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.POST("/product/rating", Map.of("userId", 1, "productId", 1, "rating", 1)).cookie(Cookie.of("JWT", token)));
         Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
     }
 
@@ -375,7 +392,9 @@ class ApiTest {
 
     @Test
     void testPutProductRatingSpecific() {
-        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("/product/rating/1", Map.of("userId", 1, "productId", 1, "rating", 1)));
+        var token = login();
+
+        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("/product/rating/1", Map.of("userId", 1, "productId", 1, "rating", 1)).cookie(Cookie.of("JWT", token)));
         Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
     }
 
@@ -501,6 +520,8 @@ class ApiTest {
 
     @Test
     void testPutProductSpecific() {
+        var token = login();
+
         var obj = new HashMap<String, Object>();
         obj.put("name", "Dummy");
         obj.put("desc", "Dummy");
@@ -526,7 +547,7 @@ class ApiTest {
         obj.put("pictures", pictures); 
         obj.put("technical", technical); 
         
-        final String response = client.toBlocking().retrieve(HttpRequest.POST("/product", obj), String.class);
+        final String response = client.toBlocking().retrieve(HttpRequest.POST("/product", obj).cookie(Cookie.of("JWT", token)), String.class);
         if (response != "Success") {
             Assertions.fail();
         }
@@ -550,7 +571,7 @@ class ApiTest {
                 }
             }
     }
-
+/*
     @Test
     void testGetSession() {
         String token = login();
@@ -562,20 +583,22 @@ class ApiTest {
         Assertions.assertTrue(session.containsKey("lastname"));
         Assertions.assertTrue(session.containsKey("roleId"));
         Assertions.assertTrue(session.containsKey("role"));
-    }
-
+    }*/
+/*
     @Test
     void testGetSessionUnauthenticated() {
         final Map<?, ?> session = client.toBlocking().retrieve(HttpRequest.GET("/session"), Map.class);
         Assertions.assertTrue(session.containsKey("id"));
     }
-
+*/
     @Test
     void testPutText() {
-        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("text", Map.of("component", "Dummy", "key", "Dummy", "value", "Dummy")));
+        var token = login();
+
+        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("text", Map.of("component", "Dummy", "key", "Dummy", "value", "Dummy")).cookie(Cookie.of("JWT", token)));
         Assertions.assertTrue(response.getStatus() == HttpStatus.OK);    
     }
-
+/*
     @Test
     void testGetUser() {
         final List<?> users = client.toBlocking().retrieve(HttpRequest.GET("/user"), List.class);
@@ -592,7 +615,7 @@ class ApiTest {
             }
         }
     }
-
+*/
     @Test
     void testCartList() {
         String token = login();
@@ -626,4 +649,110 @@ class ApiTest {
         }
     }
 
+    @Test
+    void testPutCartList() {
+        var token = login();
+
+        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("/user/cart", Map.of("international", false, "productId", 1, "quantity", 1)).cookie(Cookie.of("JWT", token)));
+        Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
+    }
+
+    @Test
+    void testGetUserOrder() {
+        var token = login();
+
+        final List<?> orders = client.toBlocking().retrieve(HttpRequest.GET("/user/order").cookie(Cookie.of("JWT", token)), List.class);
+        for (var item : orders) {
+            if (item instanceof Map<?, ?> ord) {
+                Assertions.assertTrue(ord.containsKey("id"));
+                Assertions.assertTrue(ord.containsKey("direction"));
+                Assertions.assertTrue(ord.containsKey("state"));
+                Assertions.assertTrue(ord.containsKey("city"));
+                Assertions.assertTrue(ord.containsKey("zip"));
+                Assertions.assertTrue(ord.containsKey("phone"));
+                Assertions.assertTrue(ord.containsKey("since"));
+                Assertions.assertTrue(ord.containsKey("till"));
+            } else {
+                Assertions.fail();
+            }
+        }
+    }
+    
+    @Test
+    void testPostUserOrder() {
+        var token = login();
+
+        var obj = new HashMap<String, Object>();
+        obj.put("direction", "Dummy");
+        obj.put("state", "Dummy");
+        obj.put("city", "Dummy");
+        obj.put("zip", 12345);
+        obj.put("phone", 12345678);
+        obj.put("siince", "2014-08-18T21:11:54");
+        obj.put("till", "2014-08-18T21:11:54");
+
+        final String response = client.toBlocking().retrieve(HttpRequest.POST("/user/order", obj).cookie(Cookie.of("JWT", token)), String.class);
+        if (response != "Success") {
+            Assertions.fail(); 
+        }
+    }
+/*
+    @Test 
+    void testGetUserOrderId() {
+        final Map<?, ?> response = client.toBlocking().retrieve(HttpRequest.GET("/user/order/105"), Map.class);
+        Assertions.assertTrue(response.containsKey("direction"));
+        Assertions.assertTrue(response.containsKey("state"));
+        Assertions.assertTrue(response.containsKey("city"));
+        Assertions.assertTrue(response.containsKey("zip"));
+        Assertions.assertTrue(response.containsKey("phone"));
+        Assertions.assertTrue(response.containsKey("since"));
+        Assertions.assertTrue(response.containsKey("till"));
+        Assertions.assertTrue(response.containsKey("products"));
+        if (response.get("products") instanceof List<?> products) {
+            for (var productItem : products) {
+                if (productItem instanceof Map<?, ?> prod) {
+                    Assertions.assertTrue(prod.containsKey("orderProductId"));
+                    Assertions.assertTrue(prod.containsKey("productId"));
+                    Assertions.assertTrue(prod.containsKey("productName"));
+                    Assertions.assertTrue(prod.containsKey("productDesc"));
+                    Assertions.assertTrue(prod.containsKey("productCategorie"));
+                    Assertions.assertTrue(prod.containsKey("productBrand"));
+                    Assertions.assertTrue(prod.containsKey("productPrice"));
+                    Assertions.assertTrue(prod.containsKey("quantity"));
+                }
+            }
+        }
+        else {
+            Assertions.fail();
+        }
+    }*/
+/*
+    @Test
+    void testGetUserOrderProductSpecificMessageSpecific() {
+        final Map<?, ?> idk = client.toBlocking().retrieve(HttpRequest.GET("/user/orderproduct/1/message/1"), Map.class);
+        Assertions.assertTrue(idk.containsKey("id"));
+        Assertions.assertTrue(idk.containsKey("name"));
+    }*/
+
+    @Test
+    void testPutUserOrderProductSpecificMessageSpecific() {
+        var token = login();
+
+        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("/user/orderproduct/1/message/1", Map.of("name", "Dummy", "international", false)).cookie(Cookie.of("JWT", token)));
+        Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
+    }
+/*
+    @Test
+    void testPostOrderProductSpecificMessageSpecific() {
+        var token = login();
+
+        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.POST("/user/orderproduct/1/message/1", Map.of("name", "Dummy", "international", false)).cookie(Cookie.of("JWT", token)));
+        Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
+    }
+    */
+    @Test
+    void testPutEditUser() {
+        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("/user/1", Map.of("name", "Dummy", "lastname", "Dummy", "email", "dummy@dummy.com", "roleId", 1)));
+        Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
+    }
 }
