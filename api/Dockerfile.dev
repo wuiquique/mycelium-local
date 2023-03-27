@@ -4,12 +4,7 @@ WORKDIR /app
 
 RUN git clone --depth=1 https://github.com/eradman/entr.git --branch 5.3 .
 
-FROM docker.io/alpine:3.17.2 AS gcc-base
-
-RUN set -ex && \
-    apk add --no-cache gcc make musl-dev
-
-FROM gcc-base AS entr-builder
+FROM docker.io/gcc:12.2.0 AS entr-builder
 
 COPY --from=entr-cloner /app /app
 
@@ -19,9 +14,17 @@ ENV DESTDIR=/app/build
 
 RUN make -f ./Makefile.linux install
 
-FROM docker.io/openjdk:17-alpine AS runner
+FROM docker.io/openjdk:17-bullseye AS runner
+
+RUN mkdir -p /var/lib/gradle
+RUN chown -R 1000:1000 /var/lib/gradle
 
 COPY --from=entr-builder /app/build/usr/local/bin/entr /usr/local/bin/entr
+RUN chmod +x /usr/local/bin/entr
+
+USER 1000:1000
+
+ENV GRADLE_USER_HOME=/var/lib/gradle
 
 VOLUME /app
 

@@ -18,7 +18,7 @@ services:
       - "5000:8080/tcp"
     volumes:
       - ./api:/app:rw
-      - gradle:/root/.gradle:rw
+      - gradle:/var/lib/gradle:rw
     build:
       context: api
       dockerfile: Dockerfile.dev
@@ -29,6 +29,20 @@ services:
       - VIRTUAL_PATH=/api/
       - VIRTUAL_DEST=/
       - VIRTUAL_PORT=8080
+
+  api-testing:
+    profiles:
+      - testing
+    image: localhost/mycelium-local_api:dev
+    volumes:
+      - ./api:/app:rw
+      - gradle:/var/lib/gradle:rw
+    build:
+      context: api
+      dockerfile: Dockerfile.dev
+    entrypoint: "/app/test-entrypoint.sh"
+    networks:
+      - mycelium-local
 
   client:
     image: localhost/mycelium-local_client:dev
