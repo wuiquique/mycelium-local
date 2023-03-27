@@ -77,7 +77,7 @@ export function Page() {
           </Typography>
           {products.map((e, i) => (
             <Grid2 lg={6} key={i}>
-              <Button>
+              <Button component="a" href={`/product/${e.id}`}>
                 <Card elevation={10} sx={{ display: "flex" }}>
                   <CardMedia
                     sx={{ width: "50%" }}

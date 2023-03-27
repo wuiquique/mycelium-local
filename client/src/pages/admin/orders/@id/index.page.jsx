@@ -3,11 +3,14 @@ import Grid2 from "@mui/material/Unstable_Grid2";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import BackPage from "../../../../components/BackPage";
-import UserCart from "../../../../components/UserCart";
+import AdminOrderDet from "../../../../components/AdminOrderDet";
 
 export function Page({ params: { id } }) {
   const [products, setProducts] = useState([]);
-  const [orderDetails, setOrderDetails] = useState({});
+  const [orderDetails, setOrderDetails] = useState({
+    since: 1,
+    till: 1,
+  });
 
   useEffect(() => {
     axios
@@ -25,7 +28,7 @@ export function Page({ params: { id } }) {
   const getTotal = () => {
     let total = 0;
     for (let i of products) {
-      total += i.price;
+      total += i.productPrice * i.quantity;
     }
     return total;
   };
@@ -39,12 +42,7 @@ export function Page({ params: { id } }) {
       <br />
       <Grid2 container spacing={2}>
         <Grid2 lg={8}>
-          <UserCart
-            products={products}
-            cartOrCheckout="details"
-            onChange={setProducts}
-            orderId={orderDetails.id}
-          />
+          <AdminOrderDet products={products} onChange={setProducts} />
         </Grid2>
         <Grid2 lg={4}>
           <Card elevation={10}>
@@ -75,11 +73,20 @@ export function Page({ params: { id } }) {
               <Typography variant="h6">
                 <strong>Phone:</strong>&nbsp;{orderDetails.phone}
               </Typography>
+
               <Typography variant="h6">
-                <strong>Available From:</strong>&nbsp;{orderDetails.since}
+                <strong>Available From:</strong>&nbsp;
+                {new Date(orderDetails.since * 1000)
+                  .toISOString()
+                  .slice(0, 19)
+                  .replace("T", " ")}
               </Typography>
               <Typography variant="h6">
-                <strong>Until:</strong>&nbsp;{orderDetails.till}
+                <strong>Until:</strong>&nbsp;
+                {new Date(orderDetails.till * 1000)
+                  .toISOString()
+                  .slice(0, 19)
+                  .replace("T", " ")}
               </Typography>
             </div>
           </Card>

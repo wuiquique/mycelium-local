@@ -21,6 +21,8 @@ import com.mycelium.local.repository.orderproduct.OrderProduct;
 import com.mycelium.local.repository.orderproduct.OrderProductRepo;
 import com.mycelium.local.repository.status.StatusRepo;
 import com.mycelium.local.repository.user.UserRepo;
+import com.mycelium.local.repository.status.Status;
+import com.mycelium.local.repository.product.ProductRepo;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.http.annotation.Body;
@@ -55,17 +57,18 @@ class OrderProductUni {
     public String productBrand;
     public Integer productPrice;
     public Integer quantity;
-    public Integer statusId;
+    public Status statusId;
     public Integer statusIntegId;
     public String tracking;
     public String trackingInteg;
     public Integer time;
     public Integer integOrderId;
+    public List<String> pictures;
 
     public OrderProductUni(Integer orderId, Integer productId, String productName, String productDesc,
             Integer productCategorie, String productBrand, Integer productPrice, Integer quantity,
-            Integer statusId, Integer statusIntegId, String tracking, String trackingInteg,
-            Integer time, Integer integOrderId) {
+            Status statusId, Integer statusIntegId, String tracking, String trackingInteg,
+            Integer time, Integer integOrderId, List<String> pictures) {
         this.orderId = orderId;
         this.productId = productId;
         this.productName = productName;
@@ -80,6 +83,7 @@ class OrderProductUni {
         this.trackingInteg = trackingInteg;
         this.time = time;
         this.integOrderId = integOrderId;
+        this.pictures = pictures;
     }
 }
 
@@ -125,7 +129,7 @@ public class OrderController {
         return Lists.newArrayList(orderRepo.findAll());
     }
 
-    @Get("/{id}")
+    @Get("/{id}") 
     public OrderFinalResponse get(int id) {
         var order = orderRepo.findById(id).get();
         var orderFinal = new OrderFinalResponse();
@@ -140,16 +144,20 @@ public class OrderController {
         List<OrderProductUni> products = new ArrayList<OrderProductUni>();
 
         for (OrderProduct orderP : orderProductRepo.findByOrderId(id)) {
+            var pics = new ArrayList<String>();
+            for (var p : orderP.product.pictures) {
+                pics.add(p.url);
+            } 
             products.add(new OrderProductUni(orderP.id, orderP.product.id, orderP.product.name,
                     orderP.product.desc, orderP.product.categorie.id, orderP.product.brand,
-                    orderP.product.price, orderP.quantity, orderP.status.id, null,
-                    orderP.tracking, null, orderP.time, null));
+                    orderP.product.price, orderP.quantity, statusRepo.findById(orderP.status.id).get(), null,
+                    orderP.tracking, null, orderP.time, null, pics));
         }
         for (IntegOrderProduct integOrderP : integOrderProductRepo.findByOrderId(id)) {
             products.add(new OrderProductUni(null, 1000, "Ejemplo Internacional", "Ejemplo Internacional",
-                    3000, "Marca Internacional", 100, integOrderP.quantity, integOrderP.statusLocal.id, 1,
+                    3000, "Marca Internacional", 100, integOrderP.quantity, statusRepo.findById(integOrderP.statusLocal.id).get(), 1,
                     "Tracking Local", "Tracking Internacional", integOrderP.timeInteg + integOrderP.timeLocal,
-                    integOrderP.id));
+                    integOrderP.id, null));
         }
 
         orderFinal.productList = products;

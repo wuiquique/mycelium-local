@@ -12,5 +12,6 @@ import io.micronaut.data.repository.CrudRepository;
 @JdbcRepository(dialect = Dialect.ORACLE)
 public interface OrderProductRepo extends CrudRepository<OrderProduct, Integer> {
     @Join(value = "product", type = Join.Type.FETCH)
+    @Join(value = "product.pictures", type = Join.Type.LEFT_FETCH)
     List<OrderProduct> findByOrderId(int orderId);
 }

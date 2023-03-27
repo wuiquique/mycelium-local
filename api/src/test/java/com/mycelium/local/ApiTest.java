@@ -25,6 +25,14 @@ class ApiTest {
     @Client("/")
     HttpClient client;
 
+    String login() {
+        final HttpResponse<?> loginRes = client.toBlocking()
+                .exchange(HttpRequest.POST("/login", Map.of("username", "dummy@dummy.com", "password", "12345")));
+        final String token = loginRes.getCookie("JWT").get().getValue();
+
+        return token;
+    }
+
     @Test
     void testItWorks() {
         Assertions.assertTrue(application.isRunning());
@@ -75,9 +83,7 @@ class ApiTest {
 
     @Test
     void testCartList() {
-        final HttpResponse<?> loginRes = client.toBlocking()
-                .exchange(HttpRequest.POST("/login", Map.of("username", "hbergansa@unis.edu.gt", "password", "12345")));
-        final String token = loginRes.getCookie("JWT").get().getValue();
+        String token = login();
 
         final List<?> products = client.toBlocking()
                 .retrieve(HttpRequest.GET("/user/cart").cookie(Cookie.of("JWT", token)), List.class);
@@ -94,6 +100,14 @@ class ApiTest {
                 Assertions.assertTrue(product.containsKey("weight"));
                 Assertions.assertTrue(product.containsKey("price"));
                 Assertions.assertTrue(product.containsKey("pictures"));
+
+                if (product.get("pictures") instanceof List<?> pictures) {
+                    for (var picItem : pictures) {
+                        Assertions.assertTrue(picItem instanceof String);
+                    }
+                } else {
+                    Assertions.fail();
+                }
             } else {
                 Assertions.fail();
             }

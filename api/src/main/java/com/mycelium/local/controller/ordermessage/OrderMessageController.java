@@ -7,6 +7,8 @@ import com.mycelium.local.repository.order.OrderRepo;
 import com.mycelium.local.repository.ordermessage.OrderMessage;
 import com.mycelium.local.repository.ordermessage.OrderMessageRepo;
 import com.mycelium.local.repository.status.StatusRepo;
+import com.mycelium.local.repository.orderproduct.OrderProduct; 
+import com.mycelium.local.repository.orderproduct.OrderProductRepo;
 
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -44,18 +46,28 @@ public class OrderMessageController {
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/")
-    public void create(@Body OrderMessageCreateRequest body) {
+    public OrderMessage create(@Body OrderMessageCreateRequest body) {
         var newOrderMessage = new OrderMessage();
         newOrderMessage.order = orderRepo.findById(body.orderId).get();
         newOrderMessage.status = statusRepo.findById(body.statusId).get();
         newOrderMessage.name = body.name;
         orderMessageRepo.save(newOrderMessage);
+        return newOrderMessage;
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Put("/")
-    public void update() {
-        // TODO
+    public OrderMessage update(@Body OrderMessageCreateRequest body) {
+        var existing = orderMessageRepo.findByOrderIdAndStatusId(body.orderId, body.statusId);
+        for (var item : existing) {
+            orderMessageRepo.delete(item);
+        }
+        var newOrderMessage = new OrderMessage();
+        newOrderMessage.order = orderRepo.findById(body.orderId).get();
+        newOrderMessage.status = statusRepo.findById(body.statusId).get();
+        newOrderMessage.name = body.name;
+        orderMessageRepo.save(newOrderMessage);
+        return newOrderMessage;
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
