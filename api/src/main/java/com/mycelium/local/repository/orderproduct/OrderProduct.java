@@ -1,8 +1,10 @@
 package com.mycelium.local.repository.orderproduct;
 
 import java.util.Date;
+import java.util.List;
 
 import com.mycelium.local.repository.order.Order;
+import com.mycelium.local.repository.ordermessage.OrderMessage;
 import com.mycelium.local.repository.product.Product;
 import com.mycelium.local.repository.status.Status;
 
@@ -35,6 +37,17 @@ public class OrderProduct {
 
     @Relation(value = Relation.Kind.MANY_TO_ONE)
     public Status status;
+
+    @Relation(value = Relation.Kind.ONE_TO_MANY, mappedBy = "orderProduct")
+    public List<OrderMessage> orderMessages;
+
+    public List<OrderMessage> getOrderMessages() {
+        return orderMessages;
+    }
+
+    public void setOrderMessages(List<OrderMessage> orderMessages) {
+        this.orderMessages = orderMessages;
+    }
 
     public Integer getId() {
         return id;

@@ -1,6 +1,6 @@
 package com.mycelium.local.repository.ordermessage;
 
-import com.mycelium.local.repository.order.Order;
+import com.mycelium.local.repository.orderproduct.OrderProduct;
 import com.mycelium.local.repository.status.Status;
 
 import io.micronaut.data.annotation.GeneratedValue;
@@ -17,7 +17,7 @@ public class OrderMessage {
     public String name;
 
     @Relation(value = Relation.Kind.MANY_TO_ONE)
-    public Order order;
+    public OrderProduct orderProduct;
 
     @Relation(value = Relation.Kind.MANY_TO_ONE)
     public Status status;
@@ -38,12 +38,12 @@ public class OrderMessage {
         this.name = name;
     }
 
-    public Order getOrder() {
-        return order;
+    public OrderProduct getOrderProduct() {
+        return orderProduct;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrderProduct(OrderProduct orderProduct) {
+        this.orderProduct = orderProduct;
     }
 
     public Status getStatus() {
