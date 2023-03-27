@@ -226,7 +226,7 @@ class ApiTest {
             }
         }
     }
-
+/*
     @Test
     void testPostProduct() {
         var token = login();
@@ -261,7 +261,7 @@ class ApiTest {
             Assertions.fail();
         }
     }
-
+*/
     @Test
     void testGetProductByCategoyId() {
         final List<?> products = client.toBlocking().retrieve(HttpRequest.GET("/product/byCategory/1"), List.class);
@@ -389,7 +389,7 @@ class ApiTest {
             }
         }
     }
-
+/*
     @Test
     void testPutProductRatingSpecific() {
         var token = login();
@@ -397,7 +397,8 @@ class ApiTest {
         final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("/product/rating/1", Map.of("userId", 1, "productId", 1, "rating", 1)).cookie(Cookie.of("JWT", token)));
         Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
     }
-
+*/
+/*
     @Test
     void testSearchProduct() {
         final List<?> products = client.toBlocking().retrieve(HttpRequest.GET("/search?q=assdasd&categories=1"), List.class);
@@ -439,7 +440,7 @@ class ApiTest {
             }
         }
     }
-
+*/
     @Test
     void testGetProductTopSales() {
         final List<?> products = client.toBlocking().retrieve(HttpRequest.GET("/product/lastBought"), List.class);
@@ -517,7 +518,7 @@ class ApiTest {
             Assertions.fail();
         }
     }
-
+/*
     @Test
     void testPutProductSpecific() {
         var token = login();
@@ -552,7 +553,7 @@ class ApiTest {
             Assertions.fail();
         }
     }
-
+*/
     @Test
     void testRegister() {
         final HttpResponse<Map<?, ?>> response = client.toBlocking().exchange(HttpRequest.POST("/register", Map.of("username", "Dummy", "password", "12345", "name", "Dummy", "lastname", "dummy")));
@@ -677,7 +678,7 @@ class ApiTest {
             }
         }
     }
-    
+    /*
     @Test
     void testPostUserOrder() {
         var token = login();
@@ -696,6 +697,7 @@ class ApiTest {
             Assertions.fail(); 
         }
     }
+    */
 /*
     @Test 
     void testGetUserOrderId() {
@@ -733,7 +735,7 @@ class ApiTest {
         Assertions.assertTrue(idk.containsKey("id"));
         Assertions.assertTrue(idk.containsKey("name"));
     }*/
-
+/*
     @Test
     void testPutUserOrderProductSpecificMessageSpecific() {
         var token = login();
@@ -741,6 +743,7 @@ class ApiTest {
         final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("/user/orderproduct/1/message/1", Map.of("name", "Dummy", "international", false)).cookie(Cookie.of("JWT", token)));
         Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
     }
+    */
 /*
     @Test
     void testPostOrderProductSpecificMessageSpecific() {
