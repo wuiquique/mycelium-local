@@ -1,4 +1,4 @@
-package com.mycelium.local.repository.product;
+package com.mycelium.local.dynamic.search;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.google.common.collect.Lists;
+import com.mycelium.local.repository.product.Product;
+import com.mycelium.local.repository.product.ProductRepo;
 
 import io.micronaut.context.BeanProvider;
 import io.micronaut.context.annotation.Any;

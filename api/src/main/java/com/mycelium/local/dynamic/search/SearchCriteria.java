@@ -1,4 +1,4 @@
-package com.mycelium.local.repository.product;
+package com.mycelium.local.dynamic.search;
 
 import java.util.List;
 
