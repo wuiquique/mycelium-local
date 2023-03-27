@@ -2,7 +2,6 @@ package com.mycelium.local.controller.order;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -19,10 +18,9 @@ import com.mycelium.local.repository.order.Order;
 import com.mycelium.local.repository.order.OrderRepo;
 import com.mycelium.local.repository.orderproduct.OrderProduct;
 import com.mycelium.local.repository.orderproduct.OrderProductRepo;
+import com.mycelium.local.repository.status.Status;
 import com.mycelium.local.repository.status.StatusRepo;
 import com.mycelium.local.repository.user.UserRepo;
-import com.mycelium.local.repository.status.Status;
-import com.mycelium.local.repository.product.ProductRepo;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.http.annotation.Body;
@@ -45,11 +43,21 @@ class OrderCreateRequest {
     public Timestamp till;
 }
 
+class BasicOrderMessage {
+    public Integer statusId;
+    public String name;
+
+    public BasicOrderMessage(Integer statusId, String name) {
+        this.statusId = statusId;
+        this.name = name;
+    }
+}
+
 @Introspected
 @JsonInclude(Include.ALWAYS)
 class OrderProductUni {
 
-    public Integer orderId;
+    public Integer orderProductId;
     public Integer productId;
     public String productName;
     public String productDesc;
@@ -57,19 +65,20 @@ class OrderProductUni {
     public String productBrand;
     public Integer productPrice;
     public Integer quantity;
-    public Status statusId;
-    public Integer statusIntegId;
+    public Status status;
+    public Status statusInteg;
     public String tracking;
     public String trackingInteg;
     public Integer time;
     public Integer integOrderId;
     public List<String> pictures;
+    public List<BasicOrderMessage> messages;
 
-    public OrderProductUni(Integer orderId, Integer productId, String productName, String productDesc,
+    public OrderProductUni(Integer orderProductId, Integer productId, String productName, String productDesc,
             Integer productCategorie, String productBrand, Integer productPrice, Integer quantity,
-            Status statusId, Integer statusIntegId, String tracking, String trackingInteg,
-            Integer time, Integer integOrderId, List<String> pictures) {
-        this.orderId = orderId;
+            Status status, Status statusInteg, String tracking, String trackingInteg,
+            Integer time, Integer integOrderId, List<String> pictures, List<BasicOrderMessage> messages) {
+        this.orderProductId = orderProductId;
         this.productId = productId;
         this.productName = productName;
         this.productDesc = productDesc;
@@ -77,13 +86,14 @@ class OrderProductUni {
         this.productBrand = productBrand;
         this.productPrice = productPrice;
         this.quantity = quantity;
-        this.statusId = statusId;
-        this.statusIntegId = statusIntegId;
+        this.status = status;
+        this.statusInteg = statusInteg;
         this.tracking = tracking;
         this.trackingInteg = trackingInteg;
         this.time = time;
         this.integOrderId = integOrderId;
         this.pictures = pictures;
+        this.messages = messages;
     }
 }
 
@@ -95,8 +105,8 @@ class OrderFinalResponse {
     public String city;
     public int zip;
     public int phone;
-    public Date since;
-    public Date till;
+    public long since;
+    public long till;
     public List<OrderProductUni> productList;
 }
 
@@ -129,7 +139,7 @@ public class OrderController {
         return Lists.newArrayList(orderRepo.findAll());
     }
 
-    @Get("/{id}") 
+    @Get("/{id}")
     public OrderFinalResponse get(int id) {
         var order = orderRepo.findById(id).get();
         var orderFinal = new OrderFinalResponse();
@@ -138,26 +148,32 @@ public class OrderController {
         orderFinal.city = order.city;
         orderFinal.zip = order.zip;
         orderFinal.phone = order.phone;
-        orderFinal.since = order.since;
-        orderFinal.till = order.till;
+        orderFinal.since = order.since.getTime();
+        orderFinal.till = order.till.getTime();
 
         List<OrderProductUni> products = new ArrayList<OrderProductUni>();
 
-        for (OrderProduct orderP : orderProductRepo.findByOrderId(id)) {
+        for (OrderProduct orderP : order.orderProducts) {
             var pics = new ArrayList<String>();
             for (var p : orderP.product.pictures) {
                 pics.add(p.url);
-            } 
+            }
+            List<BasicOrderMessage> messages = Lists.newArrayList();
+            for (var om : orderP.orderMessages) {
+                messages.add(new BasicOrderMessage(om.status.id, om.name));
+            }
             products.add(new OrderProductUni(orderP.id, orderP.product.id, orderP.product.name,
                     orderP.product.desc, orderP.product.categorie.id, orderP.product.brand,
-                    orderP.product.price, orderP.quantity, statusRepo.findById(orderP.status.id).get(), null,
-                    orderP.tracking, null, orderP.time, null, pics));
+                    orderP.product.price, orderP.quantity, orderP.status, null,
+                    orderP.tracking, null, orderP.time, null, pics, messages));
         }
         for (IntegOrderProduct integOrderP : integOrderProductRepo.findByOrderId(id)) {
-            products.add(new OrderProductUni(null, 1000, "Ejemplo Internacional", "Ejemplo Internacional",
-                    3000, "Marca Internacional", 100, integOrderP.quantity, statusRepo.findById(integOrderP.statusLocal.id).get(), 1,
-                    "Tracking Local", "Tracking Internacional", integOrderP.timeInteg + integOrderP.timeLocal,
-                    integOrderP.id, null));
+            products.add(new OrderProductUni(integOrderP.id, integOrderP.productId, "Ejemplo Internacional",
+                    "Ejemplo Internacional",
+                    3000, "Marca Internacional", 100, integOrderP.quantity,
+                    integOrderP.statusLocal, integOrderP.statusInteg,
+                    integOrderP.trackingLocal, integOrderP.trackingInteg, integOrderP.timeInteg + integOrderP.timeLocal,
+                    integOrderP.id, List.of(), List.of()));
         }
 
         orderFinal.productList = products;

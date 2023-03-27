@@ -1,7 +1,9 @@
 package com.mycelium.local.repository.order;
 
 import java.sql.Timestamp;
+import java.util.List;
 
+import com.mycelium.local.repository.orderproduct.OrderProduct;
 import com.mycelium.local.repository.user.User;
 
 import io.micronaut.data.annotation.GeneratedValue;
@@ -25,6 +27,17 @@ public class Order {
 
     @Relation(value = Relation.Kind.MANY_TO_ONE)
     public User user;
+
+    @Relation(value = Relation.Kind.ONE_TO_MANY, mappedBy = "order")
+    public List<OrderProduct> orderProducts;
+
+    public List<OrderProduct> getOrderProducts() {
+        return orderProducts;
+    }
+
+    public void setOrderProducts(List<OrderProduct> orderProducts) {
+        this.orderProducts = orderProducts;
+    }
 
     public Integer getId() {
         return id;

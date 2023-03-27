@@ -6,36 +6,83 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import axios, { AxiosResponse } from "axios";
 
-export default function AdminOrderDet({ products, onChange }) {
-  const [prods, setProds] = useState(products);
+type OrderProduct = {
+  orderProductId: number;
+  productPrice: number;
+  quantity: number;
+  pictures: string[];
+  productName: string;
+  productDesc: string;
+  productBrand: string;
+  status: {
+    id: number;
+    name: string;
+  };
+  messages: {
+    unsaved?: boolean;
+    statusId: number;
+    name: string;
+  }[];
+};
 
-  useEffect(() => {
-    setProds(products);
-  }, [products]);
-
+export default function AdminOrderDet({
+  products,
+  onChange,
+  reloadProducts,
+}: {
+  products: OrderProduct[];
+  onChange: (value: OrderProduct[]) => void;
+  reloadProducts: () => void;
+}) {
   const handleCommentChange = (i, value) => {
-    let temp = [...prods];
-    temp[i]["comment"] = value;
-    setProds(temp);
+    let temp = [...products];
+    const mi = temp[i].messages.findIndex(
+      (m) => m.statusId === temp[i].status.id
+    );
+    if (mi > -1) {
+      temp[i].messages[mi].name = value;
+    } else {
+      temp[i].messages.push({
+        unsaved: true,
+        name: value,
+        statusId: temp[i].status.id,
+      });
+    }
+    onChange(temp);
   };
 
-  const handleBlur = (status) => 
-    axios
-      .post(`/api/user/order/${orderId}/message/${status}`)
-      .then((response) => {
-        onChange(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const handleBlur = (i: number, op: OrderProduct) => {
+    let req: Promise<AxiosResponse<any, any>>;
+    const message = op.messages.find((m) => m.statusId === op.status.id);
+    if (!message) return;
+    if (message.unsaved) {
+      req = axios.post(
+        `/api/user/orderproduct/${op.orderProductId}/message/${op.status.id}`,
+        {
+          international: false,
+          name: message.name,
+        }
+      );
+    } else {
+      req = axios.put(
+        `/api/user/orderproduct/${op.orderProductId}/message/${op.status.id}`,
+        {
+          international: false,
+          name: message.name,
+        }
+      );
+    }
+
+    req.then((response) => {
+      reloadProducts();
+    });
   };
 
   return (
     <div>
-      {prods.map((e, i) => (
+      {products.map((e, i) => (
         <Card
           elevation={10}
           sx={{ display: "flex", marginBottom: "10px" }}
@@ -72,19 +119,21 @@ export default function AdminOrderDet({ products, onChange }) {
                 color="secondary"
               >
                 <Typography>
-                  <strong>{e.statusId.name}</strong>
+                  <strong>{e.status.name}</strong>
                 </Typography>
               </Button>
               <TextField
                 className="mt-2"
                 label="Status Comment"
-                value={e.comment}
+                value={
+                  e.messages.find((m) => m.statusId === e.status.id)?.name ?? ""
+                }
                 variant="standard"
                 size="small"
                 multiline
                 rows={2}
                 onChange={(ev) => handleCommentChange(i, ev.target.value)}
-                onBlur={() => handleBlur()}
+                onBlur={() => handleBlur(i, e)}
               />
             </div>
           </div>
