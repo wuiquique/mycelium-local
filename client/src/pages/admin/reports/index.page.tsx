@@ -16,7 +16,9 @@ import {
   Typography,
   Unstable_Grid2 as Grid2,
 } from "@mui/material";
-import { useState } from "react";
+import { DataGrid } from "@mui/x-data-grid";
+import axios from "axios";
+import { useCallback, useEffect, useState } from "react";
 import { MdAdd } from "react-icons/md";
 import BackPage from "../../../components/BackPage";
 
@@ -24,33 +26,50 @@ export function Page() {
   const [availableReports, setAvailableReports] = useState<
     {
       name: string;
-      document: string;
-      fields: { name: string; key: string; type: "text" | "number" }[];
+      tableName: string;
+      columns: {
+        name: string;
+        displayName: string;
+        type: "TEXT" | "INTEGER" | "FLOATING" | "DATETIME";
+      }[];
     }[]
-  >([
-    {
-      name: "Inventario",
-      document: "inventory",
-      fields: [
-        { name: "Nombre", key: "name", type: "text" },
-        { name: "Precio", key: "price", type: "number" },
-      ],
-    },
-  ]);
+  >([]);
+
+  useEffect(() => {
+    axios.get("/api/reports").then((response) => {
+      setAvailableReports(response.data);
+    });
+  }, []);
 
   const [selectedReport, setSelectedReport] = useState<number | null>(null);
   const [orders, setOrders] = useState<
-    { index: number | null; order: "asc" | "desc" }[]
+    { name: string; order: "ASC" | "DESC" }[]
   >([]);
   const [filters, setFilters] = useState<
     {
-      index: number | null;
-      comparison: "gt" | "lt" | "gteq" | "lteq" | "eq" | "neq";
-      value: string;
+      name: string;
+      operation: "EQ" | "GT" | "LT" | "GTEQ" | "LTEQ" | "LIKE";
+      value: any;
     }[]
   >([]);
 
-  const [fields, setFields] = useState<number[]>([]);
+  const [fields, setFields] = useState<string[]>([]);
+
+  const [generated, setGenerated] = useState<Record<string, any>[]>([]);
+
+  const generateReport = useCallback(() => {
+    if (selectedReport === null) return;
+    axios
+      .post("/api/reports/generate", {
+        reportType: availableReports[selectedReport].tableName,
+        selected: fields,
+        filters: filters,
+        sorts: orders,
+      })
+      .then((response) => {
+        setGenerated(response.data);
+      });
+  }, [availableReports, fields, filters, orders, selectedReport]);
 
   return (
     <div>
@@ -70,7 +89,7 @@ export function Page() {
               }
             >
               {availableReports.map((r, i) => (
-                <MenuItem key={r.document} value={i}>
+                <MenuItem key={r.tableName} value={i}>
                   {r.name}
                 </MenuItem>
               ))}
@@ -84,7 +103,7 @@ export function Page() {
               onChange={(e) =>
                 setFields(
                   typeof e.target.value === "string"
-                    ? e.target.value.split(",").map((d) => parseInt(d, 10))
+                    ? e.target.value.split(",")
                     : e.target.value
                 )
               }
@@ -96,8 +115,9 @@ export function Page() {
                     <Chip
                       key={value}
                       label={
-                        availableReports[selectedReport ?? -1].fields[value]
-                          .name
+                        availableReports[selectedReport ?? -1]?.columns?.find(
+                          (c) => c.name === value
+                        )?.displayName ?? ""
                       }
                     />
                   ))}
@@ -105,9 +125,9 @@ export function Page() {
               )}
             >
               {selectedReport !== null
-                ? availableReports[selectedReport].fields.map((f, i) => (
-                    <MenuItem key={f.key} value={i}>
-                      {f.name}
+                ? availableReports[selectedReport].columns.map((f, i) => (
+                    <MenuItem key={f.name} value={f.name}>
+                      {f.displayName}
                     </MenuItem>
                   ))
                 : null}
@@ -144,7 +164,7 @@ export function Page() {
                 onClick={() =>
                   setFilters([
                     ...filters,
-                    { index: null, comparison: "lt", value: "" },
+                    { name: "", operation: "EQ", value: "" },
                   ])
                 }
               >
@@ -179,7 +199,7 @@ export function Page() {
               <Button
                 className="m-1 w-full"
                 onClick={() =>
-                  setOrders([...orders, { index: null, order: "asc" }])
+                  setOrders([...orders, { name: "", order: "ASC" }])
                 }
               >
                 <MdAdd />
@@ -188,7 +208,48 @@ export function Page() {
             </Grid2>
           </Grid2>
           <Divider variant="middle" />
-          <Button className="m-1 w-full">Generar</Button>
+          <Button className="m-1 w-full" onClick={generateReport}>
+            Generar
+          </Button>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent>
+          {selectedReport !== null ? (
+            <DataGrid
+              columns={
+                fields.length > 0
+                  ? fields.map((f) => ({
+                      field:
+                        availableReports[selectedReport].columns.find(
+                          (c) => c.name === f
+                        )?.name ?? "",
+                      headerName:
+                        availableReports[selectedReport].columns.find(
+                          (c) => c.name === f
+                        )?.displayName ?? "",
+                      flex: 1,
+                    }))
+                  : availableReports[selectedReport].columns.map((c) => ({
+                      field: c.name,
+                      headerName: c.displayName,
+                      flex: 1,
+                    }))
+              }
+              autoHeight
+              rows={generated.map((r, i) => ({ ...r, _id: i }))}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 5,
+                  },
+                },
+              }}
+              pageSizeOptions={[5, 10, 15]}
+              getRowId={(t) => t._id}
+              rowSelection={false}
+            />
+          ) : null}
         </CardContent>
       </Card>
     </div>

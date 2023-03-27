@@ -40,24 +40,23 @@ public class Report {
         return null;
     }
 
-    public void addColumn(String name, Column.Type type) {
+    public void addColumn(String name, String displayName, Column.Type type) {
         if (this.hasColumn(name))
             return;
-        this.columns.add(new Column(name, type));
+        this.columns.add(new Column(name, displayName, type));
     }
 
     static public Map<String, Report> getAvailableReports() {
         Map<String, Report> reports = Maps.newHashMap();
 
         var productReport = new Report("Products", "product");
-        productReport.addColumn("id", Column.Type.INTEGER);
-        productReport.addColumn("name", Column.Type.TEXT);
-        productReport.addColumn("desc", Column.Type.TEXT);
-        productReport.addColumn("brand", Column.Type.TEXT);
-        productReport.addColumn("weight", Column.Type.INTEGER);
-        productReport.addColumn("quantity", Column.Type.INTEGER);
-        productReport.addColumn("price", Column.Type.INTEGER);
-        productReport.addColumn("categorieid", Column.Type.INTEGER);
+        productReport.addColumn("id", "Id", Column.Type.INTEGER);
+        productReport.addColumn("name", "Name", Column.Type.TEXT);
+        productReport.addColumn("desc", "Description", Column.Type.TEXT);
+        productReport.addColumn("brand", "Brand", Column.Type.TEXT);
+        productReport.addColumn("weight", "Weight", Column.Type.INTEGER);
+        productReport.addColumn("quantity", "Quantity", Column.Type.INTEGER);
+        productReport.addColumn("price", "Price", Column.Type.INTEGER);
         reports.put(productReport.tableName, productReport);
 
         return reports;
@@ -65,10 +64,12 @@ public class Report {
 
     static private class Column {
         public final String name;
+        public final String displayName;
         public final Type type;
 
-        public Column(String name, Type type) {
+        public Column(String name, String displayName, Type type) {
             this.name = name;
+            this.displayName = displayName;
             this.type = type;
         }
 

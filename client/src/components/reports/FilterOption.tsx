@@ -6,13 +6,12 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import React from "react";
 import { MdRemove } from "react-icons/md";
 
 type Filter = {
-  index: number | null;
-  comparison: "gt" | "lt" | "gteq" | "lteq" | "eq" | "neq";
-  value: string;
+  name: string;
+  operation: "EQ" | "GT" | "LT" | "GTEQ" | "LTEQ" | "LIKE";
+  value: any;
 };
 
 export default function FilterOption({
@@ -25,8 +24,12 @@ export default function FilterOption({
   report:
     | {
         name: string;
-        document: string;
-        fields: { name: string; key: string; type: "text" | "number" }[];
+        tableName: string;
+        columns: {
+          name: string;
+          displayName: string;
+          type: "TEXT" | "INTEGER" | "FLOATING" | "DATETIME";
+        }[];
       }
     | undefined;
 }) {
@@ -36,20 +39,17 @@ export default function FilterOption({
         <InputLabel>Campo</InputLabel>
         <Select
           label="Campo"
-          value={value.index ?? ""}
+          value={value.name ?? ""}
           onChange={(e) =>
             onChange({
               ...value,
-              index:
-                typeof e.target.value === "string"
-                  ? parseInt(e.target.value, 10)
-                  : e.target.value,
+              name: e.target.value,
             })
           }
         >
-          {report?.fields?.map((f, i) => (
-            <MenuItem key={f.key} value={i}>
-              {f.name}
+          {report?.columns?.map((f, i) => (
+            <MenuItem key={f.name} value={f.name}>
+              {f.displayName}
             </MenuItem>
           ))}
         </Select>
@@ -58,26 +58,26 @@ export default function FilterOption({
         <InputLabel>Operación</InputLabel>
         <Select
           label="Operación"
-          value={value.comparison}
+          value={value.operation}
           onChange={(e) =>
             onChange({
               ...value,
-              comparison: e.target.value as
-                | "gt"
-                | "lt"
-                | "gteq"
-                | "lteq"
-                | "eq"
-                | "neq",
+              operation: e.target.value as
+                | "EQ"
+                | "GT"
+                | "LT"
+                | "GTEQ"
+                | "LTEQ"
+                | "LIKE",
             })
           }
         >
-          <MenuItem value="gt">Mayor que</MenuItem>
-          <MenuItem value="gteq">Mayor o igual que</MenuItem>
-          <MenuItem value="lt">Menor que</MenuItem>
-          <MenuItem value="lteq">Menor o igual que</MenuItem>
-          <MenuItem value="eq">Igual a</MenuItem>
-          <MenuItem value="neq">No igual a</MenuItem>
+          <MenuItem value="EQ">Igual a</MenuItem>
+          <MenuItem value="GT">Mayor que</MenuItem>
+          <MenuItem value="GTEQ">Mayor o igual que</MenuItem>
+          <MenuItem value="LT">Menor que</MenuItem>
+          <MenuItem value="LTEQ">Menor o igual que</MenuItem>
+          <MenuItem value="LIKE">Similar a</MenuItem>
         </Select>
       </FormControl>
       <TextField

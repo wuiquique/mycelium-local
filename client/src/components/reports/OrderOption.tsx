@@ -5,10 +5,9 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
-import React from "react";
 import { MdRemove } from "react-icons/md";
 
-type Order = { index: number | null; order: "asc" | "desc" };
+type Order = { name: string; order: "ASC" | "DESC" };
 
 export default function OrderOption({
   value,
@@ -20,8 +19,12 @@ export default function OrderOption({
   report:
     | {
         name: string;
-        document: string;
-        fields: { name: string; key: string; type: "text" | "number" }[];
+        tableName: string;
+        columns: {
+          name: string;
+          displayName: string;
+          type: "TEXT" | "INTEGER" | "FLOATING" | "DATETIME";
+        }[];
       }
     | undefined;
 }) {
@@ -31,20 +34,17 @@ export default function OrderOption({
         <InputLabel>Campo</InputLabel>
         <Select
           label="Campo"
-          value={value.index ?? ""}
+          value={value.name ?? ""}
           onChange={(e) =>
             onChange({
               ...value,
-              index:
-                typeof e.target.value === "string"
-                  ? parseInt(e.target.value, 10)
-                  : e.target.value,
+              name: e.target.value,
             })
           }
         >
-          {report?.fields?.map((f, i) => (
-            <MenuItem key={f.key} value={i}>
-              {f.name}
+          {report?.columns?.map((f, i) => (
+            <MenuItem key={f.name} value={f.name}>
+              {f.displayName}
             </MenuItem>
           ))}
         </Select>
@@ -57,12 +57,12 @@ export default function OrderOption({
           onChange={(e) =>
             onChange({
               ...value,
-              order: e.target.value as "asc" | "desc",
+              order: e.target.value as "ASC" | "DESC",
             })
           }
         >
-          <MenuItem value="asc">Ascendiente</MenuItem>
-          <MenuItem value="desc">Descendiente</MenuItem>
+          <MenuItem value="ASC">Ascendiente</MenuItem>
+          <MenuItem value="DESC">Descendiente</MenuItem>
         </Select>
       </FormControl>
       <Button onClick={() => onChange(null)}>
