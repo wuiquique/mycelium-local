@@ -6,13 +6,13 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.common.collect.Lists;
+import com.mycelium.local.dynamic.search.SearchCriteria;
+import com.mycelium.local.dynamic.search.SearchManager;
 import com.mycelium.local.repository.categorie.CategorieRepo;
 import com.mycelium.local.repository.picture.Picture;
 import com.mycelium.local.repository.picture.PictureRepo;
 import com.mycelium.local.repository.product.Product;
 import com.mycelium.local.repository.product.ProductRepo;
-import com.mycelium.local.repository.product.SearchCriteria;
-import com.mycelium.local.repository.product.SearchManager;
 import com.mycelium.local.repository.technical.Technical;
 import com.mycelium.local.repository.technical.TechnicalRepo;
 
