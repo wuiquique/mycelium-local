@@ -78,9 +78,6 @@ class ApiTest {
         Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
     }
 
-//####################Comments#############################
-
-//#########################################################
 
     @Test 
     void testAllIntegrations() {
@@ -226,42 +223,7 @@ class ApiTest {
             }
         }
     }
-/*
-    @Test
-    void testPostProduct() {
-        var token = login();
 
-        var obj = new HashMap<String, Object>();
-        obj.put("name", "Dummy");
-        obj.put("desc", "Dummy");
-        obj.put("categorie", 1);
-        obj.put("brand", "Dummy");
-        obj.put("weight", 1);
-        obj.put("quantity", 1);
-        obj.put("price", 1);
-        
-        var pictures = new ArrayList<Map<String, Object>>();
-        var pictureObj = new HashMap<String, Object>(); 
-        pictureObj.put("url", "Dummy URL"); 
-        pictureObj.put("product", 1);
-        pictures.add(pictureObj);
-
-        var technical = new ArrayList<Map<String, Object>>();
-        var technicalObj = new HashMap<String, Object>(); 
-        technicalObj.put("type", "Dummy"); 
-        technicalObj.put("product", 1);
-        technicalObj.put("value", "Dummy");
-        technical.add(pictureObj);
-        
-        obj.put("pictures", pictures); 
-        obj.put("technical", technical); 
-        
-        final String response = client.toBlocking().retrieve(HttpRequest.POST("/product", obj).cookie(Cookie.of("JWT", token)), String.class);
-        if (response != "Success") {
-            Assertions.fail();
-        }
-    }
-*/
     @Test
     void testGetProductByCategoyId() {
         final List<?> products = client.toBlocking().retrieve(HttpRequest.GET("/product/byCategory/1"), List.class);
@@ -389,58 +351,7 @@ class ApiTest {
             }
         }
     }
-/*
-    @Test
-    void testPutProductRatingSpecific() {
-        var token = login();
 
-        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("/product/rating/1", Map.of("userId", 1, "productId", 1, "rating", 1)).cookie(Cookie.of("JWT", token)));
-        Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
-    }
-*/
-/*
-    @Test
-    void testSearchProduct() {
-        final List<?> products = client.toBlocking().retrieve(HttpRequest.GET("/search?q=assdasd&categories=1"), List.class);
-         for (var prodItem : products) {
-            if (prodItem instanceof Map<?, ?> product) {
-                Assertions.assertTrue(product.containsKey("id"));
-                Assertions.assertTrue(product.containsKey("name"));
-                Assertions.assertTrue(product.containsKey("desc"));
-                Assertions.assertTrue(product.containsKey("categorieId"));
-                Assertions.assertTrue(product.containsKey("brand"));
-                Assertions.assertTrue(product.containsKey("weight"));
-                Assertions.assertTrue(product.containsKey("quantity"));
-                Assertions.assertTrue(product.containsKey("price"));
-                Assertions.assertTrue(product.containsKey("pictures"));
-                Assertions.assertTrue(product.containsKey("technical"));
-
-                if (product.get("pictures") instanceof List<?> pictures) {
-                    for (var picItem : pictures) {
-                        Assertions.assertTrue(picItem instanceof String);
-                    }
-                } else {
-                    Assertions.fail();
-                }
-
-                if (product.get("technical") instanceof List<?> technical) {
-                    for (var techItem : technical) {
-                        if (techItem instanceof Map<?, ?> tech) {
-                            Assertions.assertTrue(tech.containsKey("type"));
-                            Assertions.assertTrue(tech.containsKey("value"));
-                        } else {
-                            Assertions.fail();
-                        }
-                    }
-                } else {
-                    Assertions.fail();
-                }
-            } else {
-                Assertions.fail();
-            }
-        }
-    }
-*/
     @Test
     void testGetProductTopSales() {
         final List<?> products = client.toBlocking().retrieve(HttpRequest.GET("/product/lastBought"), List.class);
@@ -518,42 +429,7 @@ class ApiTest {
             Assertions.fail();
         }
     }
-/*
-    @Test
-    void testPutProductSpecific() {
-        var token = login();
 
-        var obj = new HashMap<String, Object>();
-        obj.put("name", "Dummy");
-        obj.put("desc", "Dummy");
-        obj.put("categorie", 1);
-        obj.put("brand", "Dummy");
-        obj.put("weight", 1);
-        obj.put("quantity", 1);
-        obj.put("price", 1);
-        
-        var pictures = new ArrayList<Map<String, Object>>();
-        var pictureObj = new HashMap<String, Object>(); 
-        pictureObj.put("url", "Dummy URL"); 
-        pictureObj.put("product", 1);
-        pictures.add(pictureObj);
-
-        var technical = new ArrayList<Map<String, Object>>();
-        var technicalObj = new HashMap<String, Object>(); 
-        technicalObj.put("type", "Dummy"); 
-        technicalObj.put("product", 1);
-        technicalObj.put("value", "Dummy");
-        technical.add(pictureObj);
-        
-        obj.put("pictures", pictures); 
-        obj.put("technical", technical); 
-        
-        final String response = client.toBlocking().retrieve(HttpRequest.POST("/product", obj).cookie(Cookie.of("JWT", token)), String.class);
-        if (response != "Success") {
-            Assertions.fail();
-        }
-    }
-*/
     @Test
     void testRegister() {
         final HttpResponse<Map<?, ?>> response = client.toBlocking().exchange(HttpRequest.POST("/register", Map.of("username", "Dummy", "password", "12345", "name", "Dummy", "lastname", "dummy")));
@@ -572,26 +448,7 @@ class ApiTest {
                 }
             }
     }
-/*
-    @Test
-    void testGetSession() {
-        String token = login();
 
-        final Map<?, ?> session = client.toBlocking().retrieve(HttpRequest.GET("/session").cookie(Cookie.of("JWT", token)), Map.class);
-        Assertions.assertTrue(session.containsKey("id"));
-        Assertions.assertTrue(session.containsKey("email"));
-        Assertions.assertTrue(session.containsKey("name"));
-        Assertions.assertTrue(session.containsKey("lastname"));
-        Assertions.assertTrue(session.containsKey("roleId"));
-        Assertions.assertTrue(session.containsKey("role"));
-    }*/
-/*
-    @Test
-    void testGetSessionUnauthenticated() {
-        final Map<?, ?> session = client.toBlocking().retrieve(HttpRequest.GET("/session"), Map.class);
-        Assertions.assertTrue(session.containsKey("id"));
-    }
-*/
     @Test
     void testPutText() {
         var token = login();
@@ -599,24 +456,7 @@ class ApiTest {
         final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("text", Map.of("component", "Dummy", "key", "Dummy", "value", "Dummy")).cookie(Cookie.of("JWT", token)));
         Assertions.assertTrue(response.getStatus() == HttpStatus.OK);    
     }
-/*
-    @Test
-    void testGetUser() {
-        final List<?> users = client.toBlocking().retrieve(HttpRequest.GET("/user"), List.class);
-        for (var item : users) {
-            if (item instanceof Map<?, ?> user) {
-                Assertions.assertTrue(user.containsKey("id"));
-                Assertions.assertTrue(user.containsKey("name"));
-                Assertions.assertTrue(user.containsKey("lastname"));
-                Assertions.assertTrue(user.containsKey("email"));
-                Assertions.assertTrue(user.containsKey("roleId"));
-                Assertions.assertTrue(user.containsKey("role"));
-            } else {
-                Assertions.fail();
-            }
-        }
-    }
-*/
+
     @Test
     void testCartList() {
         String token = login();
@@ -678,81 +518,7 @@ class ApiTest {
             }
         }
     }
-    /*
-    @Test
-    void testPostUserOrder() {
-        var token = login();
 
-        var obj = new HashMap<String, Object>();
-        obj.put("direction", "Dummy");
-        obj.put("state", "Dummy");
-        obj.put("city", "Dummy");
-        obj.put("zip", 12345);
-        obj.put("phone", 12345678);
-        obj.put("siince", "2014-08-18T21:11:54");
-        obj.put("till", "2014-08-18T21:11:54");
-
-        final String response = client.toBlocking().retrieve(HttpRequest.POST("/user/order", obj).cookie(Cookie.of("JWT", token)), String.class);
-        if (response != "Success") {
-            Assertions.fail(); 
-        }
-    }
-    */
-/*
-    @Test 
-    void testGetUserOrderId() {
-        final Map<?, ?> response = client.toBlocking().retrieve(HttpRequest.GET("/user/order/105"), Map.class);
-        Assertions.assertTrue(response.containsKey("direction"));
-        Assertions.assertTrue(response.containsKey("state"));
-        Assertions.assertTrue(response.containsKey("city"));
-        Assertions.assertTrue(response.containsKey("zip"));
-        Assertions.assertTrue(response.containsKey("phone"));
-        Assertions.assertTrue(response.containsKey("since"));
-        Assertions.assertTrue(response.containsKey("till"));
-        Assertions.assertTrue(response.containsKey("products"));
-        if (response.get("products") instanceof List<?> products) {
-            for (var productItem : products) {
-                if (productItem instanceof Map<?, ?> prod) {
-                    Assertions.assertTrue(prod.containsKey("orderProductId"));
-                    Assertions.assertTrue(prod.containsKey("productId"));
-                    Assertions.assertTrue(prod.containsKey("productName"));
-                    Assertions.assertTrue(prod.containsKey("productDesc"));
-                    Assertions.assertTrue(prod.containsKey("productCategorie"));
-                    Assertions.assertTrue(prod.containsKey("productBrand"));
-                    Assertions.assertTrue(prod.containsKey("productPrice"));
-                    Assertions.assertTrue(prod.containsKey("quantity"));
-                }
-            }
-        }
-        else {
-            Assertions.fail();
-        }
-    }*/
-/*
-    @Test
-    void testGetUserOrderProductSpecificMessageSpecific() {
-        final Map<?, ?> idk = client.toBlocking().retrieve(HttpRequest.GET("/user/orderproduct/1/message/1"), Map.class);
-        Assertions.assertTrue(idk.containsKey("id"));
-        Assertions.assertTrue(idk.containsKey("name"));
-    }*/
-/*
-    @Test
-    void testPutUserOrderProductSpecificMessageSpecific() {
-        var token = login();
-
-        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("/user/orderproduct/1/message/1", Map.of("name", "Dummy", "international", false)).cookie(Cookie.of("JWT", token)));
-        Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
-    }
-    */
-/*
-    @Test
-    void testPostOrderProductSpecificMessageSpecific() {
-        var token = login();
-
-        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.POST("/user/orderproduct/1/message/1", Map.of("name", "Dummy", "international", false)).cookie(Cookie.of("JWT", token)));
-        Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
-    }
-    */
     @Test
     void testPutEditUser() {
         final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("/user/1", Map.of("name", "Dummy", "lastname", "Dummy", "email", "dummy@dummy.com", "roleId", 1)));
