@@ -31,6 +31,7 @@ public class SearchManager {
         this.productRepo = productRepo;
     }
 
+    @SuppressWarnings("unused")
     public List<Product> search(List<SearchCriteria> criteria) {
         Optional<Connection> connection = Optional.empty();
         Optional<SynchronousTransactionManager<Connection>> transactionManager = Optional.empty();

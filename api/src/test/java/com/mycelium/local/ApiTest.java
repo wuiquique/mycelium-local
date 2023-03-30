@@ -1,6 +1,5 @@
 package com.mycelium.local;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,41 +48,45 @@ class ApiTest {
             if (catItem instanceof Map<?, ?> cate) {
                 Assertions.assertTrue(cate.containsKey("id"));
                 Assertions.assertTrue(cate.containsKey("name"));
-            }
-            else {
+            } else {
                 Assertions.fail();
             }
         }
     }
 
-    @Test void testPostCategorie() {
+    @Test
+    void testPostCategorie() {
         var token = login();
 
-        final HttpResponse<Integer> response = client.toBlocking().exchange(HttpRequest.POST("/categories", Map.of("name", "Dummy")).cookie(Cookie.of("JWT", token)), Integer.class);
+        final HttpResponse<Integer> response = client.toBlocking().exchange(
+                HttpRequest.POST("/categories", Map.of("name", "Dummy")).cookie(Cookie.of("JWT", token)),
+                Integer.class);
         Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
     }
 
-    @Test void testGetCategorieSpecific() {        
+    @Test
+    void testGetCategorieSpecific() {
         final Map<?, ?> categorie = client.toBlocking().retrieve(HttpRequest.GET("/categories/1"), Map.class);
         Assertions.assertTrue(categorie.containsKey("id"));
-        Assertions.assertTrue(categorie.containsKey("name"));    
+        Assertions.assertTrue(categorie.containsKey("name"));
     }
 
-    @Test 
+    @Test
     void testPutCategorieSpecific() {
         var token = login();
 
-        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("/categories/1", Map.of("name", "Dummy")).cookie(Cookie.of("JWT", token)));
+        final HttpResponse<?> response = client.toBlocking()
+                .exchange(HttpRequest.PUT("/categories/1", Map.of("name", "Dummy")).cookie(Cookie.of("JWT", token)));
 
         Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
     }
 
-
-    @Test 
+    @Test
     void testAllIntegrations() {
         String token = login();
 
-        final List<?> integrations = client.toBlocking().retrieve(HttpRequest.GET("/integration").cookie(Cookie.of("JWT", token)), List.class);
+        final List<?> integrations = client.toBlocking()
+                .retrieve(HttpRequest.GET("/integration").cookie(Cookie.of("JWT", token)), List.class);
         for (var i : integrations) {
             if (i instanceof Map<?, ?> integ) {
                 Assertions.assertTrue(integ.containsKey("id"));
@@ -91,19 +94,22 @@ class ApiTest {
                 Assertions.assertTrue(integ.containsKey("request"));
                 Assertions.assertTrue(integ.containsKey("user"));
                 Assertions.assertTrue(integ.containsKey("password"));
-            }
-            else {
+            } else {
                 Assertions.fail();
             }
         }
-        
+
     }
 
     @Test
     void testPostIntegration() {
         var token = login();
 
-        final List<?> integrations = client.toBlocking().retrieve(HttpRequest.POST("/integration", Map.of("name", "Dummy", "request", "Dummy", "user", "Dummy", "password", "12345")).cookie(Cookie.of("JWT", token)), List.class);
+        final List<?> integrations = client.toBlocking()
+                .retrieve(HttpRequest
+                        .POST("/integration",
+                                Map.of("name", "Dummy", "request", "Dummy", "user", "Dummy", "password", "12345"))
+                        .cookie(Cookie.of("JWT", token)), List.class);
         for (var i : integrations) {
             if (i instanceof Map<?, ?> integ) {
                 Assertions.assertTrue(integ.containsKey("id"));
@@ -111,8 +117,7 @@ class ApiTest {
                 Assertions.assertTrue(integ.containsKey("request"));
                 Assertions.assertTrue(integ.containsKey("user"));
                 Assertions.assertTrue(integ.containsKey("password"));
-            }
-            else {
+            } else {
                 Assertions.fail();
             }
         }
@@ -122,7 +127,8 @@ class ApiTest {
     void testGetIntegrationSpecific() {
         var token = login();
 
-        final Map<?, ?> integration = client.toBlocking().retrieve(HttpRequest.GET("/integration/1").cookie(Cookie.of("JWT", token)), Map.class);
+        final Map<?, ?> integration = client.toBlocking()
+                .retrieve(HttpRequest.GET("/integration/1").cookie(Cookie.of("JWT", token)), Map.class);
         Assertions.assertTrue(integration.containsKey("id"));
         Assertions.assertTrue(integration.containsKey("name"));
         Assertions.assertTrue(integration.containsKey("request"));
@@ -133,13 +139,14 @@ class ApiTest {
     @Test
     void testPutIntegration() {
         var token = login();
-        
+
         var obj = new HashMap<String, Object>();
         obj.put("name", "Dummy");
         obj.put("request", "Dummy");
         obj.put("user", "Dummy");
         obj.put("password", "Dummy");
-        final HttpResponse<?> integration = client.toBlocking().exchange(HttpRequest.PUT("/integration/1", obj).cookie(Cookie.of("JWT", token)));
+        final HttpResponse<?> integration = client.toBlocking()
+                .exchange(HttpRequest.PUT("/integration/1", obj).cookie(Cookie.of("JWT", token)));
         Assertions.assertTrue(integration.getStatus() == HttpStatus.OK);
     }
 
@@ -151,18 +158,19 @@ class ApiTest {
                 Assertions.assertTrue(pic.containsKey("id"));
                 Assertions.assertTrue(pic.containsKey("url"));
                 Assertions.assertTrue(pic.containsKey("product"));
-            }
-            else {
+            } else {
                 Assertions.fail();
             }
         }
     }
 
-    @Test 
+    @Test
     void testPostPictures() {
         var token = login();
 
-        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.POST("/pictures", Map.of("url", "http://Dummy.com", "productId", "1")).cookie(Cookie.of("JWT", token)));
+        final HttpResponse<?> response = client.toBlocking()
+                .exchange(HttpRequest.POST("/pictures", Map.of("url", "http://Dummy.com", "productId", "1"))
+                        .cookie(Cookie.of("JWT", token)));
         Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
     }
 
@@ -174,8 +182,7 @@ class ApiTest {
                 Assertions.assertTrue(pic.containsKey("id"));
                 Assertions.assertTrue(pic.containsKey("url"));
                 Assertions.assertTrue(pic.containsKey("product"));
-            }
-            else {
+            } else {
                 Assertions.fail();
             }
         }
@@ -317,8 +324,7 @@ class ApiTest {
                 Assertions.assertTrue(rat.containsKey("id"));
                 Assertions.assertTrue(rat.containsKey("rating"));
                 Assertions.assertTrue(rat.containsKey("user"));
-            }
-            else {
+            } else {
                 Assertions.fail();
             }
         }
@@ -328,16 +334,19 @@ class ApiTest {
     void testPostProductRating() {
         var token = login();
 
-        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.POST("/product/rating", Map.of("userId", 1, "productId", 1, "rating", 1)).cookie(Cookie.of("JWT", token)));
+        final HttpResponse<?> response = client.toBlocking()
+                .exchange(HttpRequest.POST("/product/rating", Map.of("userId", 1, "productId", 1, "rating", 1))
+                        .cookie(Cookie.of("JWT", token)));
         Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
     }
 
     @Test
     void testGetProductRatingAvg() {
-        final HttpResponse<Integer> response = client.toBlocking().exchange(HttpRequest.GET("/product/rating/avg/1"), Integer.class);
+        final HttpResponse<Integer> response = client.toBlocking().exchange(HttpRequest.GET("/product/rating/avg/1"),
+                Integer.class);
         Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
     }
-    
+
     @Test
     void testGetProductRatingSpecific() {
         final List<?> ratings = client.toBlocking().retrieve(HttpRequest.GET("/product/rating/1"), List.class);
@@ -432,29 +441,32 @@ class ApiTest {
 
     @Test
     void testRegister() {
-        final HttpResponse<Map<?, ?>> response = client.toBlocking().exchange(HttpRequest.POST("/register", Map.of("username", "Dummy", "password", "12345", "name", "Dummy", "lastname", "dummy")));
+        final HttpResponse<Map<?, ?>> response = client.toBlocking().exchange(HttpRequest.POST("/register",
+                Map.of("username", "Dummy", "password", "12345", "name", "Dummy", "lastname", "dummy")));
         Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
     }
 
     @Test
-    void testGetRoles() { 
+    void testGetRoles() {
         final List<?> roles = client.toBlocking().retrieve(HttpRequest.GET("/role"), List.class);
         for (var i : roles) {
-                if (i instanceof Map<?, ?> role) {
-                    Assertions.assertTrue(role.containsKey("id"));
-                    Assertions.assertTrue(role.containsKey("name"));
-                } else {
-                    Assertions.fail();
-                }
+            if (i instanceof Map<?, ?> role) {
+                Assertions.assertTrue(role.containsKey("id"));
+                Assertions.assertTrue(role.containsKey("name"));
+            } else {
+                Assertions.fail();
             }
+        }
     }
 
     @Test
     void testPutText() {
         var token = login();
 
-        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("text", Map.of("component", "Dummy", "key", "Dummy", "value", "Dummy")).cookie(Cookie.of("JWT", token)));
-        Assertions.assertTrue(response.getStatus() == HttpStatus.OK);    
+        final HttpResponse<?> response = client.toBlocking()
+                .exchange(HttpRequest.PUT("text", Map.of("component", "Dummy", "key", "Dummy", "value", "Dummy"))
+                        .cookie(Cookie.of("JWT", token)));
+        Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
     }
 
     @Test
@@ -494,7 +506,9 @@ class ApiTest {
     void testPutCartList() {
         var token = login();
 
-        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("/user/cart", Map.of("international", false, "productId", 1, "quantity", 1)).cookie(Cookie.of("JWT", token)));
+        final HttpResponse<?> response = client.toBlocking()
+                .exchange(HttpRequest.PUT("/user/cart", Map.of("international", false, "productId", 1, "quantity", 1))
+                        .cookie(Cookie.of("JWT", token)));
         Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
     }
 
@@ -502,7 +516,8 @@ class ApiTest {
     void testGetUserOrder() {
         var token = login();
 
-        final List<?> orders = client.toBlocking().retrieve(HttpRequest.GET("/user/order").cookie(Cookie.of("JWT", token)), List.class);
+        final List<?> orders = client.toBlocking()
+                .retrieve(HttpRequest.GET("/user/order").cookie(Cookie.of("JWT", token)), List.class);
         for (var item : orders) {
             if (item instanceof Map<?, ?> ord) {
                 Assertions.assertTrue(ord.containsKey("id"));
@@ -521,7 +536,8 @@ class ApiTest {
 
     @Test
     void testPutEditUser() {
-        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("/user/1", Map.of("name", "Dummy", "lastname", "Dummy", "email", "dummy@dummy.com", "roleId", 1)));
+        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("/user/1",
+                Map.of("name", "Dummy", "lastname", "Dummy", "email", "dummy@dummy.com", "roleId", 1)));
         Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
     }
 }

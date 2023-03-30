@@ -62,6 +62,7 @@ public class Report {
         return reports;
     }
 
+    @SuppressWarnings("unused")
     static private class Column {
         public final String name;
         public final String displayName;
