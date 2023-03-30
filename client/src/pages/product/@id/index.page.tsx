@@ -10,42 +10,43 @@ import CommentTree from "../../../components/comments/CommentTree";
 import { useUser } from "../../../hooks/userContext";
 
 export function Page({ params: { id } }) {
-  const [prod, setProd] = useState({});
+  const [prod, setProd] = useState<{
+    id: number;
+    name: string;
+    desc: string;
+    brand: string;
+    weight: number;
+    categorieId: number;
+    price: number;
+    quantity: number;
+  }>({} as any);
 
-  const [urls, setUrls] = useState([]);
+  const [urls, setUrls] = useState<{ url: string }[]>([]);
 
-  const [categ, setCategs] = useState([]);
+  const [categ, setCategs] = useState<{ id: number; name: string }[]>([]);
 
-  const [tech, setTech] = useState([]);
+  const [tech, setTech] = useState<{ type: string; value: string }[]>([]);
 
-  const [ratings, setRatings] = useState([]);
+  const [ratings, setRatings] = useState<
+    { id: number; user: { id: number } }[]
+  >([]);
 
-  const [ratingAvg, setRAvg] = useState([]);
+  const [ratingAvg, setRAvg] = useState(0);
 
-  const [user, setUser] = useUser();
+  const [user] = useUser();
 
-  const [comments, setComments] = useState([
-    {
-      author: "Test",
-      content: "Test",
-      votes: 10,
-      replies: [
-        {
-          author: "Test",
-          content: "Test",
-          votes: 10,
-          replies: [],
-        },
-        {
-          author: "Test",
-          content: "Test",
-          votes: 10,
-          replies: [],
-        },
-      ],
-    },
-    { author: "Test", content: "Test", votes: 10, replies: [] },
-  ]);
+  type Comment = {
+    id: number;
+    message: string;
+    created: number;
+    updated: number;
+    productId: number;
+    userName: string;
+    votes: number | undefined;
+    children: any[];
+  };
+
+  const [comments, setComments] = useState<Comment[]>([]);
 
   useEffect(() => {
     axios.get(`/api/product/${id}`).then((response) => {
@@ -66,6 +67,9 @@ export function Page({ params: { id } }) {
     });
     axios.get(`/api/product/rating/avg/${id}`).then((response) => {
       setRAvg(response.data);
+    });
+    axios.get(`/api/comment/${id}`).then((response) => {
+      setComments(response.data);
     });
   }, [id]);
 

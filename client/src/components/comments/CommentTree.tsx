@@ -5,14 +5,17 @@ import {
   CardContent,
   Typography,
 } from "@mui/material";
-import React, { Fragment } from "react";
 import { MdArrowDownward, MdArrowUpward } from "react-icons/md";
 
 type Comment = {
-  author: string;
-  content: string;
-  votes: number;
-  replies: Comment[];
+  id: number;
+  message: string;
+  created: number;
+  updated: number;
+  productId: number;
+  userName: string;
+  votes: number | undefined;
+  children: any[];
 };
 
 export default function CommentTree({ comments }: { comments: Comment[] }) {
@@ -23,9 +26,9 @@ export default function CommentTree({ comments }: { comments: Comment[] }) {
           <Card>
             <CardContent>
               <Typography variant="h5" component="div">
-                {c.author}
+                {c.userName}
               </Typography>
-              <p>{c.content}</p>
+              <p>{c.message}</p>
             </CardContent>
             <CardActions>
               <Button size="small">
@@ -38,7 +41,7 @@ export default function CommentTree({ comments }: { comments: Comment[] }) {
             </CardActions>
           </Card>
           <div className="pl-5">
-            <CommentTree comments={c.replies} />
+            <CommentTree comments={c.children} />
           </div>
         </div>
       ))}
