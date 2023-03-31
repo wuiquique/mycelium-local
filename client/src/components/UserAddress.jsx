@@ -15,9 +15,10 @@ export default function UserAddress({ products }) {
   const texts = useTexts();
   const [date1, setDate1] = useState("2014-08-18T21:11:54");
   const [date2, setDate2] = useState("2014-08-18T21:11:54");
-  const user = useUser();
+  const [user] = useUser();
 
   const handleSubmit = (event) => {
+    if (user.id === null) return;
     event.preventDefault();
     let dirHolder = {
       userId: user.id,
@@ -87,6 +88,7 @@ export default function UserAddress({ products }) {
                 label={texts.checkoutpage.deliveryfrom}
                 value={date1}
                 onChange={(newValue) => {
+                  if (newValue === null) return;
                   setDate1(newValue);
                 }}
               />{" "}
@@ -96,6 +98,7 @@ export default function UserAddress({ products }) {
                 label={texts.checkoutpage.deliveryto}
                 value={date2}
                 onChange={(newValue) => {
+                  if (newValue === null) return;
                   setDate2(newValue);
                 }}
               />

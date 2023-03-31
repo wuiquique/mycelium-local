@@ -13,8 +13,16 @@ import BackPage from "../../../components/BackPage";
 
 export function Page() {
   const texts = useTexts();
-  const [integ, setInteg] = useState([]);
-  const [showPass, setShowPass] = useState(false);
+  const [integ, setInteg] = useState<
+    {
+      id: number;
+      name: string;
+      user: string;
+      password: string;
+      request: string;
+    }[]
+  >([]);
+  // const [showPass, setShowPass] = useState(false);
 
   useEffect(() => {
     axios.get("/api/integration/").then((response) => {

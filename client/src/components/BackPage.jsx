@@ -6,7 +6,7 @@ export default function BackPage() {
   const texts = useTexts();
   return (
     <div className="justify-left block">
-      <Button size="large" onClick={() => history.back()}>
+      <Button size="large" onClick={() => window.history.back()}>
         <KeyboardBackspaceOutlinedIcon className="m-1" />
         {texts.global.backbutton}
       </Button>
