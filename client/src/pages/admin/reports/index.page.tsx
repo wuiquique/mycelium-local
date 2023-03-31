@@ -1,5 +1,6 @@
 import FilterOption from "@/components/reports/FilterOption";
 import OrderOption from "@/components/reports/OrderOption";
+import { useTexts } from "@/hooks/textContext";
 import {
   Box,
   Button,
@@ -23,6 +24,8 @@ import { MdAdd } from "react-icons/md";
 import BackPage from "../../../components/BackPage";
 
 export function Page() {
+  const texts = useTexts();
+
   const [availableReports, setAvailableReports] = useState<
     {
       name: string;
@@ -77,10 +80,12 @@ export function Page() {
     <div>
       <BackPage />
       <Card>
-        <CardHeader title="Reportes" />
+        <CardHeader title={texts.reportpage.title} />
         <CardContent>
           <FormControl className="m-1 w-full">
-            <InputLabel id="reports-label">Reporte</InputLabel>
+            <InputLabel id="reports-label">
+              {texts.reportpage.report}
+            </InputLabel>
             <Select
               className="w-full"
               labelId="reports-label"
@@ -98,7 +103,9 @@ export function Page() {
             </Select>
           </FormControl>
           <FormControl className="m-1 w-full">
-            <InputLabel id="multiple-fields-label">Campos</InputLabel>
+            <InputLabel id="multiple-fields-label">
+              {texts.reportpage.fields}
+            </InputLabel>
             <Select
               labelId="multiple-fields-label"
               value={fields}
@@ -110,7 +117,7 @@ export function Page() {
                 )
               }
               multiple
-              input={<OutlinedInput label="Campos" />}
+              input={<OutlinedInput label={texts.reportpage.fields} />}
               renderValue={(selected) => (
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                   {selected.map((value) => (
@@ -139,7 +146,7 @@ export function Page() {
           <Grid2 container spacing={2}>
             <Grid2 xs={12} md={6}>
               <Typography variant="h6" component="div">
-                Filtros
+                {texts.reportpage.filters}
               </Typography>
               {filters.map((o, i) => (
                 <FilterOption
@@ -171,12 +178,12 @@ export function Page() {
                 }
               >
                 <MdAdd />
-                &nbsp;Agregar
+                &nbsp;{texts.reportpage.addfilterbutton}
               </Button>
             </Grid2>
             <Grid2 xs={12} md={6}>
               <Typography variant="h6" component="div">
-                Ordenamiento
+                {texts.reportpage.sort}
               </Typography>
               {orders.map((o, i) => (
                 <OrderOption
@@ -205,13 +212,13 @@ export function Page() {
                 }
               >
                 <MdAdd />
-                &nbsp;Agregar
+                &nbsp;{texts.reportpage.addsortbutton}
               </Button>
             </Grid2>
           </Grid2>
           <Divider variant="middle" />
           <Button className="m-1 w-full" onClick={generateReport}>
-            Generar
+            {texts.reportpage.generatebutton}
           </Button>
         </CardContent>
       </Card>

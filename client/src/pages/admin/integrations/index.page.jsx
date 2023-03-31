@@ -1,3 +1,4 @@
+import { useTexts } from "@/hooks/textContext";
 import {
   Button,
   Card,
@@ -11,6 +12,7 @@ import { useEffect, useState } from "react";
 import BackPage from "../../../components/BackPage";
 
 export function Page() {
+  const texts = useTexts();
   const [integ, setInteg] = useState([]);
   const [showPass, setShowPass] = useState(false);
 
@@ -63,7 +65,7 @@ export function Page() {
     <div>
       <BackPage />
       <Typography variant="h3" className="text-center">
-        Integrations
+        {texts.integrationpage.title}
       </Typography>
       <br />
       <Grid2 container spacing={2}>
@@ -75,19 +77,19 @@ export function Page() {
                   <TextField
                     sx={{ minWidth: "33%" }}
                     variant="standard"
-                    label="Nombre"
+                    label={texts.integration.name}
                     name="int_name"
                   />
                   <TextField
                     sx={{ minWidth: "33%" }}
                     variant="standard"
-                    label="Usuario"
+                    label={texts.integration.username}
                     name="int_user"
                   />
                   <TextField
                     sx={{ minWidth: "33%" }}
                     variant="standard"
-                    label="Contraseña"
+                    label={texts.integration.password}
                     name="int_pass"
                     type="password"
                   />
@@ -96,12 +98,12 @@ export function Page() {
                 <TextField
                   sx={{ minWidth: "100%" }}
                   variant="standard"
-                  label="Ruta"
+                  label={texts.integration.url}
                   name="int_ref"
                 />
                 <div className="flex justify-center">
                   <Button className="mt-3" variant="outlined" type="submit">
-                    Guardar
+                    {texts.integrationpage.savebutton}
                   </Button>
                 </div>
               </form>
@@ -141,13 +143,15 @@ export function Page() {
                   />
                   <br />
                   <div className="flex justify-center">
-                    <Button type="submit">Update</Button>
+                    <Button type="submit">
+                      {texts.integrationpage.updatebutton}
+                    </Button>
                     <Button
                       onClick={() => {
                         deleteInt(e.id);
                       }}
                     >
-                      Remove
+                      {texts.integrationpage.removebutton}
                     </Button>
                   </div>
                 </form>

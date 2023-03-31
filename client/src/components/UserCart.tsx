@@ -1,3 +1,4 @@
+import { useTexts } from "@/hooks/textContext";
 import {
   Button,
   Card,
@@ -13,8 +14,14 @@ export default function UserCart({
   products,
   cartOrCheckout,
   onChange,
-  orderId,
+  orderId = undefined,
+}: {
+  products: any[];
+  cartOrCheckout: "cart" | "checkout" | "details";
+  onChange: (value: any[]) => void;
+  orderId?: number;
 }) {
+  const texts = useTexts();
   const [localProds, setLocalProds] = useState(products);
 
   useEffect(() => {
@@ -55,7 +62,7 @@ export default function UserCart({
           sx={{ display: "flex", height: "485px" }}
         >
           <Typography variant="h5" sx={{ padding: "2%" }}>
-            No hay productos en tu carrito :(
+            {texts.usercartpage.noproducts}
           </Typography>
         </Card>
       ) : (
@@ -80,24 +87,26 @@ export default function UserCart({
               <div className="text-left">
                 <Typography variant="h6">{e.description}</Typography>
                 <Typography>
-                  <strong>Brand:</strong>&nbsp;{e.brand}
+                  <strong>{texts.product.brand}:</strong>&nbsp;{e.brand}
                 </Typography>
                 <Typography>
-                  <strong>Weight:</strong>&nbsp;{e.weight}
+                  <strong>{texts.product.weight}:</strong>&nbsp;{e.weight}
                 </Typography>
               </div>
             </CardContent>
             <div className="text-right p-5">
               {cartOrCheckout === "cart" ? (
                 <Button variant="outlined" onClick={() => handleDeleteItem(e)}>
-                  Eliminar
+                  {texts.usercartpage.deletebutton}
                 </Button>
               ) : (
                 <></>
               )}
               <Typography variant="h4">{`Q.${e.price}.00`}</Typography>
               <Typography variant="subtitle1">
-                <strong>{`Qty. ${e.quantity}`}</strong>
+                <strong>
+                  {texts.product.quantity}: ${e.quantity}
+                </strong>
               </Typography>
               {cartOrCheckout === "details" ? (
                 <div className="mt-8">
@@ -112,7 +121,7 @@ export default function UserCart({
                   </Button>
                   <TextField
                     className="mt-2"
-                    label="Status Comment"
+                    label={texts.adminorderpage.statuscomment}
                     value={e.comment}
                     variant="standard"
                     size="small"

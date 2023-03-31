@@ -1,3 +1,4 @@
+import { useTexts } from "@/hooks/textContext";
 import { Typography } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import axios from "axios";
@@ -7,8 +8,10 @@ import UserAddress from "../../../components/UserAddress";
 import UserCart from "../../../components/UserCart";
 
 export function Page() {
-  const [products, setProducts] = useState([]);
-  const [address, setAddress] = useState({});
+  const texts = useTexts();
+
+  const [products, setProducts] = useState<any[]>([]);
+  const [address, setAddress] = useState<any>({});
 
   useEffect(() => {
     axios
@@ -24,7 +27,7 @@ export function Page() {
   return (
     <div>
       <Typography variant="h2" className="text-center">
-        Checkout
+        {texts.checkoutpage.title}
       </Typography>
       <br />
       <Grid2 container spacing={2}>

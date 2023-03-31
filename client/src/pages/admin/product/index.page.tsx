@@ -1,3 +1,4 @@
+import { useTexts } from "@/hooks/textContext";
 import {
   Button,
   Card,
@@ -12,8 +13,11 @@ import {
 import Grid2 from "@mui/material/Unstable_Grid2";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { BiPaperPlane } from "react-icons/bi";
 
 export function Page() {
+  const texts = useTexts();
+
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -50,18 +54,18 @@ export function Page() {
       <Grid2 container spacing={2}>
         <Grid2 lg={12}>
           <Typography variant="h3" className="text-center">
-            Product Administration
+            {texts.adminproductpage.title}
           </Typography>
           <br />
           <Card elevation={10} sx={{ minHeight: 300 }}>
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Description</TableCell>
-                  <TableCell>Quantity</TableCell>
-                  <TableCell>Price</TableCell>
-                  <TableCell>Details</TableCell>
+                  <TableCell>{texts.product.name}</TableCell>
+                  <TableCell>{texts.product.description}</TableCell>
+                  <TableCell>{texts.product.quantity}</TableCell>
+                  <TableCell>{texts.product.price}</TableCell>
+                  <TableCell>{texts.adminproductpage.detailscol}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -113,7 +117,7 @@ export function Page() {
                         component="a"
                         href={`/admin/product/${e.id}`}
                       >
-                        Details
+                        <BiPaperPlane size="1.6rem" />
                       </Button>
                     </TableCell>
                   </TableRow>

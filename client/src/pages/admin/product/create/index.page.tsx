@@ -36,7 +36,7 @@ export function Page() {
     axios.post("/api/product", out).then((response) => {
       console.log(response.data);
       if (response.data === "Success") {
-        location.reload();
+        window.location.reload();
       }
     });
   };
@@ -101,7 +101,7 @@ export function Page() {
                 component="img"
                 height="100%"
                 image="/redwhite.png"
-                alt="Mycelium Logo"
+                alt={texts.global.shopname}
                 sx={{ maxWidth: 345 }}
               />
             </div>
@@ -221,7 +221,7 @@ export function Page() {
                       <div key={i} className="justify-center text-center">
                         <TextField
                           className="m-1"
-                          label={texts.product.type}
+                          label={texts.technical.type}
                           variant="standard"
                           value={e.type}
                           onChange={(e) =>
@@ -230,7 +230,7 @@ export function Page() {
                         />
                         <TextField
                           className="m-1"
-                          label={texts.product.value}
+                          label={texts.technical.value}
                           variant="standard"
                           value={e.value}
                           onChange={(e) =>

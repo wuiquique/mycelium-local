@@ -1,3 +1,4 @@
+import { useTexts } from "@/hooks/textContext";
 import {
   Button,
   Card,
@@ -12,6 +13,7 @@ import BackPage from "../../../components/BackPage";
 import UserCart from "../../../components/UserCart";
 
 export function Page() {
+  const texts = useTexts();
   const [products, setProducts] = useState<any[]>([]);
 
   useEffect(() => {
@@ -36,7 +38,7 @@ export function Page() {
     <div>
       <BackPage />
       <Typography variant="h3" className="text-center">
-        Your Cart
+        {texts.usercartpage.title}
       </Typography>
       <br />
       <Grid2 container spacing={2}>
@@ -50,7 +52,9 @@ export function Page() {
         <Grid2 lg={4}>
           <Card elevation={10}>
             <CardContent className="text-center">
-              <Typography variant="h4">{`Total: Q.${getTotal()}.00`}</Typography>
+              <Typography variant="h4">
+                {texts.usercartpage.total}: Q.{getTotal()}.00
+              </Typography>
               <Button
                 className="mt-6"
                 variant="outlined"
@@ -59,14 +63,14 @@ export function Page() {
                 component="a"
                 href="/user/checkout"
               >
-                Checkout
+                {texts.usercartpage.checkoutbutton}
               </Button>
             </CardContent>
             <CardMedia
               component="img"
               width="100%"
               image="/redwhite.png"
-              alt="Mycelium Logo"
+              alt={texts.global.shopname}
               className="p-2"
             />
           </Card>

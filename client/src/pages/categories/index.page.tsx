@@ -1,3 +1,4 @@
+import { useTexts } from "@/hooks/textContext";
 import {
   Button,
   Card,
@@ -14,6 +15,8 @@ import { useEffect, useState } from "react";
 import BackPage from "../../components/BackPage";
 
 export function Page() {
+  const texts = useTexts();
+
   useEffect(() => {
     axios.get("/api/categories/").then((response) => {
       setAllCategories(response.data);
@@ -26,10 +29,10 @@ export function Page() {
       id: number;
     }[]
   >([]);
-  const [currentCat, setCurrentCat] = useState({
-    name: "Select a Category",
-    id: 0,
-  });
+  const [currentCat, setCurrentCat] = useState<{
+    name: string;
+    id: number;
+  } | null>(null);
   const [products, setProducts] = useState<
     {
       id: number;
@@ -55,13 +58,13 @@ export function Page() {
     <div>
       <BackPage />
       <Typography variant="h3" className="text-center">
-        Categories
+        {texts.categorypage.title}
       </Typography>
       <br />
       <Grid2 container spacing={2}>
         <Grid2 lg={12}>
           <Typography variant="body1" className="mb-2">
-            ***Click to display all category products:
+            {texts.categorypage.instruction}
           </Typography>
           <Stack direction="row" spacing={1}>
             {allCategories.map((e, i) => (
@@ -75,7 +78,9 @@ export function Page() {
         </Grid2>
         <Grid2 lg={12}>
           <Typography variant="h5" className="text-center">
-            {currentCat.name}
+            {currentCat === null
+              ? texts.categorypage.notselected
+              : currentCat.name}
           </Typography>
           {products.map((e, i) => (
             <Grid2 lg={6} key={i}>

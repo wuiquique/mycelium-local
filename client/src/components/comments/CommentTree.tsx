@@ -1,3 +1,4 @@
+import { useTexts } from "@/hooks/textContext";
 import { useUser } from "@/hooks/userContext";
 import {
   Button,
@@ -31,6 +32,7 @@ export default function CommentTree({
   productId: number;
   onPostComment: () => void;
 }) {
+  const texts = useTexts();
   const [user] = useUser();
   const [newComment, setNewComment] = useState<string[]>([]);
 
@@ -91,7 +93,7 @@ export default function CommentTree({
                   }}
                 />
                 <Button className="block" onClick={() => postComment(c.id, i)}>
-                  Post
+                  {texts.comment.postbutton}
                 </Button>
               </CardContent>
             </Card>

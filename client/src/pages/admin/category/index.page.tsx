@@ -1,3 +1,4 @@
+import { useTexts } from "@/hooks/textContext";
 import {
   Button,
   Card,
@@ -11,9 +12,12 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { FaTrashAlt } from "react-icons/fa";
 import BackPage from "../../../components/BackPage";
 
 export function Page() {
+  const texts = useTexts();
+
   useEffect(() => {
     axios.get("/api/categories/").then((response) => {
       setCategs(response.data);
@@ -69,15 +73,15 @@ export function Page() {
       <BackPage />
       <Card className="p-4 mt-2" elevation={10} sx={{ width: "100%" }}>
         <Typography variant="h3" className="text-center">
-          Categories Administration
+          {texts.admincategorypage.title}
         </Typography>{" "}
         <br />
         <Card elevation={10} sx={{ minHeight: 300 }}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Delete</TableCell>
+                <TableCell>{texts.category.name}</TableCell>
+                <TableCell>{texts.admincategorypage.deletecol}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -98,7 +102,7 @@ export function Page() {
                       color="primary"
                       onClick={() => deleteRow(e.id, i)}
                     >
-                      Delete
+                      <FaTrashAlt />
                     </Button>
                   </TableCell>
                 </TableRow>

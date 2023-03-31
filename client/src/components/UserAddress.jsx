@@ -1,3 +1,4 @@
+import { useTexts } from "@/hooks/textContext";
 import { useUser } from "@/hooks/userContext";
 import {
   Button,
@@ -11,6 +12,7 @@ import axios from "axios";
 import { useState } from "react";
 
 export default function UserAddress({ products }) {
+  const texts = useTexts();
   const [date1, setDate1] = useState("2014-08-18T21:11:54");
   const [date2, setDate2] = useState("2014-08-18T21:11:54");
   const user = useUser();
@@ -39,42 +41,50 @@ export default function UserAddress({ products }) {
       <Card className="p-4" elevation={10}>
         <CardContent>
           <Typography variant="h4" className="text-center">
-            Mailing Address
+            {texts.checkoutpage.mailing}
           </Typography>
           <form onSubmit={handleSubmit}>
             <TextField
               sx={{ minWidth: "100%" }}
-              label="Address"
+              label={texts.checkoutpage.mailingaddr}
               variant="standard"
               name="direction"
             />
             <div>
               <TextField
-                label="State"
+                label={texts.checkoutpage.mailingstate}
                 variant="standard"
                 className="mr-1"
                 name="state"
               />
-              <TextField label="City" variant="standard" name="city" />
+              <TextField
+                label={texts.checkoutpage.mailingcity}
+                variant="standard"
+                name="city"
+              />
             </div>
             <div>
               <TextField
-                label="Zip"
+                label={texts.checkoutpage.mailingzip}
                 variant="standard"
                 className="mr-1"
                 name="zip"
               />
-              <TextField label="Phone" variant="standard" name="phone" />
+              <TextField
+                label={texts.checkoutpage.mailingphone}
+                variant="standard"
+                name="phone"
+              />
             </div>
             <br />
             <Typography variant="h5" className="text-center">
-              Delivery Time Range
+              {texts.checkoutpage.deliveryrange}
             </Typography>
             <br />
             <div className="flex">
               <DateTimePicker
                 renderInput={(props) => <TextField {...props} />}
-                label="From"
+                label={texts.checkoutpage.deliveryfrom}
                 value={date1}
                 onChange={(newValue) => {
                   setDate1(newValue);
@@ -83,7 +93,7 @@ export default function UserAddress({ products }) {
               &nbsp;
               <DateTimePicker
                 renderInput={(props) => <TextField {...props} />}
-                label="To"
+                label={texts.checkoutpage.deliveryto}
                 value={date2}
                 onChange={(newValue) => {
                   setDate2(newValue);
@@ -92,7 +102,7 @@ export default function UserAddress({ products }) {
             </div>
             <div className="text-center mt-3">
               <Button type="submit" variant="outlined">
-                Place Order
+                {texts.checkoutpage.placeorder}
               </Button>
             </div>
           </form>

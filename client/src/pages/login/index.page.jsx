@@ -1,3 +1,4 @@
+import { useTexts } from "@/hooks/textContext";
 import { Button, Card, CardMedia, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { navigate } from "vite-plugin-ssr/client/router";
@@ -5,6 +6,7 @@ import BackPage from "../../components/BackPage";
 import { useUser } from "../../hooks/userContext";
 
 export function Page() {
+  const texts = useTexts();
   const [, setUser] = useUser();
 
   const handleSubmit = async (e) => {
@@ -38,15 +40,19 @@ export function Page() {
             component="img"
             height="100%"
             image="/redwhite.png"
-            alt="Mycelium Logo"
+            alt={texts.global.shopname}
           />
           <Typography variant="h4" mt={2}>
-            mycelium :)
+            {texts.global.shopname}
           </Typography>
           <form className="mt-8 mb-11" onSubmit={handleSubmit}>
-            <TextField label="Email" variant="standard" name="email_login" />
             <TextField
-              label="Password"
+              label={texts.user.email}
+              variant="standard"
+              name="email_login"
+            />
+            <TextField
+              label={texts.user.password}
               variant="standard"
               name="password_login"
               type="password"
@@ -59,7 +65,7 @@ export function Page() {
               color="secondary"
               type="submit"
             >
-              Login
+              {texts.loginpage.loginbutton}
             </Button>
           </form>
         </Card>

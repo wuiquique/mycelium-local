@@ -1,3 +1,4 @@
+import { useTexts } from "@/hooks/textContext";
 import { Button, Card, CardMedia, TextField, Typography } from "@mui/material";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
@@ -10,6 +11,8 @@ import CommentTree from "../../../components/comments/CommentTree";
 import { useUser } from "../../../hooks/userContext";
 
 export function Page({ params: { id } }) {
+  const texts = useTexts();
+
   const [prod, setProd] = useState<{
     id: number;
     name: string;
@@ -164,7 +167,7 @@ export function Page({ params: { id } }) {
             component="img"
             height="100%"
             image="/redwhite.png"
-            alt="Mycelium Logo"
+            alt={texts.global.shopname}
             sx={{ maxWidth: 345 }}
           />
         </div>
@@ -186,13 +189,13 @@ export function Page({ params: { id } }) {
             <Card className="p-4" elevation={10}>
               <div className="text-left">
                 <Typography variant="body1" mt={1}>
-                  <b>Description:</b> {prod.desc}
+                  <b>{texts.product.description}:</b> {prod.desc}
                 </Typography>
                 <Typography variant="body1" mt={1}>
-                  <b>Brand: </b> {prod.brand}
+                  <b>{texts.product.brand}: </b> {prod.brand}
                 </Typography>
                 <Typography variant="body1" mt={1}>
-                  <b>Weight: </b> {prod.weight}
+                  <b>{texts.product.weight}: </b> {prod.weight}
                 </Typography>
                 {tech.map((e, i) => (
                   <Typography key={i} variant="body1" mt={1}>
@@ -200,13 +203,13 @@ export function Page({ params: { id } }) {
                   </Typography>
                 ))}
                 <Typography variant="body1" mt={1}>
-                  <b>Category: </b> {categSelect()}
+                  <b>{texts.product.category}: </b> {categSelect()}
                 </Typography>
                 <Typography variant="h6" mt={4} className="text-right">
                   Q. {prod.price}.00
                 </Typography>
                 <Typography variant="subtitle2" className="text-right">
-                  <b>Quantity: </b> {prod.quantity}
+                  <b>{texts.product.quantity}: </b> {prod.quantity}
                 </Typography>
               </div>
               {user.id !== null ? (
@@ -225,7 +228,7 @@ export function Page({ params: { id } }) {
                     color="primary"
                     type="submit"
                   >
-                    Add to Cart
+                    {texts.productpage.addtocartbutton}
                   </Button>
                 </form>
               ) : null}
@@ -234,7 +237,9 @@ export function Page({ params: { id } }) {
         </Grid2>
         {user.id !== null ? (
           <Card className="p-4 mt-2" elevation={10}>
-            <Typography variant="body1">Rate this product</Typography>
+            <Typography variant="body1">
+              {texts.productpage.rateproduct}
+            </Typography>
             <Rating name="userRating" value={rU} onChange={changeRating} />
             <br />
             <form onSubmit={submitComment}>
@@ -249,7 +254,7 @@ export function Page({ params: { id } }) {
                 name="user_commment"
               />
               <Button className="block" type="submit">
-                Post
+                {texts.comment.postbutton}
               </Button>
             </form>
           </Card>

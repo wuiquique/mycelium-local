@@ -45,6 +45,8 @@ export const defaultKeys = {
     reports: "",
     integrations: "",
     admintext: "",
+    login: "",
+    register: "",
   },
   categorypage: {
     title: "",
@@ -56,6 +58,7 @@ export const defaultKeys = {
     noproducts: "",
     total: "",
     checkoutbutton: "",
+    deletebutton: "",
   },
   adminuserpage: {
     title: "",
@@ -67,6 +70,7 @@ export const defaultKeys = {
   adminproductpage: {
     title: "",
     detailscol: "",
+    updatebutton: "",
   },
   admincategorypage: {
     title: "",
@@ -75,6 +79,7 @@ export const defaultKeys = {
   adminorderpage: {
     title: "",
     detailscol: "",
+    statuscomment: "",
   },
   reportpage: {
     title: "",
@@ -87,11 +92,10 @@ export const defaultKeys = {
     generatebutton: "",
   },
   integrationpage: {
-    name: "",
-    username: "",
-    password: "",
-    url: "",
+    title: "",
     savebutton: "",
+    updatebutton: "",
+    removebutton: "",
   },
   admintextpage: {
     component: "",
@@ -103,14 +107,51 @@ export const defaultKeys = {
     categoryfilter: "",
     pricefilter: "",
   },
+  productpage: {
+    addtocartbutton: "",
+    rateproduct: "",
+  },
+  loginpage: {
+    loginbutton: "",
+  },
+  registerpage: {
+    registerbutton: "",
+  },
+  checkoutpage: {
+    title: "",
+    creditcardinfo: "",
+    cardnumber: "",
+    cardname: "",
+    cardexpiration: "",
+    cardcvv: "",
+    billing: "",
+    billingaddr: "",
+    billingspec: "",
+    mailing: "",
+    mailingaddr: "",
+    mailingstate: "",
+    mailingcity: "",
+    mailingzip: "",
+    mailingphone: "",
+    deliveryrange: "",
+    deliveryfrom: "",
+    deliveryto: "",
+    placeorder: "",
+  },
+  comment: {
+    postbutton: "",
+  },
   user: {
     firstname: "",
     lastname: "",
     email: "",
     role: "",
+    password: "",
   },
   order: {
+    id: "",
     name: "",
+    address: "",
     producttotal: "",
     since: "",
     till: "",
@@ -128,8 +169,16 @@ export const defaultKeys = {
     pictureurl: "",
     quantity: "",
     technical: "",
+  },
+  technical: {
     type: "",
     value: "",
+  },
+  integration: {
+    name: "",
+    username: "",
+    password: "",
+    url: "",
   },
 };
 

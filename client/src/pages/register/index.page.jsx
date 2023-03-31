@@ -1,3 +1,4 @@
+import { useTexts } from "@/hooks/textContext";
 import { Button, Card, CardMedia, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { navigate } from "vite-plugin-ssr/client/router";
@@ -5,6 +6,7 @@ import BackPage from "../../components/BackPage";
 import { useUser } from "../../hooks/userContext";
 
 export function Page() {
+  const texts = useTexts();
   const [, setUser] = useUser();
 
   const handleSubmit = async (e) => {
@@ -46,20 +48,32 @@ export function Page() {
             component="img"
             height="100%"
             image="/redwhite.png"
-            alt="Mycelium Logo"
+            alt={texts.global.shopname}
           />
           <Typography variant="h4" mt={2}>
-            mycelium :)
+            {texts.global.shopname}
           </Typography>
           <form className="mt-8 mb-11" onSubmit={handleSubmit}>
             <TextField
-              label="First Name"
+              label={texts.user.firstname}
               variant="standard"
               name="first_name"
             />
-            <TextField label="Last Name" variant="standard" name="last_name" />
-            <TextField label="Email" variant="standard" name="email" />
-            <TextField label="Password" variant="standard" name="password" />
+            <TextField
+              label={texts.user.lastname}
+              variant="standard"
+              name="last_name"
+            />
+            <TextField
+              label={texts.user.email}
+              variant="standard"
+              name="email"
+            />
+            <TextField
+              label={texts.user.password}
+              variant="standard"
+              name="password"
+            />
             <br />
             <Button
               className="mt-6"
@@ -68,7 +82,7 @@ export function Page() {
               color="secondary"
               type="submit"
             >
-              Register
+              {texts.registerpage.registerbutton}
             </Button>
           </form>
         </Card>

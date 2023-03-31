@@ -1,3 +1,4 @@
+import { useTexts } from "@/hooks/textContext";
 import {
   Button,
   Card,
@@ -15,6 +16,8 @@ import { BiPaperPlane } from "react-icons/bi";
 import BackPage from "../../../components/BackPage";
 
 export function Page() {
+  const texts = useTexts();
+
   const [orders, setOrders] = useState<
     {
       id: number;
@@ -41,37 +44,29 @@ export function Page() {
       <Grid2 container spacing={2}>
         <Grid2 lg={12}>
           <Typography variant="h3" className="text-center">
-            All Orders
+            {texts.adminorderpage.title}
           </Typography>
           <br />
           <Card elevation={10} sx={{ minHeight: 300 }}>
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Id</TableCell>
-                  <TableCell>Address</TableCell>
-                  <TableCell>Since</TableCell>
-                  <TableCell>Till</TableCell>
-                  <TableCell>Details</TableCell>
+                  <TableCell>{texts.order.id}</TableCell>
+                  <TableCell>{texts.order.address}</TableCell>
+                  <TableCell>{texts.order.since}</TableCell>
+                  <TableCell>{texts.order.till}</TableCell>
+                  <TableCell>{texts.adminorderpage.detailscol}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {orders.map((o, i) => (
                   <TableRow key={i}>
                     <TableCell>{o.id}</TableCell>
-                    <TableCell>{`${o.direction}, ${o.city}, ${o.state}, ${o.zip}`}</TableCell>
                     <TableCell>
-                      {new Date(o.since)
-                        .toISOString()
-                        .slice(0, 19)
-                        .replace("T", " ")}
+                      {o.direction}, {o.city}, {o.state}, {o.zip}
                     </TableCell>
-                    <TableCell>
-                      {new Date(o.till)
-                        .toISOString()
-                        .slice(0, 19)
-                        .replace("T", " ")}
-                    </TableCell>
+                    <TableCell>{new Date(o.since).toLocaleString()}</TableCell>
+                    <TableCell>{new Date(o.till).toLocaleString()}</TableCell>
                     <TableCell>
                       <Button
                         variant="text"

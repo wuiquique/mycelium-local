@@ -1,3 +1,4 @@
+import { useTexts } from "@/hooks/textContext";
 import {
   Card,
   FormControl,
@@ -16,8 +17,23 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 export function Page() {
-  const [users, setUsers] = useState([]);
-  const [roles, setRoles] = useState([]);
+  const texts = useTexts();
+
+  const [users, setUsers] = useState<
+    {
+      id: number;
+      name: string;
+      lastname: string;
+      email: string;
+      roleId: number;
+    }[]
+  >([]);
+  const [roles, setRoles] = useState<
+    {
+      id: number;
+      name: string;
+    }[]
+  >([]);
 
   useEffect(() => {
     axios.get("/api/user/").then((response) => {
@@ -65,17 +81,17 @@ export function Page() {
       <Grid2 container spacing={2}>
         <Grid2 lg={12}>
           <Typography variant="h3" className="text-center">
-            User Administration
+            {texts.adminuserpage.title}
           </Typography>
           <br />
           <Card elevation={10} sx={{ minHeight: 300 }}>
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>First Name</TableCell>
-                  <TableCell>Last Name</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Role</TableCell>
+                  <TableCell>{texts.user.firstname}</TableCell>
+                  <TableCell>{texts.user.lastname}</TableCell>
+                  <TableCell>{texts.user.email}</TableCell>
+                  <TableCell>{texts.user.role}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

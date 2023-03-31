@@ -27,11 +27,6 @@ export function Page() {
 
   const [prods, setProds] = useState<any[]>([]);
 
-  const [categ, setCategs] = useState([
-    { id: 1, name: "GOD" },
-    { id: 2, name: "NonGOD" },
-  ]);
-
   const [newp, setNewP] = useState<any[]>([]);
 
   return (
@@ -43,7 +38,7 @@ export function Page() {
             component="img"
             height="100%"
             image="/redwhite.png"
-            alt="Mycelium Logo"
+            alt={texts.global.shopname}
             sx={{ maxWidth: 345 }}
           />
         </div>
@@ -118,7 +113,7 @@ export function Page() {
           </Grid2>
         </Card>
         <Typography variant="h5" mt={6} className="text-left">
-          Best Sellers
+          {texts.homepage.bestsellers}
         </Typography>
         <Carousel sx={{ width: 1 }}>
           {prods.map((e, i) => (
@@ -139,8 +134,8 @@ export function Page() {
                           {e.name}
                         </Typography>
                         <Typography variant="body1" mt={2}>
-                          <b>Description:</b> {e.desc} <br />
-                          <b>Brand:</b> {e.brand}
+                          <b>{texts.product.description}:</b> {e.desc} <br />
+                          <b>{texts.product.brand}:</b> {e.brand}
                         </Typography>
                       </div>
                       <div className="text-right">
@@ -152,7 +147,7 @@ export function Page() {
                           mt={1}
                           className="text-right"
                         >
-                          <b>Quantity: </b> {e.quantity}
+                          <b>{texts.product.quantity}: </b> {e.quantity}
                         </Typography>
                       </div>
                     </Grid2>
@@ -182,7 +177,7 @@ export function Page() {
                     <Typography variant="h6">{e.name}</Typography>
                     <Typography variant="body1">Q. {e.price}.00</Typography>
                     <Typography variant="subtitle2">
-                      Quantity: {e.quantity}
+                      {texts.product.quantity}: {e.quantity}
                     </Typography>
                   </Card>
                 </ListItemButton>

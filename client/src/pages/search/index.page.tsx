@@ -1,3 +1,4 @@
+import { useTexts } from "@/hooks/textContext";
 import {
   Box,
   Button,
@@ -36,6 +37,8 @@ function valuetext(value: number) {
 }
 
 export function Page({ searchParams: { q } }: { searchParams: { q: string } }) {
+  const texts = useTexts();
+
   const [categories, setCategories] = useState<
     {
       id: number;
@@ -102,7 +105,7 @@ export function Page({ searchParams: { q } }: { searchParams: { q: string } }) {
   }, []);
 
   useEffect(() => {
-    const url = new URL("/api/product/search", location.href);
+    const url = new URL("/api/product/search", window.location.href);
     url.searchParams.set("q", q);
     url.searchParams.set("pricemin", selectedPriceRange[0].toString());
     url.searchParams.set("pricemax", selectedPriceRange[1].toString());
@@ -116,13 +119,13 @@ export function Page({ searchParams: { q } }: { searchParams: { q: string } }) {
     <div>
       <BackPage />
       <Typography variant="h3" className="text-center">
-        Search Results
+        {texts.searchpage.title}
       </Typography>
       <br />
       <Grid2 container spacing={2}>
         <Grid2 lg={6}>
           <Typography variant="h6" className="text-center">
-            Category Filter
+            {texts.searchpage.categoryfilter}
           </Typography>
           <FormControl sx={{ width: "100%" }}>
             <InputLabel id="demo-multiple-chip-label">Categories</InputLabel>
@@ -157,7 +160,7 @@ export function Page({ searchParams: { q } }: { searchParams: { q: string } }) {
         </Grid2>
         <Grid2 lg={6}>
           <Typography variant="h6" className="text-center">
-            Price Filter ($)
+            {texts.searchpage.pricefilter}
           </Typography>
           <Slider
             className="mt-2"

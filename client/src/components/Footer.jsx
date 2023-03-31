@@ -1,8 +1,11 @@
+import { useTexts } from "@/hooks/textContext";
 import CopyrightIcon from "@mui/icons-material/Copyright";
 import { Box, Container, Typography } from "@mui/material";
 import { useState } from "react";
 
 export default function Footer() {
+  const texts = useTexts();
+
   const [pMeth, setPMeth] = useState([
     "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Old_Visa_Logo.svg/2560px-Old_Visa_Logo.svg.png",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png",
@@ -20,7 +23,7 @@ export default function Footer() {
       >
         <Container maxWidth="lg" sx={{ py: 6 }}>
           <CopyrightIcon fontSize="small" />
-          <Typography variant="outline">Copyright - Mycelium</Typography>
+          <Typography variant="outline">{texts.footer.copyright}</Typography>
           <div className="flex justify-center">
             {pMeth.map((e, i) => (
               <div key={i} height="5px" className="m-1">
@@ -28,9 +31,7 @@ export default function Footer() {
               </div>
             ))}
           </div>
-          <Typography variant="subtitle2">
-            We&apos;re your best option, what makes you, our best option.
-          </Typography>
+          <Typography variant="subtitle2">{texts.footer.slogan}</Typography>
         </Container>
       </Box>
     </div>

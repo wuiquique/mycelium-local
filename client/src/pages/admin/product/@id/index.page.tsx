@@ -1,3 +1,5 @@
+import BackPage from "@/components/BackPage";
+import { useTexts } from "@/hooks/textContext";
 import { Button, Card, CardMedia, TextField, Typography } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -6,9 +8,10 @@ import Select from "@mui/material/Select";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import BackPage from "../../../../components/BackPage";
 
 export function Page({ params: { id } }) {
+  const texts = useTexts();
+
   const [categ, setCategs] = useState<
     {
       id: number;
@@ -113,12 +116,12 @@ export function Page({ params: { id } }) {
                 component="img"
                 height="100%"
                 image="/redwhite.png"
-                alt="Mycelium Logo"
+                alt={texts.global.shopname}
                 sx={{ maxWidth: 345 }}
               />
             </div>
             <Typography variant="h5" mt={2}>
-              Update product
+              {texts.adminproductpage.title}
             </Typography>
             {prod !== null ? (
               <form className="mt-8 mb-11" onSubmit={handleSubmit}>
@@ -127,7 +130,7 @@ export function Page({ params: { id } }) {
                     <Card className="p-4" elevation={10} sx={{ height: 200 }}>
                       <TextField
                         className="mt-1"
-                        label="Name"
+                        label={texts.product.name}
                         variant="standard"
                         name="product_name"
                         defaultValue={prod.name}
@@ -135,7 +138,7 @@ export function Page({ params: { id } }) {
                       <br />
                       <TextField
                         className="mt-1"
-                        label="Description"
+                        label={texts.product.description}
                         variant="standard"
                         name="product_desc"
                         defaultValue={prod.desc}
@@ -143,7 +146,7 @@ export function Page({ params: { id } }) {
                       <br />
                       <TextField
                         className="mt-1"
-                        label="Brand"
+                        label={texts.product.brand}
                         variant="standard"
                         name="product_brand"
                         defaultValue={prod.brand}
@@ -154,7 +157,7 @@ export function Page({ params: { id } }) {
                     <Card className="p-4" elevation={10} sx={{ height: 200 }}>
                       <TextField
                         className="mt-1"
-                        label="Weight"
+                        label={texts.product.weight}
                         variant="standard"
                         name="product_weight"
                         defaultValue={prod.weight}
@@ -162,7 +165,7 @@ export function Page({ params: { id } }) {
                       <br />
                       <TextField
                         className="mt-1"
-                        label="Price"
+                        label={texts.product.price}
                         variant="standard"
                         name="product_price"
                         defaultValue={prod.price}
@@ -173,14 +176,14 @@ export function Page({ params: { id } }) {
                         sx={{ m: 1, minWidth: 215 }}
                       >
                         <InputLabel id="form-id-categorie">
-                          Categorie
+                          {texts.product.category}
                         </InputLabel>
                         <Select
                           labelId="form-id-categorie"
                           name="product_categorie"
                           defaultValue={prod.categorieId}
                           onChange={handleChange}
-                          label="Categories"
+                          label={texts.product.category}
                         >
                           {categ.map((e, i) => (
                             <MenuItem key={i} value={e.id}>
@@ -212,7 +215,7 @@ export function Page({ params: { id } }) {
                                 />
                                 <TextField
                                   className="mt-1"
-                                  label="URL"
+                                  label={texts.product.pictureurl}
                                   variant="standard"
                                   name={"product_img" + i.toString()}
                                   defaultValue={p}
@@ -228,21 +231,21 @@ export function Page({ params: { id } }) {
                     <Card className="p-4" elevation={10}>
                       <div>
                         <TextField
-                          label="Quantity"
+                          label={texts.product.quantity}
                           type="number"
                           variant="standard"
                           defaultValue={prod.quantity}
                           name="product_quantity"
                         />
                         <Typography variant="body1" mt={6}>
-                          Technical Specifications
+                          {texts.product.technical}
                         </Typography>
                       </div>
                       {technical.map((e, i) => (
                         <div key={i}>
                           <TextField
                             className="m-1"
-                            label="Type"
+                            label={texts.technical.type}
                             variant="standard"
                             value={e.type}
                             onChange={(e) =>
@@ -251,7 +254,7 @@ export function Page({ params: { id } }) {
                           />
                           <TextField
                             className="m-1"
-                            label="Value"
+                            label={texts.technical.value}
                             variant="standard"
                             value={e.value}
                             onChange={(e) =>
@@ -287,7 +290,7 @@ export function Page({ params: { id } }) {
                       color="secondary"
                       type="submit"
                     >
-                      Update
+                      {texts.adminproductpage.updatebutton}
                     </Button>
                   </Grid2>
                 </Grid2>
