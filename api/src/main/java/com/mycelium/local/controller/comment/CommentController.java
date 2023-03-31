@@ -16,11 +16,10 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
 
 class CommentCreateRequest {
-    public int userId;
-    public int productId;
     public int commentId;
     public String message;
 }
@@ -56,8 +55,10 @@ public class CommentController {
     private UserRepo userRepo;
     private ProductRepo productRepo;
 
-    public CommentController(CommentRepo commentRepo) {
+    public CommentController(CommentRepo commentRepo, UserRepo userRepo, ProductRepo productRepo) {
         this.commentRepo = commentRepo;
+        this.userRepo = userRepo;
+        this.productRepo = productRepo;
     }
 
     public List<CommentTree> buildCommentTree(int productId, Integer commentId) {
@@ -75,11 +76,14 @@ public class CommentController {
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
-    @Post("/")
-    public void create(@Body CommentCreateRequest body) {
+    @Post("/{productId}")
+    public void create(Authentication authentication, int productId, @Body CommentCreateRequest body) {
+        var userMap = authentication.getAttributes();
+        var userId = (int) (long) userMap.get("id");
+
         var newComment = new Comment();
-        newComment.user = userRepo.findById(body.userId).get();
-        newComment.product = productRepo.findById(body.productId).get();
+        newComment.user = userRepo.findById(userId).get();
+        newComment.product = productRepo.findById(productId).get();
         newComment.comment = commentRepo.findById(body.commentId).orElse(null);
         newComment.message = body.message;
         newComment.created = new Date();

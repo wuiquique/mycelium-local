@@ -4,7 +4,7 @@ import ImageListItem from "@mui/material/ImageListItem";
 import Rating from "@mui/material/Rating";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import BackPage from "../../../components/BackPage";
 import CommentTree from "../../../components/comments/CommentTree";
 import { useUser } from "../../../hooks/userContext";
@@ -136,21 +136,22 @@ export function Page({ params: { id } }) {
     });
   };
 
+  const reloadComments = useCallback(() => {
+    axios.get(`/api/comment/${id}`).then((response) => {
+      setComments(response.data);
+    });
+  }, [id]);
+
   const submitComment = (e) => {
     e.preventDefault();
-    let post = {
-      userId: "",
-      productId: "",
-      commentId: "",
-      message: e.target.user_commment.value,
-    };
     axios
-      .post("ruta_comentario", post)
-      .then((response) => {
-        console.log(response.data);
+      .post(`/api/comment/${id}`, {
+        commentId: null,
+        message: e.target.user_commment.value,
       })
-      .catch((error) => {
-        console.log(error);
+      .then(() => {
+        e.target.reset();
+        reloadComments();
       });
   };
 
@@ -235,19 +236,26 @@ export function Page({ params: { id } }) {
           <br />
           <form onSubmit={submitComment}>
             <TextField
-              className="mt-1"
-              label="Comment"
-              variant="standard"
+              className="block w-full min-h-[4rem]"
               multiline
+              InputProps={{
+                className: "block w-full min-h-[4rem]",
+              }}
+              variant="standard"
+              placeholder="Comment"
               name="user_commment"
             />
-            <Button variant="outlined" type="submit">
-              Post Comment
+            <Button className="block" type="submit">
+              Post
             </Button>
           </form>
         </Card>
         <Card className="p-4 mt-1" elevation={10}>
-          <CommentTree comments={comments} />
+          <CommentTree
+            comments={comments}
+            productId={prod.id}
+            onPostComment={reloadComments}
+          />
         </Card>
       </Card>
     </div>
