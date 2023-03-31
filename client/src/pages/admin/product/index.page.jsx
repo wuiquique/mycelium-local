@@ -111,7 +111,7 @@ export function Page() {
                       <Button
                         variant="text"
                         component="a"
-                        href={`/admin/product/${e.id}/update`}
+                        href={`/admin/product/${e.id}`}
                       >
                         Details
                       </Button>

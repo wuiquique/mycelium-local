@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { Button, Card, CardMedia, TextField, Typography } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -8,13 +6,35 @@ import Select from "@mui/material/Select";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import BackPage from "../../../../../components/BackPage";
+import BackPage from "../../../../components/BackPage";
 
 export function Page({ params: { id } }) {
-  const [categ, setCategs] = useState([]);
-  const [prod, setProd] = useState(null);
-  const [pictures, setPictures] = useState([]);
-  const [technical, setTechnical] = useState([]);
+  const [categ, setCategs] = useState<
+    {
+      id: number;
+      name: string;
+    }[]
+  >([]);
+  const [prod, setProd] = useState<{
+    name: string;
+    desc: string;
+    brand: string;
+    weight: number;
+    quantity: number;
+    price: number;
+    categorieId: number;
+  } | null>(null);
+  const [pictures, setPictures] = useState<
+    {
+      url: string;
+    }[]
+  >([]);
+  const [technical, setTechnical] = useState<
+    {
+      type: string;
+      value: string;
+    }[]
+  >([]);
 
   useEffect(() => {
     axios.get(`/api/product/${id}`).then((response) => {
@@ -27,7 +47,7 @@ export function Page({ params: { id } }) {
       console.log(response.data);
       setCategs(response.data);
     });
-  }, []);
+  }, [id]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -50,18 +70,16 @@ export function Page({ params: { id } }) {
     axios.put(`/api/product/${id}`, out).then((response) => {
       console.log(response.data);
       if (response.data === "Success") {
-        location.reload();
+        window.location.reload();
       }
     });
   };
 
-  const [age, setAge] = useState("");
-
   const handleChange = (e) => {
+    if (!prod) return;
     let temp = { ...prod };
     temp.categorieId = e.target.value;
     setProd(temp);
-    console.log(temp);
   };
 
   const addRow = (e) => {
@@ -193,7 +211,7 @@ export function Page({ params: { id } }) {
                                 <CardMedia
                                   component="img"
                                   height="100%"
-                                  image={p}
+                                  image={p.url}
                                   alt="Img2"
                                 />
                                 <TextField
@@ -201,7 +219,7 @@ export function Page({ params: { id } }) {
                                   label="URL"
                                   variant="standard"
                                   name={"product_img" + i.toString()}
-                                  defaultValue={p}
+                                  defaultValue={p.url}
                                   onChange={(e) => changeImg(1, e.target.value)}
                                 />
                               </div>

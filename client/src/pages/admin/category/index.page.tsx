@@ -20,7 +20,12 @@ export function Page() {
     });
   }, []);
 
-  const [categ, setCategs] = useState([]);
+  const [categ, setCategs] = useState<
+    {
+      id: number;
+      name: string;
+    }[]
+  >([]);
 
   const changeInput = (index, camp, value) => {
     let temp = [...categ];
@@ -86,14 +91,16 @@ export function Page() {
                       onBlur={() => blurSave(e.id, i)}
                     />
                   </TableCell>
-                  <Button
-                    className="mt-6"
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => deleteRow(e.id, i)}
-                  >
-                    Delete
-                  </Button>
+                  <TableCell>
+                    <Button
+                      className="mt-6"
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => deleteRow(e.id, i)}
+                    >
+                      Delete
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
