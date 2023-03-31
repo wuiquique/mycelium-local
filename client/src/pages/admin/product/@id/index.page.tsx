@@ -24,11 +24,7 @@ export function Page({ params: { id } }) {
     price: number;
     categorieId: number;
   } | null>(null);
-  const [pictures, setPictures] = useState<
-    {
-      url: string;
-    }[]
-  >([]);
+  const [pictures, setPictures] = useState<string[]>([]);
   const [technical, setTechnical] = useState<
     {
       type: string;
@@ -200,9 +196,9 @@ export function Page({ params: { id } }) {
                       <Grid2 container spacing={2}>
                         {[
                           ...pictures,
-                          { url: "/default.jpg" },
-                          { url: "/default.jpg" },
-                          { url: "/default.jpg" },
+                          "/default.jpg",
+                          "/default.jpg",
+                          "/default.jpg",
                         ]
                           .slice(0, 3)
                           .map((p, i) => (
@@ -211,7 +207,7 @@ export function Page({ params: { id } }) {
                                 <CardMedia
                                   component="img"
                                   height="100%"
-                                  image={p.url}
+                                  image={p}
                                   alt="Img2"
                                 />
                                 <TextField
@@ -219,7 +215,7 @@ export function Page({ params: { id } }) {
                                   label="URL"
                                   variant="standard"
                                   name={"product_img" + i.toString()}
-                                  defaultValue={p.url}
+                                  defaultValue={p}
                                   onChange={(e) => changeImg(1, e.target.value)}
                                 />
                               </div>

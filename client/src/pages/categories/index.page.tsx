@@ -20,27 +20,29 @@ export function Page() {
     });
   }, []);
 
-  const [allCategories, setAllCategories] = useState([]);
+  const [allCategories, setAllCategories] = useState<
+    {
+      name: string;
+      id: number;
+    }[]
+  >([]);
   const [currentCat, setCurrentCat] = useState({
     name: "Select a Category",
     id: 0,
   });
-  const [products, setProducts] = useState([
-    /*{
-      type: "local",
-      id: "1",
-      name: "Cuchara de Oro",
-      description: "Muy Fina",
-      quantity: "3",
-      category: "Oro", //-> nombre
-      brand: "Dioro",
-      weight: "23",
-      price: 75,
-      pictures: [
-        "https://falabella.scene7.com/is/image/FalabellaPE/770197465_1?wid=800&hei=800&qlt=70",
-      ], //-> solo 1
-    },*/
-  ]);
+  const [products, setProducts] = useState<
+    {
+      id: number;
+      name: string;
+      desc: string;
+      brand: string;
+      weight: number;
+      quantity: number;
+      price: number;
+      pictures: string[];
+      technical: { type: string; value: string }[];
+    }[]
+  >([]);
 
   const handleChangeCat = (cat) => {
     setCurrentCat(cat);
@@ -87,7 +89,7 @@ export function Page() {
                   />
                   <CardContent className="text-left">
                     <Typography variant="h5">{e.name}</Typography>
-                    <Typography variant="h6">{e.description}</Typography>
+                    <Typography variant="h6">{e.desc}</Typography>
                     <Typography variant="body1">
                       <strong>{e.brand}</strong>
                     </Typography>
