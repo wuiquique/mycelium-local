@@ -2,10 +2,12 @@ package com.mycelium.local.controller.product;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.mycelium.local.dynamic.search.SearchCriteria;
 import com.mycelium.local.dynamic.search.SearchManager;
 import com.mycelium.local.repository.categorie.CategorieRepo;
@@ -281,5 +283,44 @@ public class ProductController {
             criteria.add(new SearchCriteria.CategoryIn(ids));
         }
         return ProductResponse.fromProductList(searchManager.search(criteria));
+    }
+
+    @Secured(SecurityRule.IS_AUTHENTICATED)
+    @Get("/export")
+    public List<Map<String, Object>> export() {
+        List<Map<String, Object>> res = Lists.newArrayList();
+
+        for (var product : productRepo.findAll()) {
+            Map<String, Object> map = Maps.newHashMap();
+
+            map.put("id", product.id);
+            map.put("name", product.name);
+            map.put("desc", product.desc);
+            map.put("brand", product.brand);
+            map.put("weight", product.weight);
+            map.put("quantity", product.quantity);
+            map.put("price", product.price);
+
+            List<String> pictures = Lists.newArrayList();
+            for (var pic : product.pictures) {
+                pictures.add(pic.url);
+            }
+            map.put("pictures", pictures);
+
+            List<Map<String, String>> technical = Lists.newArrayList();
+            for (var tech : product.technical) {
+                Map<String, String> techMap = Maps.newHashMap();
+
+                techMap.put("type", tech.type);
+                techMap.put("value", tech.value);
+
+                technical.add(techMap);
+            }
+            map.put("technical", technical);
+
+            res.add(map);
+        }
+
+        return res;
     }
 }
