@@ -22,13 +22,16 @@ export default function Footer() {
         className="text-center justify-center"
       >
         <Container maxWidth="lg" sx={{ py: 6 }}>
-          <CopyrightIcon fontSize="small" />
-          <Typography variant="outline">{texts.footer.copyright}</Typography>
-          <div className="flex justify-center">
+          <Typography>
+            <CopyrightIcon fontSize="small" /> {texts.footer.copyright}
+          </Typography>
+          <div>
             {pMeth.map((e, i) => (
-              <div key={i} height="5px" className="m-1">
-                <img src={pMeth[i]} height="100%" width="50px" />
-              </div>
+              <img
+                src={pMeth[i]}
+                width="50"
+                className="inline-block align-middle mx-1"
+              />
             ))}
           </div>
           <Typography variant="subtitle2">{texts.footer.slogan}</Typography>
