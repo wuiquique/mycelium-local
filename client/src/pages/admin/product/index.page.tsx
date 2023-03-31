@@ -18,7 +18,18 @@ import { BiPaperPlane } from "react-icons/bi";
 export function Page() {
   const texts = useTexts();
 
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<
+    {
+      id: number;
+      name: string;
+      desc: string;
+      categorieId: number;
+      brand: string;
+      weight: number;
+      quantity: number;
+      price: number;
+    }[]
+  >([]);
 
   useEffect(() => {
     axios.get("/api/product").then((response) => {

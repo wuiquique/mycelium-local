@@ -1,6 +1,7 @@
 micronaut:
   application:
     name: api
+  context-path: /api
   router:
     static-resources:
       swagger:
