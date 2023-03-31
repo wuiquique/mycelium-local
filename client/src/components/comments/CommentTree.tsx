@@ -1,3 +1,4 @@
+import { useUser } from "@/hooks/userContext";
 import {
   Button,
   Card,
@@ -30,6 +31,7 @@ export default function CommentTree({
   productId: number;
   onPostComment: () => void;
 }) {
+  const [user] = useUser();
   const [newComment, setNewComment] = useState<string[]>([]);
 
   const postComment = useCallback(
@@ -52,7 +54,7 @@ export default function CommentTree({
   return (
     <>
       {comments.map((c, i) => (
-        <div key={i} className="my-5 gap-2 flex-col flex">
+        <div key={i} className="gap-2 flex-col flex">
           <Card>
             <CardContent>
               <Typography variant="h5" component="div">
@@ -70,28 +72,30 @@ export default function CommentTree({
               </Button>
             </CardActions>
           </Card>
-          <Card>
-            <CardContent>
-              <TextField
-                className="block w-full min-h-[4rem]"
-                multiline
-                InputProps={{
-                  className: "block w-full min-h-[4rem]",
-                }}
-                variant="standard"
-                placeholder="Comment"
-                value={newComment[i]}
-                onChange={(e) => {
-                  const temp = [...newComment];
-                  temp[i] = e.currentTarget.value;
-                  setNewComment(temp);
-                }}
-              />
-              <Button className="block" onClick={() => postComment(c.id, i)}>
-                Post
-              </Button>
-            </CardContent>
-          </Card>
+          {user.id !== null ? (
+            <Card>
+              <CardContent>
+                <TextField
+                  className="block w-full min-h-[4rem]"
+                  multiline
+                  InputProps={{
+                    className: "block w-full min-h-[4rem]",
+                  }}
+                  variant="standard"
+                  placeholder="Comment"
+                  value={newComment[i]}
+                  onChange={(e) => {
+                    const temp = [...newComment];
+                    temp[i] = e.currentTarget.value;
+                    setNewComment(temp);
+                  }}
+                />
+                <Button className="block" onClick={() => postComment(c.id, i)}>
+                  Post
+                </Button>
+              </CardContent>
+            </Card>
+          ) : null}
           <div className="pl-5">
             <CommentTree
               comments={c.children}

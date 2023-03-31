@@ -14,7 +14,6 @@ export default function Footer() {
     <div className="mt-6">
       <Box
         sx={{
-          bgcolor: "#edebed",
           color: "grey.700",
         }}
         className="text-center justify-center"

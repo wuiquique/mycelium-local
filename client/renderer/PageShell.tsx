@@ -113,20 +113,22 @@ export function PageShell({
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <UserProvider>
               <TextProvider>
-                <CssBaseline />
-                <NavBar
-                  onDrawer={() => setDrawer(true)}
-                  defaultSearchQuery={pageContext.urlParsed?.search?.q ?? ""}
-                />
-                <NavDrawer
-                  open={drawer}
-                  onClose={() => setDrawer(false)}
-                  items={navItems}
-                />
-                <Container className="mt-[6rem]" maxWidth="lg">
-                  {children}
-                </Container>
-                <Footer />
+                <div className="bg-[#edebed] min-h-screen">
+                  <CssBaseline />
+                  <NavBar
+                    onDrawer={() => setDrawer(true)}
+                    defaultSearchQuery={pageContext.urlParsed?.search?.q ?? ""}
+                  />
+                  <NavDrawer
+                    open={drawer}
+                    onClose={() => setDrawer(false)}
+                    items={navItems}
+                  />
+                  <div className="bg-white pt-[6rem] pb-12">
+                    <Container maxWidth="lg">{children}</Container>
+                  </div>
+                  <Footer />
+                </div>
               </TextProvider>
             </UserProvider>
           </LocalizationProvider>

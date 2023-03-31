@@ -209,53 +209,62 @@ export function Page({ params: { id } }) {
                   <b>Quantity: </b> {prod.quantity}
                 </Typography>
               </div>
-              <form onSubmit={addCart}>
-                <TextField
-                  className="m-2"
-                  label="Quantity"
-                  variant="standard"
-                  type={"number"}
-                  name="cartQuantity"
-                  inputProps={{ min: 0, max: prod.quantity }}
-                />
-                <Button
-                  className="mt-6"
-                  variant="outlined"
-                  color="primary"
-                  type="submit"
-                >
-                  Add to Cart
-                </Button>
-              </form>
+              {user.id !== null ? (
+                <form onSubmit={addCart}>
+                  <TextField
+                    className="m-2"
+                    label="Quantity"
+                    variant="standard"
+                    type={"number"}
+                    name="cartQuantity"
+                    inputProps={{ min: 0, max: prod.quantity }}
+                  />
+                  <Button
+                    className="mt-6"
+                    variant="outlined"
+                    color="primary"
+                    type="submit"
+                  >
+                    Add to Cart
+                  </Button>
+                </form>
+              ) : null}
             </Card>
           </Grid2>
         </Grid2>
-        <Card className="p-4 mt-2" elevation={10}>
-          <Typography variant="body1">Rate this product</Typography>
-          <Rating name="userRating" value={rU} onChange={changeRating} />
-          <br />
-          <form onSubmit={submitComment}>
-            <TextField
-              className="block w-full min-h-[4rem]"
-              multiline
-              InputProps={{
-                className: "block w-full min-h-[4rem]",
-              }}
-              variant="standard"
-              placeholder="Comment"
-              name="user_commment"
-            />
-            <Button className="block" type="submit">
-              Post
-            </Button>
-          </form>
-        </Card>
+        {user.id !== null ? (
+          <Card className="p-4 mt-2" elevation={10}>
+            <Typography variant="body1">Rate this product</Typography>
+            <Rating name="userRating" value={rU} onChange={changeRating} />
+            <br />
+            <form onSubmit={submitComment}>
+              <TextField
+                className="block w-full min-h-[4rem]"
+                multiline
+                InputProps={{
+                  className: "block w-full min-h-[4rem]",
+                }}
+                variant="standard"
+                placeholder="Comment"
+                name="user_commment"
+              />
+              <Button className="block" type="submit">
+                Post
+              </Button>
+            </form>
+          </Card>
+        ) : null}
         <Card className="p-4 mt-1" elevation={10}>
-          <CommentTree
-            comments={comments}
-            productId={prod.id}
-            onPostComment={reloadComments}
-          />
+          <Typography variant="body1">Comentarios</Typography>
+          {comments.length > 0 ? (
+            <CommentTree
+              comments={comments}
+              productId={prod.id}
+              onPostComment={reloadComments}
+            />
+          ) : (
+            <Typography variant="body2">No hay comentarios</Typography>
+          )}
         </Card>
       </Card>
     </div>

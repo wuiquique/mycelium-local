@@ -54,6 +54,7 @@ export function Page() {
   >([]);
 
   const [fields, setFields] = useState<string[]>([]);
+  const [genFields, setGenFields] = useState<string[]>([]);
 
   const [generated, setGenerated] = useState<Record<string, any>[]>([]);
 
@@ -67,6 +68,7 @@ export function Page() {
         sorts: orders,
       })
       .then((response) => {
+        setGenFields([...fields]);
         setGenerated(response.data);
       });
   }, [availableReports, fields, filters, orders, selectedReport]);
@@ -218,8 +220,8 @@ export function Page() {
           {selectedReport !== null ? (
             <DataGrid
               columns={
-                fields.length > 0
-                  ? fields.map((f) => ({
+                genFields.length > 0
+                  ? genFields.map((f) => ({
                       field:
                         availableReports[selectedReport].columns.find(
                           (c) => c.name === f

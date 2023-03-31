@@ -61,13 +61,13 @@ export function Page() {
                     <TableCell>{o.id}</TableCell>
                     <TableCell>{`${o.direction}, ${o.city}, ${o.state}, ${o.zip}`}</TableCell>
                     <TableCell>
-                      {new Date(o.since * 1000)
+                      {new Date(o.since)
                         .toISOString()
                         .slice(0, 19)
                         .replace("T", " ")}
                     </TableCell>
                     <TableCell>
-                      {new Date(o.till * 1000)
+                      {new Date(o.till)
                         .toISOString()
                         .slice(0, 19)
                         .replace("T", " ")}

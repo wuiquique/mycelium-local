@@ -1,3 +1,8 @@
+import ReactDOMServer from "react-dom/server";
+import { dangerouslySkipEscape, escapeInject } from "vite-plugin-ssr/server";
+import { PageShell } from "./PageShell";
+import type { PageContextServer } from "./types";
+
 export { render };
 // See https://vite-plugin-ssr.com/data-fetching
 export const passToClient = [
@@ -6,11 +11,6 @@ export const passToClient = [
   "urlParsed",
   "routeParams",
 ];
-
-import ReactDOMServer from "react-dom/server";
-import { dangerouslySkipEscape, escapeInject } from "vite-plugin-ssr/server";
-import { PageShell } from "./PageShell";
-import type { PageContextServer } from "./types";
 
 async function render(pageContext: PageContextServer) {
   const { Page, pageProps } = pageContext;
@@ -40,7 +40,9 @@ async function render(pageContext: PageContextServer) {
         <title>${title}</title>
       </head>
       <body>
-        <div id="page-view">${dangerouslySkipEscape(pageHtml)}</div>
+        <div id="page-view" style="min-height: 100%">${dangerouslySkipEscape(
+          pageHtml
+        )}</div>
       </body>
     </html>`;
 
