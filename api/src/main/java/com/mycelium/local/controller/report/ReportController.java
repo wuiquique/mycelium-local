@@ -36,7 +36,7 @@ class GenerateReportRequest {
 }
 
 @Secured(SecurityRule.IS_ANONYMOUS)
-@Controller("/")
+@Controller("/reports")
 public class ReportController {
 
     private ReportManager reportManager;
@@ -45,8 +45,8 @@ public class ReportController {
         this.reportManager = reportManager;
     }
 
-    @Get("/reports")
-    public List<Report> session() {
+    @Get("/")
+    public List<Report> availableReports() {
         List<Report> res = Lists.newArrayList();
         for (var entry : Report.getAvailableReports().entrySet()) {
             res.add(entry.getValue());
@@ -54,7 +54,7 @@ public class ReportController {
         return res;
     }
 
-    @Post("/reports/generate")
+    @Post("/generate")
     public List<Map<String, ?>> generate(@Body GenerateReportRequest body) {
         var generator = new Report.Generator(Report.getAvailableReports().get(body.reportType));
         for (var col : body.selected) {

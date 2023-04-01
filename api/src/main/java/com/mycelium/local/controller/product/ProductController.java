@@ -39,7 +39,12 @@ class ProductCreateRequest {
     public int quantity;
     public int price;
     public List<String> pictures;
-    public List<Technical> technical;
+    public List<BasicTechnical> technical;
+}
+
+class ProductImportRequest extends ProductCreateRequest {
+    @Nullable
+    public Integer id;
 }
 
 class BasicTechnical {
@@ -287,40 +292,61 @@ public class ProductController {
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Get("/export")
-    public List<Map<String, Object>> export() {
-        List<Map<String, Object>> res = Lists.newArrayList();
+    public List<ProductResponse> exportProduct() {
+        return ProductResponse.fromProductList(productRepo.findAll());
+    }
 
-        for (var product : productRepo.findAll()) {
-            Map<String, Object> map = Maps.newHashMap();
-
-            map.put("id", product.id);
-            map.put("name", product.name);
-            map.put("desc", product.desc);
-            map.put("brand", product.brand);
-            map.put("weight", product.weight);
-            map.put("quantity", product.quantity);
-            map.put("price", product.price);
-
-            List<String> pictures = Lists.newArrayList();
-            for (var pic : product.pictures) {
-                pictures.add(pic.url);
+    @Secured(SecurityRule.IS_AUTHENTICATED)
+    @Get("/import")
+    public void importProduct(@Body List<ProductImportRequest> body) {
+        List<Integer> ids = Lists.newArrayList();
+        for (var newProd : body) {
+            if (newProd.id != null) {
+                ids.add(newProd.id);
             }
-            map.put("pictures", pictures);
-
-            List<Map<String, String>> technical = Lists.newArrayList();
-            for (var tech : product.technical) {
-                Map<String, String> techMap = Maps.newHashMap();
-
-                techMap.put("type", tech.type);
-                techMap.put("value", tech.value);
-
-                technical.add(techMap);
-            }
-            map.put("technical", technical);
-
-            res.add(map);
         }
 
-        return res;
+        Map<Integer, Product> prods = Maps.newHashMap();
+        for (var prod : productRepo.findByIdInList(ids)) {
+            prods.put(prod.id, prod);
+        }
+
+        for (var newProd : body) {
+            if (newProd.id != null) {
+                ids.add(newProd.id);
+            }
+        }
+        // var prod = productRepo.findById(newProd.id).get();
+
+        // prod.name = body.name;
+        // prod.desc = body.desc;
+        // prod.categorie = categorieRepo.findById(body.categorieId).get();
+        // prod.brand = body.brand;
+        // prod.weight = body.weight;
+        // prod.quantity = body.quantity;
+        // prod.price = body.price;
+
+        // productRepo.update(prod);
+
+        // for (var pic : prod.pictures) {
+        // pictureRepo.delete(pic);
+        // }
+        // for (int i = 0; i < body.pictures.size(); i++) {
+        // var newPic = new Picture();
+        // newPic.url = body.pictures.get(i);
+        // newPic.product = prod;
+        // pictureRepo.save(newPic);
+        // }
+
+        // for (var tech : prod.technical) {
+        // technicalRepo.delete(tech);
+        // }
+        // for (int i = 0; i < body.technical.size(); i++) {
+        // var newTech = new Technical();
+        // newTech.type = body.technical.get(i).type;
+        // newTech.value = body.technical.get(i).value;
+        // newTech.product = prod;
+        // technicalRepo.save(newTech);
+        // }
     }
 }

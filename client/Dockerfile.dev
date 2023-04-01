@@ -3,6 +3,8 @@ FROM docker.io/node:16 AS mycelium-international-client
 
 WORKDIR /app
 
+USER 1000:1000
+
 # Expose directory to the outside
 VOLUME /app
 
