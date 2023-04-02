@@ -28,6 +28,7 @@ export default function Footer() {
           <div>
             {pMeth.map((e, i) => (
               <img
+                key={i}
                 src={pMeth[i]}
                 width="50"
                 className="inline-block align-middle mx-1"
