@@ -1,6 +1,6 @@
 micronaut:
   application:
-    name: api
+    name: local
   context-path: /api
   router:
     static-resources:
@@ -11,6 +11,11 @@ micronaut:
         paths: classpath:META-INF/swagger/views/swagger-ui
         mapping: /swagger-ui/**
   security:
+    intercept-url-map:
+    - access: isAnonymous()
+      pattern: /swagger/**
+    - access: isAnonymous()
+      pattern: /swagger-ui/**
     enabled: true
     authentication: cookie
     reject-not-found: false
