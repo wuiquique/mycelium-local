@@ -9,6 +9,8 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
     networks:
       - mycelium-local
+    environment:
+      - DEFAULT_HOST=localhost
 
   api:
     image: localhost/mycelium-local_api:prod
