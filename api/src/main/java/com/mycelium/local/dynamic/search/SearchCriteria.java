@@ -12,13 +12,13 @@ public interface SearchCriteria {
         }
     }
 
-    public class PriceBetween implements SearchCriteria {
-        public final int min;
-        public final int max;
+    public class PriceComparison implements SearchCriteria {
+        public final int value;
+        public final boolean gteq;
 
-        public PriceBetween(int min, int max) {
-            this.min = min;
-            this.max = max;
+        public PriceComparison(int value, boolean gteq) {
+            this.value = value;
+            this.gteq = gteq;
         }
     }
 
