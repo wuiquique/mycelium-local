@@ -105,7 +105,7 @@ export default function UserCart({
               <Typography variant="h4">{`Q.${e.price}.00`}</Typography>
               <Typography variant="subtitle1">
                 <strong>
-                  {texts.product.quantity}: ${e.quantity}
+                  {texts.product.quantity}: {e.quantity}
                 </strong>
               </Typography>
               {cartOrCheckout === "details" ? (

@@ -102,7 +102,7 @@ export function Page({ params: { id } }) {
   const addCart = (e) => {
     e.preventDefault();
     let out = {
-      international: false,
+      integrationId: null,
       productId: prod.id,
       quantity: parseInt(e.target.cartQuantity.value),
     };

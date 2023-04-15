@@ -48,10 +48,11 @@ export function Page({ searchParams: { q } }: { searchParams: { q: string } }) {
 
   const [results, setResults] = useState<
     {
-      id: number;
+      id: number | string;
+      integrationId: number | null;
       name: string;
       desc: string;
-      categorieId: number;
+      category?: string;
       brand: string;
       weight: number;
       quantity: number;
@@ -174,13 +175,13 @@ export function Page({ searchParams: { q } }: { searchParams: { q: string } }) {
         </Grid2>
         {results.map((e, i) => (
           <Grid2 lg={6} key={i}>
-            <Button component="a" href={`/product/${e.id}`}>
+            <Button component="a" href={e.integrationId ? `/product/${e.integrationId}/${e.id}` : `/product/${e.id}`}>
               <Card elevation={10} sx={{ display: "flex" }}>
                 <CardMedia
                   sx={{ width: "50%" }}
                   component="img"
                   image={
-                    "https://falabella.scene7.com/is/image/FalabellaPE/770197465_1?wid=800&hei=800&qlt=70"
+                    e.pictures[0] ?? "/default.jpg"
                   }
                   alt="Imagen de Producto"
                 />

@@ -1,15 +1,15 @@
+import BackPage from "@/components/BackPage";
 import { useTexts } from "@/hooks/textContext";
+import { useUser } from "@/hooks/userContext";
 import { Button, Card, CardMedia, TextField, Typography } from "@mui/material";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import Rating from "@mui/material/Rating";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
-import BackPage from "../../../../../components/BackPage";
-import { useUser } from "../../../../../hooks/userContext";
+import { useEffect, useState } from "react";
 
-export function Page({ params: { id } }) {
+export function Page({ params: { integration, id } }) {
   const texts = useTexts();
 
   const [prod, setProd] = useState<{
@@ -37,42 +37,26 @@ export function Page({ params: { id } }) {
 
   const [user] = useUser();
 
-  type Comment = {
-    id: number;
-    message: string;
-    created: number;
-    updated: number;
-    productId: number;
-    userName: string;
-    votes: number | undefined;
-    children: any[];
-  };
-
-  const [comments, setComments] = useState<Comment[]>([]);
-
   useEffect(() => {
-    axios.get(`/api/product/${id}`).then((response) => {
+    axios.get(`/api/product/${integration}/${id}`).then((response) => {
       setProd(response.data);
       console.log(response.data);
       //    setUrls(response.data.urls);
       //  setTech(response.data.tech);
       //setComments(response.data.comments);
     });
-    axios.get("/api/categories/").then((response) => {
-      setCategs(response.data);
-    });
-    axios.get(`/api/pictures/product/${id}`).then((response) => {
-      setUrls(response.data);
-    });
-    axios.get(`/api/technical/product/${id}`).then((response) => {
-      setTech(response.data);
-    });
-    axios.get(`/api/product/rating/avg/${id}`).then((response) => {
-      setRAvg(response.data);
-    });
-    axios.get(`/api/comment/${id}`).then((response) => {
-      setComments(response.data);
-    });
+    // axios.get("/api/categories/").then((response) => {
+    //   setCategs(response.data);
+    // });
+    // axios.get(`/api/pictures/product/${id}`).then((response) => {
+    //   setUrls(response.data);
+    // });
+    // axios.get(`/api/technical/product/${id}`).then((response) => {
+    //   setTech(response.data);
+    // });
+    // axios.get(`/api/product/rating/avg/${id}`).then((response) => {
+    //   setRAvg(response.data);
+    // });
   }, [id]);
 
   useEffect(() => {
@@ -101,7 +85,7 @@ export function Page({ params: { id } }) {
   const addCart = (e) => {
     e.preventDefault();
     let out = {
-      international: false,
+      integrationId: integration,
       productId: prod.id,
       quantity: parseInt(e.target.cartQuantity.value),
     };
@@ -136,25 +120,6 @@ export function Page({ params: { id } }) {
     axios.get(`/api/product/rating/avg/${id}`).then((response) => {
       setRAvg(response.data);
     });
-  };
-
-  const reloadComments = useCallback(() => {
-    axios.get(`/api/comment/${id}`).then((response) => {
-      setComments(response.data);
-    });
-  }, [id]);
-
-  const submitComment = (e) => {
-    e.preventDefault();
-    axios
-      .post(`/api/comment/${id}`, {
-        commentId: null,
-        message: e.target.user_commment.value,
-      })
-      .then(() => {
-        e.target.reset();
-        reloadComments();
-      });
   };
 
   return (
