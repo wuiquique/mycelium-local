@@ -32,6 +32,7 @@ import com.mycelium.local.repository.user.UserRepo;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -376,5 +377,12 @@ public class OrderController {
 
         return body;
     }
+
+    /* 
+    @Post("/receipt")
+    public HttpResponse<byte[]> si() {
+        var response  = client.toBlocking().retrieve(HttpRequest.POST("http://mycelium-taxes/apis/tax/pdf", null), null, null)
+    }
+    */
 }
 

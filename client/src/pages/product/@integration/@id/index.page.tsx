@@ -45,6 +45,7 @@ export function Page({ params: { integration, id } }) {
       //  setTech(response.data.tech);
       //setComments(response.data.comments);
     });
+    axios.put(`/api/product/${integration}/${id}`);
     // axios.get("/api/categories/").then((response) => {
     //   setCategs(response.data);
     // });
