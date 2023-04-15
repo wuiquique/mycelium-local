@@ -14,6 +14,7 @@ import com.mycelium.local.repository.categorie.CategorieRepo;
 import com.mycelium.local.repository.integorderproduct.IntegOrderProductRepo;
 import com.mycelium.local.repository.integorderproduct.IntegOrderProduct;
 import com.mycelium.local.repository.integration.Integration;
+import com.mycelium.local.repository.integration.IntegrationRepo;
 import com.mycelium.local.repository.picture.Picture;
 import com.mycelium.local.repository.picture.PictureRepo;
 import com.mycelium.local.repository.product.Product;
@@ -21,14 +22,8 @@ import com.mycelium.local.repository.product.ProductRepo;
 import com.mycelium.local.repository.technical.Technical;
 import com.mycelium.local.repository.technical.TechnicalRepo;
 
-import io.micronaut.http.HttpRequest;
-import io.micronaut.http.client.HttpClient;
-import io.micronaut.http.client.annotation.Client;
-import io.micronaut.http.client.exceptions.HttpClientException;
-import io.micronaut.http.client.exceptions.HttpClientResponseException;
-import io.micronaut.http.client.exceptions.ReadTimeoutException;
-
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Delete;
@@ -36,6 +31,8 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
 import io.micronaut.http.annotation.QueryValue;
+import io.micronaut.http.client.HttpClient;
+import io.micronaut.http.client.annotation.Client;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.annotation.Nullable;
@@ -89,23 +86,26 @@ class IntegrationProductResponse {
 @Introspected
 @JsonInclude(Include.ALWAYS)
 class ProductResponse {
-    public Integer id;
+    public Object id;
+    public Integer integrationId;
     public String name;
     public String desc;
-    public int categorieId;
+    public String category;
     public String brand;
-    public int weight;
-    public int quantity;
-    public int price;
+    public Integer weight;
+    public Integer quantity;
+    public Integer price;
     public List<String> pictures;
     public List<BasicTechnical> technical;
 
-    public ProductResponse(Integer id, String name, String desc, int categorieId,
-            String brand, int weight, int quantity, int price, List<String> pictures, List<BasicTechnical> technical) {
+    public ProductResponse(Object id, Integer integrationId, String name, String desc, String category,
+            String brand, Integer weight, Integer quantity, Integer price, List<String> pictures,
+            List<BasicTechnical> technical) {
         this.id = id;
+        this.integrationId = integrationId;
         this.name = name;
         this.desc = desc;
-        this.categorieId = categorieId;
+        this.category = category;
         this.brand = brand;
         this.weight = weight;
         this.quantity = quantity;
@@ -123,14 +123,14 @@ class ProductResponse {
         for (var tech : prod.technical) {
             techs.add(new BasicTechnical(tech.type, tech.value));
         }
-        return new ProductResponse(prod.id, prod.name, prod.desc, prod.categorie.id, prod.brand, prod.weight,
+        return new ProductResponse(prod.id, null, prod.name, prod.desc, prod.categorie.name, prod.brand, prod.weight,
                 prod.quantity, prod.price, pics, techs);
     }
 
     static public ProductResponse fromProductBasic(Product prod) {
         List<String> pics = Lists.newArrayList();
         List<BasicTechnical> techs = Lists.newArrayList();
-        return new ProductResponse(prod.id, prod.name, prod.desc, prod.categorie.id, prod.brand, prod.weight,
+        return new ProductResponse(prod.id, null, prod.name, prod.desc, prod.categorie.name, prod.brand, prod.weight,
                 prod.quantity, prod.price, pics, techs);
     }
 
@@ -156,15 +156,17 @@ public class ProductController {
     private CategorieRepo categorieRepo;
     private TechnicalRepo technicalRepo;
     private SearchManager searchManager;
+    private IntegrationRepo integrationRepo;
     private IntegOrderProductRepo integOrderProductRepo;
 
     public ProductController(ProductRepo productRepo, PictureRepo pictureRepo, CategorieRepo categorieRepo,
-            TechnicalRepo technicalRepo, SearchManager searchManager, IntegOrderProductRepo integOrderProductRepo) {
+            TechnicalRepo technicalRepo, SearchManager searchManager, IntegrationRepo integrationRepo, IntegOrderProductRepo integOrderProductRepo) {
         this.productRepo = productRepo;
         this.pictureRepo = pictureRepo;
         this.categorieRepo = categorieRepo;
         this.technicalRepo = technicalRepo;
         this.searchManager = searchManager;
+        this.integrationRepo = integrationRepo;
         this.integOrderProductRepo = integOrderProductRepo;
     }
 
@@ -191,7 +193,7 @@ public class ProductController {
             for (Picture picture : pictureRepo.findByProductId(product.id)) {
                 urls.add(picture.url);
             }
-            res.add(new ProductResponse(product.id, product.name, product.desc, product.categorie.id,
+            res.add(new ProductResponse(product.id, null, product.name, product.desc, product.categorie.name,
                     product.brand, product.weight, product.quantity, product.price, urls, Lists.newArrayList()));
         }
         return res;
@@ -205,7 +207,7 @@ public class ProductController {
             for (Picture picture : pictureRepo.findByProductId(product.id)) {
                 urls.add(picture.url);
             }
-            res.add(new ProductResponse(product.id, product.name, product.desc, product.categorie.id,
+            res.add(new ProductResponse(product.id, null, product.name, product.desc, product.categorie.name,
                     product.brand, product.weight, product.quantity, product.price, urls, Lists.newArrayList()));
         }
         return res;
@@ -296,13 +298,13 @@ public class ProductController {
 
     @Get("/report/supplier")
     public List<IntegrationProductResponse> reportsInetgrations() {
-        List<IntegrationProductResponse> res = new ArrayList<IntegrationProductResponse>();
+        var res = new ArrayList<IntegrationProductResponse>();
         for (IntegOrderProduct prod : integOrderProductRepo.findAll()) {
             res.add(new IntegrationProductResponse(prod.id, prod.productId, prod.quantity, prod.price, prod.integration));
         }
         return res;
     }
-    
+        
 
     @Get("/search")
     public List<ProductResponse> search(@Nullable @QueryValue(value = "q", defaultValue = "") String query,
@@ -313,14 +315,23 @@ public class ProductController {
         if (query.trim() != "") {
             criteria.add(new SearchCriteria.TextContains(query.trim()));
         }
-        if (priceMinStr.trim() != "" && priceMaxStr.trim() != "") {
+
+        if (priceMaxStr.trim() != "") {
             try {
-                criteria.add(new SearchCriteria.PriceBetween(Integer.parseInt(priceMinStr.trim()),
-                        Integer.parseInt(priceMaxStr.trim())));
+                criteria.add(new SearchCriteria.PriceComparison(Integer.parseInt(priceMaxStr.trim()), false));
             } catch (NumberFormatException e) {
                 // Do nothing
             }
         }
+
+        if (priceMinStr.trim() != "") {
+            try {
+                criteria.add(new SearchCriteria.PriceComparison(Integer.parseInt(priceMinStr.trim()), true));
+            } catch (NumberFormatException e) {
+                // Do nothing
+            }
+        }
+
         if (categoriesStr.trim() != "") {
             List<Integer> ids = Lists.newArrayList();
             for (var categId : categoriesStr.split(",")) {
@@ -332,7 +343,27 @@ public class ProductController {
             }
             criteria.add(new SearchCriteria.CategoryIn(ids));
         }
-        return ProductResponse.fromProductList(searchManager.search(criteria));
+
+        var products = ProductResponse.fromProductList(searchManager.search(criteria));
+
+        for (var integ : integrationRepo.findAll()) {
+            List<?> response = client.toBlocking().retrieve(
+                    HttpRequest.GET(integ.request + "/api/search"),
+                    List.class);
+
+            for (var prod : response) {
+                if (prod instanceof Map<?, ?> m) {
+                    var res = new ProductResponse((String) m.get("_id"), integ.id, (String) m.get("name"),
+                            (String) m.get("desc"), (String) m.get("categorie"), (String) m.get("brand"),
+                            (Integer) m.get("weight"), (Integer) m.get("stock"), (Integer) m.get("price"), List.of(),
+                            List.of());
+
+                    products.add(res);
+                }
+            }
+        }
+
+        return products;
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)

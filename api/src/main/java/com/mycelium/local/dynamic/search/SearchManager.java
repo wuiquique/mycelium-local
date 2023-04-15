@@ -53,8 +53,12 @@ public class SearchManager {
                     where += " OR UPPER(p.\"DESC\") LIKE CONCAT(CONCAT('%', UPPER(?)), '%')";
                     where += " OR UPPER(p.BRAND) LIKE CONCAT(CONCAT('%', UPPER(?)), '%')";
                     where += ")";
-                } else if (criterium instanceof SearchCriteria.PriceBetween c) {
-                    where += " AND (p.PRICE > ? AND p.PRICE < ?)";
+                } else if (criterium instanceof SearchCriteria.PriceComparison c) {
+                    if (c.gteq) {
+                        where += " AND p.PRICE >= ?";
+                    } else {
+                        where += " AND p.PRICE <= ?";
+                    }
                 } else if (criterium instanceof SearchCriteria.CategoryIn c) {
                     where += " AND (0 = 1";
                     for (var id : c.ids) {
@@ -74,9 +78,8 @@ public class SearchManager {
                         ps.setString(++currIndex, c.value);
                         ps.setString(++currIndex, c.value);
                         ps.setString(++currIndex, c.value);
-                    } else if (criterium instanceof SearchCriteria.PriceBetween c) {
-                        ps.setInt(++currIndex, c.min);
-                        ps.setInt(++currIndex, c.max);
+                    } else if (criterium instanceof SearchCriteria.PriceComparison c) {
+                        ps.setInt(++currIndex, c.value);
                     } else if (criterium instanceof SearchCriteria.CategoryIn c) {
                         for (var id : c.ids) {
                             ps.setInt(++currIndex, id);
