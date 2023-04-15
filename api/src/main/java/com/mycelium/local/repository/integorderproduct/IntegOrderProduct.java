@@ -19,8 +19,9 @@ public class IntegOrderProduct {
     @Id
     @GeneratedValue
     public Integer id;
-    public int productId;
+    public String productId;
     public int quantity;
+    public int price;
     public String trackingInteg;
     public String trackingLocal;
     public int timeInteg;
@@ -50,11 +51,11 @@ public class IntegOrderProduct {
         this.id = id;
     }
 
-    public int getProductId() {
+    public String getProductId() {
         return productId;
     }
 
-    public void setProductId(int productId) {
+    public void setProductId(String productId) {
         this.productId = productId;
     }
 
@@ -64,6 +65,14 @@ public class IntegOrderProduct {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public String getTrackingInteg() {

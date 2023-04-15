@@ -11,6 +11,9 @@ import com.google.common.collect.Maps;
 import com.mycelium.local.dynamic.search.SearchCriteria;
 import com.mycelium.local.dynamic.search.SearchManager;
 import com.mycelium.local.repository.categorie.CategorieRepo;
+import com.mycelium.local.repository.integorderproduct.IntegOrderProductRepo;
+import com.mycelium.local.repository.integorderproduct.IntegOrderProduct;
+import com.mycelium.local.repository.integration.Integration;
 import com.mycelium.local.repository.picture.Picture;
 import com.mycelium.local.repository.picture.PictureRepo;
 import com.mycelium.local.repository.product.Product;
@@ -62,6 +65,24 @@ class BasicTechnical {
     public BasicTechnical(String type, String value) {
         this.type = type;
         this.value = value;
+    }
+}
+
+@Introspected
+@JsonInclude
+class IntegrationProductResponse {
+    public Integer id;
+    public String productId;
+    public int quantity;
+    public int price;
+    public Integration integration;
+    
+    public IntegrationProductResponse(Integer id, String productId, int quantity, int price, Integration integration) {
+        this.id = id;
+        this.productId = productId;
+        this.quantity = quantity;
+        this.price = price;
+        this.integration = integration;
     }
 }
 
@@ -135,14 +156,16 @@ public class ProductController {
     private CategorieRepo categorieRepo;
     private TechnicalRepo technicalRepo;
     private SearchManager searchManager;
+    private IntegOrderProductRepo integOrderProductRepo;
 
     public ProductController(ProductRepo productRepo, PictureRepo pictureRepo, CategorieRepo categorieRepo,
-            TechnicalRepo technicalRepo, SearchManager searchManager) {
+            TechnicalRepo technicalRepo, SearchManager searchManager, IntegOrderProductRepo integOrderProductRepo) {
         this.productRepo = productRepo;
         this.pictureRepo = pictureRepo;
         this.categorieRepo = categorieRepo;
         this.technicalRepo = technicalRepo;
         this.searchManager = searchManager;
+        this.integOrderProductRepo = integOrderProductRepo;
     }
 
     @Get("/")
@@ -271,6 +294,16 @@ public class ProductController {
         // TODO
     }
 
+    @Get("/report/supplier")
+    public List<IntegrationProductResponse> reportsInetgrations() {
+        List<IntegrationProductResponse> res = new ArrayList<IntegrationProductResponse>();
+        for (IntegOrderProduct prod : integOrderProductRepo.findAll()) {
+            res.add(new IntegrationProductResponse(prod.id, prod.productId, prod.quantity, prod.price, prod.integration));
+        }
+        return res;
+    }
+    
+
     @Get("/search")
     public List<ProductResponse> search(@Nullable @QueryValue(value = "q", defaultValue = "") String query,
             @Nullable @QueryValue(value = "pricemin", defaultValue = "") String priceMinStr,
@@ -312,7 +345,8 @@ public class ProductController {
     @Get("/{id_integration}/{id_producto}")
     public Map<?, ?> integrationProds(String id_integration, String id_producto) {
         try {
-            HttpRequest<?> request = HttpRequest.GET("/api/integrationProds/" + id_integration + "/" + id_producto);
+            HttpRequest<?> request = HttpRequest.GET("https://mycelium-international/api/products/{id_producto}");
+            System.out.println(request);
             return client.toBlocking().retrieve(request, Map.class);
         } finally {
 
