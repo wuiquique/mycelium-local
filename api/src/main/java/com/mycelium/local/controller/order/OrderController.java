@@ -373,42 +373,8 @@ public class OrderController {
             current.put("price", item.price);
             body.add(current);
         }
+
         return body;
     }
 }
 
-/*
-  [
- {
-  "id": 301,
-  "productId": "643a31e27c5d5d00cd898f67",
-  "integOrderId": "643a8787346f6253ffd5612b",
- "quantity": 1,
-  "price": 123,
-  "trackingInteg": "8051928389",
- "trackingLocal": "gjfpzhtkof",
- "timeInteg": 10,
- "timeLocal": 15,
- "created": 1681557383000,
-  "updated": 1681557383000,
-  "order": {
-  "id": 701,
-  "zip": 0,
-  "phone": 0
-  },
-  "statusInteg": {
-  "id": 1
-  },
-  "statusLocal": {
-  "id": 1
-  },
-  "integration": {
-  "id": 1,
-  "name": "Pruebas",
-  "request": "http://mycelium-international",
-  "user": "jberganza@unis.edu.gt",
-  "password": "12345"
-  }
-  }
-  ]
- */
