@@ -8,7 +8,10 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
     networks:
-      - mycelium-local
+      mycelium-local:
+      mycelium-global:
+        aliases:
+          - mycelium-local
     environment:
       - DEFAULT_HOST=localhost
 
@@ -24,6 +27,7 @@ services:
       dockerfile: Dockerfile.dev
     networks:
       - mycelium-local
+      - mycelium-global
     environment:
       - VIRTUAL_HOST=localhost
       - VIRTUAL_PATH=~^/(api|swagger|swagger-ui)
@@ -56,6 +60,7 @@ services:
       dockerfile: Dockerfile.dev
     networks:
       - mycelium-local
+      - mycelium-global
     environment:
       - VIRTUAL_HOST=localhost
       - VIRTUAL_PATH=/
@@ -65,7 +70,6 @@ services:
     image: container-registry.oracle.com/database/express:21.3.0-xe
     ports:
       - 1521:1521
-      - 5500:5500
     restart: unless-stopped
     environment:
       ORACLE_PWD: "12345"
@@ -83,3 +87,5 @@ volumes:
 networks:
   mycelium-local:
     driver: bridge
+  mycelium-global:
+    external: true
