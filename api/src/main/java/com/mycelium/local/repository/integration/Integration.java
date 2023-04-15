@@ -3,6 +3,7 @@ package com.mycelium.local.repository.integration;
 import java.util.List;
 
 import com.mycelium.local.repository.cartinteg.CartInteg;
+import com.mycelium.local.repository.integorderproduct.IntegOrderProduct;
 
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
@@ -22,6 +23,9 @@ public class Integration {
 
     @Relation(value = Relation.Kind.ONE_TO_MANY, mappedBy = "integration")
     public List<CartInteg> cartInteg;
+
+    @Relation(value = Relation.Kind.ONE_TO_MANY, mappedBy = "integration")
+    public List<IntegOrderProduct> integOrderProducts;
 
     public Integer getId() {
         return id;
@@ -69,5 +73,13 @@ public class Integration {
 
     public void setCartInteg(List<CartInteg> cartInteg) {
         this.cartInteg = cartInteg;
+    }
+
+    public List<IntegOrderProduct> getIntegOrderProducts() {
+        return integOrderProducts;
+    }
+
+    public void setIntegOrderProducts(List<IntegOrderProduct> integOrderProducts) {
+        this.integOrderProducts = integOrderProducts;
     }
 }

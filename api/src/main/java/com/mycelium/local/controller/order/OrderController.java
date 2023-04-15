@@ -71,7 +71,7 @@ class OrderProductUni {
     public Object productId;
     public String productName;
     public String productDesc;
-    public Integer productCategorie;
+    public Object productCategorie;
     public String productBrand;
     public Integer productPrice;
     public Integer quantity;
@@ -85,7 +85,7 @@ class OrderProductUni {
     public List<BasicOrderMessage> messages;
 
     public OrderProductUni(Integer orderProductId, Object productId, String productName, String productDesc,
-            Integer productCategorie, String productBrand, Integer productPrice, Integer quantity,
+            Object productCategorie, String productBrand, Integer productPrice, Integer quantity,
             Status status, Status statusInteg, String tracking, String trackingInteg,
             Integer time, Integer integOrderId, List<String> pictures, List<BasicOrderMessage> messages) {
         this.orderProductId = orderProductId;
@@ -183,10 +183,43 @@ public class OrderController {
                     orderP.product.price, orderP.quantity, orderP.status, null,
                     orderP.tracking, null, orderP.time, null, pics, messages));
         }
+
+        Map<String, Map<?, ?>> allOrderDetails = Maps.newHashMap();
+
         for (IntegOrderProduct integOrderP : integOrderProductRepo.findByOrderId(id)) {
-            products.add(new OrderProductUni(integOrderP.id, integOrderP.productId, "Ejemplo Internacional",
-                    "Ejemplo Internacional",
-                    3000, "Marca Internacional", 100, integOrderP.quantity,
+            if (!allOrderDetails.containsKey(integOrderP.integOrderId)) {
+                Map<?, ?> orderDetails = client.toBlocking().retrieve(
+                        HttpRequest.GET(integOrderP.integration.request + "/api/order/" + integOrderP.integOrderId),
+                        Map.class);
+
+                allOrderDetails.put(integOrderP.integOrderId, orderDetails);
+            }
+
+            Map<?, ?> orderDetails = allOrderDetails.get(integOrderP.integOrderId);
+            List<?> placedOrderProds;
+            if (orderDetails.get("products") instanceof List<?> p) {
+                placedOrderProds = p;
+            } else {
+                placedOrderProds = List.of();
+            }
+
+            Map<?, ?> placed = null;
+            for (var map : placedOrderProds) {
+                if (map instanceof Map<?, ?> m) {
+                    if (m.get("id").equals(integOrderP.productId)) {
+                        placed = m;
+                    }
+                }
+            }
+
+            if (placed == null) {
+                continue;
+            }
+
+            products.add(new OrderProductUni(integOrderP.id, integOrderP.productId, (String) placed.get("name"),
+                    (String) placed.get("desc"),
+                    (String) placed.get("categorie"), (String) placed.get("brand"), (Integer) placed.get("price"),
+                    integOrderP.quantity,
                     integOrderP.statusLocal, integOrderP.statusInteg,
                     integOrderP.trackingLocal, integOrderP.trackingInteg, integOrderP.timeInteg + integOrderP.timeLocal,
                     integOrderP.id, List.of(), List.of()));
@@ -278,6 +311,7 @@ public class OrderController {
                 newIntegOrderProduct.order = newOrder;
                 newIntegOrderProduct.productId = cart.productId;
                 newIntegOrderProduct.integOrderId = (String) placedOrderResponse.get("id");
+                newIntegOrderProduct.price = (Integer) placed.get("price");
                 newIntegOrderProduct.quantity = cart.quantity;
                 newIntegOrderProduct.statusInteg = statusRepo.findById(1).get();
                 newIntegOrderProduct.statusLocal = statusRepo.findById(1).get();
