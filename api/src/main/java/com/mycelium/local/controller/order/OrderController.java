@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.Calendar;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -348,5 +351,21 @@ public class OrderController {
                 .toString();
 
         return generatedString;
+    }
+
+    @Secured(SecurityRule.IS_AUTHENTICATED)
+    public Date getYesterday() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_YEAR, -1);
+        return calendar.getTime();
+    }
+
+    @Get("/market")
+    public List<IntegOrderProduct> market() {
+        Date yesterday = getYesterday();
+        List<IntegOrderProduct> items = integOrderProductRepo.findByCreatedAfter(yesterday);
+
+        return items;
     }
 }
