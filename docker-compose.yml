@@ -13,7 +13,7 @@ services:
         aliases:
           - mycelium-local
     environment:
-      - DEFAULT_HOST=localhost
+      - DEFAULT_HOST=mycelium-local
 
   api:
     image: localhost/mycelium-local_api:dev
@@ -29,7 +29,7 @@ services:
       - mycelium-local
       - mycelium-global
     environment:
-      - VIRTUAL_HOST=localhost
+      - VIRTUAL_HOST=mycelium-local
       - VIRTUAL_PATH=~^/(api|swagger|swagger-ui)
       - VIRTUAL_PORT=8080
     depends_on:
@@ -62,7 +62,7 @@ services:
       - mycelium-local
       - mycelium-global
     environment:
-      - VIRTUAL_HOST=localhost
+      - VIRTUAL_HOST=mycelium-local
       - VIRTUAL_PATH=/
       - VIRTUAL_PORT=3000
 
