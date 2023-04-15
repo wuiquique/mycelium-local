@@ -20,6 +20,7 @@ public class IntegOrderProduct {
     @GeneratedValue
     public Integer id;
     public String productId;
+    public String integOrderId;
     public int quantity;
     public int price;
     public String trackingInteg;
@@ -153,6 +154,14 @@ public class IntegOrderProduct {
 
     public void setIntegration(Integration integration) {
         this.integration = integration;
+    }
+
+    public String getIntegOrderId() {
+        return integOrderId;
+    }
+
+    public void setIntegOrderId(String integOrderId) {
+        this.integOrderId = integOrderId;
     }
 
 }

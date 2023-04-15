@@ -1,8 +1,13 @@
 package com.mycelium.local.repository.integration;
 
+import java.util.List;
+
+import com.mycelium.local.repository.cartinteg.CartInteg;
+
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
+import io.micronaut.data.annotation.Relation;
 import io.micronaut.data.model.naming.NamingStrategies;
 
 @MappedEntity(namingStrategy = NamingStrategies.Raw.class)
@@ -14,6 +19,9 @@ public class Integration {
     public String request;
     public String user;
     public String password;
+
+    @Relation(value = Relation.Kind.ONE_TO_MANY, mappedBy = "integration")
+    public List<CartInteg> cartInteg;
 
     public Integer getId() {
         return id;
@@ -53,5 +61,13 @@ public class Integration {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<CartInteg> getCartInteg() {
+        return cartInteg;
+    }
+
+    public void setCartInteg(List<CartInteg> cartInteg) {
+        this.cartInteg = cartInteg;
     }
 }

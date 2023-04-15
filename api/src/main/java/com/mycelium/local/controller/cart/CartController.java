@@ -9,10 +9,12 @@ import com.mycelium.local.repository.cart.Cart;
 import com.mycelium.local.repository.cart.CartRepo;
 import com.mycelium.local.repository.cartinteg.CartInteg;
 import com.mycelium.local.repository.cartinteg.CartIntegRepo;
+import com.mycelium.local.repository.integration.IntegrationRepo;
 import com.mycelium.local.repository.product.ProductRepo;
 import com.mycelium.local.repository.user.UserRepo;
 
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -22,27 +24,28 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
 
 class CartCreateRequest {
-    public boolean international;
-    public int productId;
+    @Nullable
+    public Integer integrationId;
+    public Object productId;
     public int quantity;
 }
 
 @Introspected
 @JsonInclude(Include.ALWAYS)
 class CartUnifiedResponse {
-    public Integer id;
+    public Object id;
     public boolean international;
-    public int productId;
+    public Object productId;
     public String name;
     public String description;
-    public int quantity;
+    public Integer quantity;
     public String category;
-    public int weight;
-    public int price;
+    public Integer weight;
+    public Integer price;
     public List<String> pictures;
 
-    public CartUnifiedResponse(Integer id, boolean international, int productId, String name, String description,
-            int quantity, String category, int weight, int price, List<String> pictures) {
+    public CartUnifiedResponse(Object id, boolean international, Object productId, String name, String description,
+            Integer quantity, String category, Integer weight, Integer price, List<String> pictures) {
         this.id = id;
         this.international = international;
         this.productId = productId;
@@ -65,12 +68,15 @@ public class CartController {
     private CartIntegRepo cartIntegRepo;
     private UserRepo userRepo;
     private ProductRepo productRepo;
+    private IntegrationRepo integrationRepo;
 
-    public CartController(CartRepo cartRepo, CartIntegRepo cartIntegRepo, UserRepo userRepo, ProductRepo productRepo) {
+    public CartController(CartRepo cartRepo, CartIntegRepo cartIntegRepo, UserRepo userRepo, ProductRepo productRepo,
+            IntegrationRepo integrationRepo) {
         this.cartRepo = cartRepo;
         this.cartIntegRepo = cartIntegRepo;
         this.userRepo = userRepo;
         this.productRepo = productRepo;
+        this.integrationRepo = integrationRepo;
     }
 
     @Get("/")
@@ -99,8 +105,8 @@ public class CartController {
         var userMap = authentication.getAttributes();
         var userId = (int) (long) userMap.get("id");
 
-        if (body.international) {
-            var existing = cartIntegRepo.findByUserIdAndProductId(userId, body.productId);
+        if (body.integrationId != null) {
+            var existing = cartIntegRepo.findByUserIdAndProductId(userId, (String) body.productId);
 
             for (var cart : existing) {
                 cartIntegRepo.delete(cart);
@@ -108,13 +114,14 @@ public class CartController {
 
             if (body.quantity > 0) {
                 var newCart = new CartInteg();
-                newCart.productId = body.productId;
+                newCart.productId = (String) body.productId;
                 newCart.quantity = body.quantity;
                 newCart.user = userRepo.findById(userId).get();
+                newCart.integration = integrationRepo.findById(body.integrationId).get();
                 cartIntegRepo.save(newCart);
             }
         } else {
-            var existing = cartRepo.findByUserIdAndProductId(userId, body.productId);
+            var existing = cartRepo.findByUserIdAndProductId(userId, (int) body.productId);
 
             for (var cart : existing) {
                 cartRepo.delete(cart);
@@ -122,7 +129,7 @@ public class CartController {
 
             if (body.quantity > 0) {
                 var newCart = new Cart();
-                newCart.product = productRepo.findById(body.productId).get();
+                newCart.product = productRepo.findById((int) body.productId).get();
                 newCart.quantity = body.quantity;
                 newCart.user = userRepo.findById(userId).get();
                 cartRepo.save(newCart);

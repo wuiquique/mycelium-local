@@ -1,19 +1,25 @@
 package com.mycelium.local.controller.order;
 
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.mycelium.local.repository.cart.Cart;
 import com.mycelium.local.repository.cart.CartRepo;
 import com.mycelium.local.repository.cartinteg.CartInteg;
 import com.mycelium.local.repository.cartinteg.CartIntegRepo;
 import com.mycelium.local.repository.integorderproduct.IntegOrderProduct;
 import com.mycelium.local.repository.integorderproduct.IntegOrderProductRepo;
+import com.mycelium.local.repository.integration.Integration;
+import com.mycelium.local.repository.integration.IntegrationRepo;
 import com.mycelium.local.repository.order.Order;
 import com.mycelium.local.repository.order.OrderRepo;
 import com.mycelium.local.repository.orderproduct.OrderProduct;
@@ -23,15 +29,19 @@ import com.mycelium.local.repository.status.StatusRepo;
 import com.mycelium.local.repository.user.UserRepo;
 
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
+import io.micronaut.http.client.HttpClient;
+import io.micronaut.http.client.annotation.Client;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
+import jakarta.inject.Inject;
 
 class OrderCreateRequest {
     public String direction;
@@ -58,7 +68,7 @@ class BasicOrderMessage {
 class OrderProductUni {
 
     public Integer orderProductId;
-    public Integer productId;
+    public Object productId;
     public String productName;
     public String productDesc;
     public Integer productCategorie;
@@ -74,7 +84,7 @@ class OrderProductUni {
     public List<String> pictures;
     public List<BasicOrderMessage> messages;
 
-    public OrderProductUni(Integer orderProductId, Integer productId, String productName, String productDesc,
+    public OrderProductUni(Integer orderProductId, Object productId, String productName, String productDesc,
             Integer productCategorie, String productBrand, Integer productPrice, Integer quantity,
             Status status, Status statusInteg, String tracking, String trackingInteg,
             Integer time, Integer integOrderId, List<String> pictures, List<BasicOrderMessage> messages) {
@@ -114,6 +124,10 @@ class OrderFinalResponse {
 @Controller("/user/order")
 public class OrderController {
 
+    @Inject
+    @Client("/")
+    HttpClient client;
+
     private OrderRepo orderRepo;
     private OrderProductRepo orderProductRepo;
     private CartRepo cartRepo;
@@ -121,10 +135,11 @@ public class OrderController {
     private IntegOrderProductRepo integOrderProductRepo;
     private StatusRepo statusRepo;
     private UserRepo userRepo;
+    private IntegrationRepo integrationRepo;
 
     public OrderController(OrderRepo orderRepo, OrderProductRepo orderProductRepo,
             CartRepo cartRepo, CartIntegRepo cartIntegRepo, IntegOrderProductRepo integOrderProductRepo,
-            StatusRepo statusRepo, UserRepo userRepo) {
+            StatusRepo statusRepo, UserRepo userRepo, IntegrationRepo integrationRepo) {
         this.orderRepo = orderRepo;
         this.orderProductRepo = orderProductRepo;
         this.cartRepo = cartRepo;
@@ -132,6 +147,7 @@ public class OrderController {
         this.integOrderProductRepo = integOrderProductRepo;
         this.statusRepo = statusRepo;
         this.userRepo = userRepo;
+        this.integrationRepo = integrationRepo;
     }
 
     @Get("/")
@@ -210,19 +226,69 @@ public class OrderController {
             orderProductRepo.save(newOrderProduct);
         }
 
-        for (CartInteg cart : cartIntegRepo.findByUserId(userId)) {
-            var newIntegOrderProduct = new IntegOrderProduct();
-            newIntegOrderProduct.order = newOrder;
-            newIntegOrderProduct.productId = 1;
-            newIntegOrderProduct.quantity = cart.quantity;
-            newIntegOrderProduct.statusInteg = statusRepo.findById(1).get();
-            newIntegOrderProduct.statusLocal = statusRepo.findById(1).get();
-            newIntegOrderProduct.trackingInteg = "Tracking Internacional";
-            newIntegOrderProduct.trackingLocal = "Tracking Local";
-            newIntegOrderProduct.timeInteg = 10;
-            newIntegOrderProduct.timeLocal = newIntegOrderProduct.timeInteg + 5;
+        for (Integration integ : integrationRepo.findByCartIntegUserId(userId)) {
+            List<Map<String, Object>> orderProds = Lists.newArrayList();
+            for (CartInteg cart : integ.cartInteg) {
+                Map<String, Object> map = Maps.newHashMap();
 
-            integOrderProductRepo.save(newIntegOrderProduct);
+                map.put("id", cart.productId);
+                map.put("quantity", cart.quantity);
+
+                orderProds.add(map);
+            }
+
+            Map<String, Object> orderReq = Maps.newHashMap();
+            orderReq.put("products", orderProds);
+            orderReq.put("email", integ.user);
+            orderReq.put("password", integ.password);
+            var in10days = Instant.now();
+            in10days = in10days.plus(10, ChronoUnit.DAYS);
+            var in20days = Instant.now();
+            in20days = in20days.plus(20, ChronoUnit.DAYS);
+            orderReq.put("since", in10days.getEpochSecond() * 1000);
+            orderReq.put("till", in20days.getEpochSecond() * 1000);
+
+            Map<?, ?> placedOrderResponse = client.toBlocking()
+                    .retrieve(HttpRequest.POST(integ.request + "/api/order/empresarial/order", orderReq), Map.class);
+            Map<?, ?> orderDetails = client.toBlocking().retrieve(
+                    HttpRequest.GET(integ.request + "/api/order/" + placedOrderResponse.get("id")),
+                    Map.class);
+            List<?> placedOrderProds;
+            if (orderDetails.get("products") instanceof List<?> p) {
+                placedOrderProds = p;
+            } else {
+                placedOrderProds = List.of();
+            }
+
+            for (CartInteg cart : integ.cartInteg) {
+                Map<?, ?> placed = null;
+                for (var map : placedOrderProds) {
+                    if (map instanceof Map<?, ?> m) {
+                        if (m.get("id").equals(cart.productId)) {
+                            placed = m;
+                        }
+                    }
+                }
+
+                if (placed == null) {
+                    continue;
+                }
+
+                var newIntegOrderProduct = new IntegOrderProduct();
+                newIntegOrderProduct.order = newOrder;
+                newIntegOrderProduct.productId = cart.productId;
+                newIntegOrderProduct.integOrderId = (String) placedOrderResponse.get("id");
+                newIntegOrderProduct.quantity = cart.quantity;
+                newIntegOrderProduct.statusInteg = statusRepo.findById(1).get();
+                newIntegOrderProduct.statusLocal = statusRepo.findById(1).get();
+                newIntegOrderProduct.trackingInteg = (String) placed.get("tracking");
+                newIntegOrderProduct.trackingLocal = trackingNumberString();
+                newIntegOrderProduct.timeInteg = 10;
+                newIntegOrderProduct.timeLocal = newIntegOrderProduct.timeInteg + 5;
+                newIntegOrderProduct.integration = cart.integration;
+
+                integOrderProductRepo.save(newIntegOrderProduct);
+            }
         }
 
         var existingL = cartRepo.findByUserId(userId);

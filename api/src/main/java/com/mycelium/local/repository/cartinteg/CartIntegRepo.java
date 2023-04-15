@@ -10,7 +10,7 @@ import io.micronaut.data.repository.CrudRepository;
 @Repository("default")
 @JdbcRepository(dialect = Dialect.ORACLE)
 public interface CartIntegRepo extends CrudRepository<CartInteg, Integer> {
-    List<CartInteg> findByUserIdAndProductId(int userId, int productId);
+    List<CartInteg> findByUserIdAndProductId(int userId, String productId);
 
     List<CartInteg> findByUserId(int userId);
 }

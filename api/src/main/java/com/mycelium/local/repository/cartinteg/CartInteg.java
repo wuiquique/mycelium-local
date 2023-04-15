@@ -1,5 +1,6 @@
 package com.mycelium.local.repository.cartinteg;
 
+import com.mycelium.local.repository.integration.Integration;
 import com.mycelium.local.repository.user.User;
 
 import io.micronaut.data.annotation.GeneratedValue;
@@ -13,11 +14,14 @@ public class CartInteg {
     @Id
     @GeneratedValue
     public Integer id;
-    public int productId;
-    public int quantity;
+    public String productId;
+    public Integer quantity;
 
     @Relation(value = Relation.Kind.MANY_TO_ONE)
     public User user;
+
+    @Relation(value = Relation.Kind.MANY_TO_ONE)
+    public Integration integration;
 
     public Integer getId() {
         return id;
@@ -27,11 +31,11 @@ public class CartInteg {
         this.id = id;
     }
 
-    public int getProductId() {
+    public String getProductId() {
         return productId;
     }
 
-    public void setProductId(int productId) {
+    public void setProductId(String productId) {
         this.productId = productId;
     }
 
@@ -49,6 +53,14 @@ public class CartInteg {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Integration getIntegration() {
+        return integration;
+    }
+
+    public void setIntegration(Integration integration) {
+        this.integration = integration;
     }
 
 }
