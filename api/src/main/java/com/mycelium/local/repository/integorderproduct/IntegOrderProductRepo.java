@@ -12,5 +12,7 @@ import io.micronaut.data.repository.CrudRepository;
 @JdbcRepository(dialect = Dialect.ORACLE)
 public interface IntegOrderProductRepo extends CrudRepository<IntegOrderProduct, Integer> {
     @Join(value = "integration", type = Join.Type.FETCH)
+    @Join(value = "statusInteg", type = Join.Type.LEFT_FETCH)
+    @Join(value = "statusLocal", type = Join.Type.LEFT_FETCH)
     List<IntegOrderProduct> findByOrderId(int orderId);
 }
