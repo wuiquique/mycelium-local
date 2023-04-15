@@ -18,6 +18,13 @@ import com.mycelium.local.repository.product.ProductRepo;
 import com.mycelium.local.repository.technical.Technical;
 import com.mycelium.local.repository.technical.TechnicalRepo;
 
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.client.HttpClient;
+import io.micronaut.http.client.annotation.Client;
+import io.micronaut.http.client.exceptions.HttpClientException;
+import io.micronaut.http.client.exceptions.HttpClientResponseException;
+import io.micronaut.http.client.exceptions.ReadTimeoutException;
+
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -29,6 +36,7 @@ import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 class ProductCreateRequest {
     public String name;
@@ -117,6 +125,10 @@ class ProductResponse {
 @Secured(SecurityRule.IS_ANONYMOUS)
 @Controller("/product")
 public class ProductController {
+
+    @Inject
+    @Client("/integrations")
+    HttpClient client;
 
     private ProductRepo productRepo;
     private PictureRepo pictureRepo;
@@ -294,6 +306,17 @@ public class ProductController {
     @Get("/export")
     public List<ProductResponse> exportProduct() {
         return ProductResponse.fromProductList(productRepo.findAll());
+    }
+
+    @Secured(SecurityRule.IS_AUTHENTICATED)
+    @Get("/{id_integration}/{id_producto}")
+    public Map<?, ?> integrationProds(String id_integration, String id_producto) {
+        try {
+            HttpRequest<?> request = HttpRequest.GET("/api/integrationProds/" + id_integration + "/" + id_producto);
+            return client.toBlocking().retrieve(request, Map.class);
+        } finally {
+            
+        }
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
