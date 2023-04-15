@@ -11,8 +11,8 @@ import com.google.common.collect.Maps;
 import com.mycelium.local.dynamic.search.SearchCriteria;
 import com.mycelium.local.dynamic.search.SearchManager;
 import com.mycelium.local.repository.categorie.CategorieRepo;
-import com.mycelium.local.repository.integorderproduct.IntegOrderProductRepo;
 import com.mycelium.local.repository.integorderproduct.IntegOrderProduct;
+import com.mycelium.local.repository.integorderproduct.IntegOrderProductRepo;
 import com.mycelium.local.repository.integration.Integration;
 import com.mycelium.local.repository.integration.IntegrationRepo;
 import com.mycelium.local.repository.picture.Picture;
@@ -26,7 +26,6 @@ import io.micronaut.core.annotation.Introspected;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
@@ -73,7 +72,7 @@ class IntegrationProductResponse {
     public int quantity;
     public int price;
     public Integration integration;
-    
+
     public IntegrationProductResponse(Integer id, String productId, int quantity, int price, Integration integration) {
         this.id = id;
         this.productId = productId;
@@ -160,7 +159,8 @@ public class ProductController {
     private IntegOrderProductRepo integOrderProductRepo;
 
     public ProductController(ProductRepo productRepo, PictureRepo pictureRepo, CategorieRepo categorieRepo,
-            TechnicalRepo technicalRepo, SearchManager searchManager, IntegrationRepo integrationRepo, IntegOrderProductRepo integOrderProductRepo) {
+            TechnicalRepo technicalRepo, SearchManager searchManager, IntegrationRepo integrationRepo,
+            IntegOrderProductRepo integOrderProductRepo) {
         this.productRepo = productRepo;
         this.pictureRepo = pictureRepo;
         this.categorieRepo = categorieRepo;
@@ -290,21 +290,15 @@ public class ProductController {
         return "Success";
     }
 
-    @Secured(SecurityRule.IS_AUTHENTICATED)
-    @Delete("/{id}")
-    public void delete(int id) {
-        // TODO
-    }
-
     @Get("/report/supplier")
     public List<IntegrationProductResponse> reportsInetgrations() {
         var res = new ArrayList<IntegrationProductResponse>();
         for (IntegOrderProduct prod : integOrderProductRepo.findAll()) {
-            res.add(new IntegrationProductResponse(prod.id, prod.productId, prod.quantity, prod.price, prod.integration));
+            res.add(new IntegrationProductResponse(prod.id, prod.productId, prod.quantity, prod.price,
+                    prod.integration));
         }
         return res;
     }
-        
 
     @Get("/search")
     public List<ProductResponse> search(@Nullable @QueryValue(value = "q", defaultValue = "") String query,

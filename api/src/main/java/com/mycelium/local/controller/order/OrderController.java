@@ -32,10 +32,8 @@ import io.micronaut.core.annotation.Introspected;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
-import io.micronaut.http.annotation.Put;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.security.annotation.Secured;
@@ -336,18 +334,6 @@ public class OrderController {
         }
 
         return "Success";
-    }
-
-    @Secured(SecurityRule.IS_AUTHENTICATED)
-    @Put("/")
-    public void update() {
-        // TODO
-    }
-
-    @Secured(SecurityRule.IS_AUTHENTICATED)
-    @Delete("/")
-    public void delete() {
-        // TODO
     }
 
     public String trackingNumberString() {

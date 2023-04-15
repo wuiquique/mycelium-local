@@ -10,7 +10,6 @@ import com.mycelium.local.repository.user.UserRepo;
 
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
@@ -70,11 +69,5 @@ public class RatingController {
         rating.user = userRepo.findById(body.userId).get();
         rating.rating = body.rating;
         ratingRepo.update(rating);
-    }
-
-    @Secured(SecurityRule.IS_AUTHENTICATED)
-    @Delete("/{id}")
-    public void delete(int id) {
-        // TODO
     }
 }

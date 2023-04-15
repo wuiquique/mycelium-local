@@ -9,10 +9,8 @@ import com.mycelium.local.repository.product.ProductRepo;
 
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
-import io.micronaut.http.annotation.Put;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 
@@ -51,17 +49,5 @@ public class PictureController {
         newPicture.product = productRepo.findById(body.productId).get();
 
         pictureRepo.save(newPicture);
-    }
-
-    @Secured(SecurityRule.IS_AUTHENTICATED)
-    @Put("/")
-    public void update() {
-        // TODO
-    }
-
-    @Secured(SecurityRule.IS_AUTHENTICATED)
-    @Delete("/")
-    public void delete() {
-        // TODO
     }
 }

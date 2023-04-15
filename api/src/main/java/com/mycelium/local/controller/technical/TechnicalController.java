@@ -9,10 +9,8 @@ import com.mycelium.local.repository.technical.TechnicalRepo;
 
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
-import io.micronaut.http.annotation.Put;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 
@@ -52,17 +50,5 @@ public class TechnicalController {
         newTechnical.value = body.value;
         newTechnical.product = productRepo.findById(body.productId).get();
         technicalRepo.save(newTechnical);
-    }
-
-    @Secured(SecurityRule.IS_AUTHENTICATED)
-    @Put("/")
-    public void update() {
-        // TODO
-    }
-
-    @Secured(SecurityRule.IS_AUTHENTICATED)
-    @Delete("/")
-    public void delete() {
-        // TODO
     }
 }
