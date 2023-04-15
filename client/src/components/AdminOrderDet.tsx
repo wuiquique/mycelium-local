@@ -1,8 +1,11 @@
 import {
-  Button,
   Card,
   CardContent,
   CardMedia,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -80,6 +83,42 @@ export default function AdminOrderDet({
     });
   };
 
+  const statuses = [
+    {
+      id: 1,
+      name: "Initiated",
+    },
+    {
+      id: 2,
+      name: "Preparing",
+    },
+    {
+      id: 3,
+      name: "Sent",
+    },
+    // {
+    //   id: 4,
+    //   name: "Cancelled",
+    // },
+    // {
+    //   id: 5,
+    //   name: "Lost",
+    // },
+    {
+      id: 6,
+      name: "Delivered",
+    },
+  ];
+
+  const changeState = (i: number, op: OrderProduct) => {
+    const temp = [...products];
+    temp[i] = op;
+    onChange(temp);
+    axios.put(`/api/user/orderproduct/`, op).then((response) => {
+      reloadProducts();
+    });
+  };
+
   return (
     <div>
       {products.map((e, i) => (
@@ -113,15 +152,32 @@ export default function AdminOrderDet({
               <strong>{`Qty. ${e.quantity}`}</strong>
             </Typography>
             <div className="mt-8">
-              <Button
-                sx={{ minWidth: "100% " }}
-                variant="outlined"
-                color="secondary"
-              >
-                <Typography>
-                  <strong>{e.status.name}</strong>
-                </Typography>
-              </Button>
+              <FormControl>
+                <InputLabel>Campo</InputLabel>
+                <Select
+                  label="Campo"
+                  value={e.status.id}
+                  onChange={(ev) => {
+                    const newVal =
+                      typeof ev.target.value === "string"
+                        ? parseInt(ev.target.value, 10)
+                        : ev.target.value;
+                    changeState(i, {
+                      ...e,
+                      status: {
+                        id: newVal,
+                        name: statuses.find((s) => s.id === newVal)?.name ?? "",
+                      },
+                    });
+                  }}
+                >
+                  {statuses.map((f, i) => (
+                    <MenuItem key={f.id} value={f.id}>
+                      {f.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <TextField
                 className="mt-2"
                 label="Status Comment"
