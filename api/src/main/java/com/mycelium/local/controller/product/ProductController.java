@@ -379,6 +379,15 @@ public class ProductController {
         }
     }
 
+    @Put("/{id_integration}/{id_producto}")
+    public void addCountProd(int id_integration, String id_producto) {
+        for (var integ : integrationRepo.findAll()) {
+            if (integ.id ==(id_integration)) {
+                var response = client.toBlocking().retrieve(HttpRequest.PUT(integ.request + "/api/products/view/" + id_producto, null), String.class);
+            }
+        }
+    }
+
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Get("/import")
     public void importProduct(@Body List<ProductImportRequest> body) {
