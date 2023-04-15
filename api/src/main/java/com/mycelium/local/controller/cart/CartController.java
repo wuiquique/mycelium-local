@@ -2,6 +2,7 @@ package com.mycelium.local.controller.cart;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -15,13 +16,17 @@ import com.mycelium.local.repository.user.UserRepo;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Put;
+import io.micronaut.http.client.HttpClient;
+import io.micronaut.http.client.annotation.Client;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
+import jakarta.inject.Inject;
 
 class CartCreateRequest {
     @Nullable
@@ -64,6 +69,10 @@ class CartUnifiedResponse {
 @Controller("/user/cart")
 public class CartController {
 
+    @Inject
+    @Client("/")
+    HttpClient client;
+
     private CartRepo cartRepo;
     private CartIntegRepo cartIntegRepo;
     private UserRepo userRepo;
@@ -94,8 +103,14 @@ public class CartController {
                     cart.quantity, cart.product.categorie.name, cart.product.weight, cart.product.price, pics));
         }
         for (CartInteg cart : cartIntegRepo.findByUserId(userId)) {
-            res.add(new CartUnifiedResponse(cart.id, true, cart.productId, "Ejemplo Internacional",
-                    "Ejemplo Internacional", cart.quantity, "Ejemplo Internacional", 10, 10, List.of()));
+            Map<Object, Object> productDetails = client.toBlocking()
+                    .retrieve(HttpRequest.GET(cart.integration.request + "/api/products/" + cart.productId), Map.class);
+
+            res.add(new CartUnifiedResponse(cart.id, true, cart.productId, (String) productDetails.get("name"),
+                    (String) productDetails.get("desc"), cart.quantity,
+                    (String) ((Map<?, ?>) productDetails.get("categorie")).get("$oid"),
+                    (int) productDetails.get("weight"), (int) productDetails.get("price"),
+                    (List<String>) productDetails.get("pictures")));
         }
         return res;
     }

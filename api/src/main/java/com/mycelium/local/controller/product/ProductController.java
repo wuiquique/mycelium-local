@@ -369,14 +369,14 @@ public class ProductController {
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Get("/{id_integration}/{id_producto}")
-    public Map<?, ?> integrationProds(String id_integration, String id_producto) {
-        try {
-            HttpRequest<?> request = HttpRequest.GET("https://mycelium-international/api/products/{id_producto}");
-            System.out.println(request);
-            return client.toBlocking().retrieve(request, Map.class);
-        } finally {
-
-        }
+    public Map<?, ?> integrationProds(int id_integration, String id_producto) {
+        var integ = integrationRepo.findById(id_integration).get();
+        HttpRequest<?> request = HttpRequest.GET(integ.request + "/api/products/" + id_producto);
+        Map<String, Object> map = client.toBlocking().retrieve(request, Map.class);
+        map.put("id", (String) ((Map<?, ?>) map.get("_id")).get("$oid"));
+        map.put("quantity", map.get("stock"));
+        map.put("categorie", (String) ((Map<?, ?>) map.get("categorie")).get("$oid"));
+        return map;
     }
 
     @Put("/{id_integration}/{id_producto}")
