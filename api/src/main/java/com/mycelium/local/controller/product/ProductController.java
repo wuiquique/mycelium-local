@@ -127,7 +127,7 @@ class ProductResponse {
 public class ProductController {
 
     @Inject
-    @Client("/integrations")
+    @Client("/")
     HttpClient client;
 
     private ProductRepo productRepo;
@@ -315,7 +315,7 @@ public class ProductController {
             HttpRequest<?> request = HttpRequest.GET("/api/integrationProds/" + id_integration + "/" + id_producto);
             return client.toBlocking().retrieve(request, Map.class);
         } finally {
-            
+
         }
     }
 
