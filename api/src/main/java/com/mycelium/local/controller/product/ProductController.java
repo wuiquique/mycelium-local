@@ -86,6 +86,7 @@ class IntegrationProductResponse {
 @JsonInclude(Include.ALWAYS)
 class ProductResponse {
     public Object id;
+    @Nullable
     public Integer integrationId;
     public String name;
     public String desc;
@@ -97,7 +98,7 @@ class ProductResponse {
     public List<String> pictures;
     public List<BasicTechnical> technical;
 
-    public ProductResponse(Object id, Integer integrationId, String name, String desc, String category,
+    public ProductResponse(Object id, @Nullable Integer integrationId, String name, String desc, String category,
             String brand, Integer weight, Integer quantity, Integer price, List<String> pictures,
             List<BasicTechnical> technical) {
         this.id = id;
