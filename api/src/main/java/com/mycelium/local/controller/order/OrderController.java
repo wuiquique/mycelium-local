@@ -54,6 +54,17 @@ class OrderCreateRequest {
     public Timestamp till;
 }
 
+class OrderEstimado {
+    public String name;
+    public Integer userId;
+    public Integer categoryId;
+    public Double boughtPrice;
+    public Double porcentage;
+    public Integer quantity;
+    public Double weight;
+    public Boolean international;
+}
+
 class BasicOrderMessage {
     public Integer statusId;
     public String name;
@@ -378,11 +389,12 @@ public class OrderController {
         return body;
     }
 
-    /* 
+    
     @Post("/receipt")
-    public HttpResponse<byte[]> si() {
-        var response  = client.toBlocking().retrieve(HttpRequest.POST("http://mycelium-taxes/apis/tax/pdf", null), null, null)
+    public HttpResponse<Object> si(List<OrderEstimado> body) {
+        var response  = client.toBlocking().exchange(HttpRequest.POST("http://mycelium-taxes/apis/tax/pdf", body));
+        return response;
     }
-    */
+    
 }
 
