@@ -1,5 +1,7 @@
 package com.mycelium.local.controller.product;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -305,7 +307,7 @@ public class ProductController {
     public List<ProductResponse> search(@Nullable @QueryValue(value = "q", defaultValue = "") String query,
             @Nullable @QueryValue(value = "pricemin", defaultValue = "") String priceMinStr,
             @Nullable @QueryValue(value = "pricemax", defaultValue = "") String priceMaxStr,
-            @Nullable @QueryValue(value = "categories", defaultValue = "") String categoriesStr) {
+            @Nullable @QueryValue(value = "categories", defaultValue = "") List<String> categories) {
         List<SearchCriteria> criteria = Lists.newArrayList();
         if (query.trim() != "") {
             criteria.add(new SearchCriteria.TextContains(query.trim()));
@@ -327,23 +329,47 @@ public class ProductController {
             }
         }
 
-        if (categoriesStr.trim() != "") {
-            List<Integer> ids = Lists.newArrayList();
-            for (var categId : categoriesStr.split(",")) {
-                try {
-                    ids.add(Integer.parseInt(categId));
-                } catch (NumberFormatException e) {
-                    // Do nothing
-                }
+        List<Integer> ids = Lists.newArrayList();
+        for (var categId : categories) {
+            try {
+                ids.add(Integer.parseInt(categId.trim()));
+            } catch (NumberFormatException e) {
+                // Do nothing
             }
+        }
+        if (ids.size() > 0) {
             criteria.add(new SearchCriteria.CategoryIn(ids));
         }
 
         var products = ProductResponse.fromProductList(searchManager.search(criteria));
 
         for (var integ : integrationRepo.findAll()) {
+            var url = "/api/search?";
+
+            List<String> queryVals = Lists.newArrayList();
+
+            if (query.trim() != "") {
+                queryVals.add("q=" + URLEncoder.encode(query.trim(), StandardCharsets.UTF_8));
+            }
+
+            if (priceMaxStr.trim() != "") {
+                queryVals.add("pricemax=" + URLEncoder.encode(priceMaxStr.trim(), StandardCharsets.UTF_8));
+            }
+
+            if (priceMinStr.trim() != "") {
+                queryVals.add("pricemin=" + URLEncoder.encode(priceMinStr.trim(), StandardCharsets.UTF_8));
+            }
+
+            for (var categId : categories) {
+                if (categId.trim() != "") {
+                    queryVals.add("categories=" + URLEncoder.encode(categId.trim(), StandardCharsets.UTF_8));
+                }
+            }
+
+            url += String.join("&", queryVals);
+
             List<?> response = client.toBlocking().retrieve(
-                    HttpRequest.GET(integ.request + "/api/search"),
+                    HttpRequest.GET(integ.request + url),
                     List.class);
 
             for (var prod : response) {
@@ -382,8 +408,9 @@ public class ProductController {
     @Put("/{id_integration}/{id_producto}")
     public void addCountProd(int id_integration, String id_producto) {
         for (var integ : integrationRepo.findAll()) {
-            if (integ.id ==(id_integration)) {
-                var response = client.toBlocking().retrieve(HttpRequest.PUT(integ.request + "/api/products/view/" + id_producto, null), String.class);
+            if (integ.id == (id_integration)) {
+                var response = client.toBlocking().retrieve(
+                        HttpRequest.PUT(integ.request + "/api/products/view/" + id_producto, null), String.class);
             }
         }
     }

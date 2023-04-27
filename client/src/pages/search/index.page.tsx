@@ -110,7 +110,9 @@ export function Page({ searchParams: { q } }: { searchParams: { q: string } }) {
     url.searchParams.set("q", q);
     url.searchParams.set("pricemin", selectedPriceRange[0].toString());
     url.searchParams.set("pricemax", selectedPriceRange[1].toString());
-    url.searchParams.set("categories", selectedCategories.join(","));
+    for (const category of selectedCategories) {
+      url.searchParams.append("categories", category);
+    }
     axios.get(url.toString()).then((response) => {
       setResults(response.data);
     });
@@ -175,14 +177,19 @@ export function Page({ searchParams: { q } }: { searchParams: { q: string } }) {
         </Grid2>
         {results.map((e, i) => (
           <Grid2 lg={6} key={i}>
-            <Button component="a" href={e.integrationId ? `/product/${e.integrationId}/${e.id}` : `/product/${e.id}`}>
+            <Button
+              component="a"
+              href={
+                e.integrationId
+                  ? `/product/${e.integrationId}/${e.id}`
+                  : `/product/${e.id}`
+              }
+            >
               <Card elevation={10} sx={{ display: "flex" }}>
                 <CardMedia
                   sx={{ width: "50%" }}
                   component="img"
-                  image={
-                    e.pictures[0] ?? "/default.jpg"
-                  }
+                  image={e.pictures[0] ?? "/default.jpg"}
                   alt="Imagen de Producto"
                 />
                 <CardContent className="text-left">
