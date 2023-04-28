@@ -482,6 +482,28 @@ public class ProductController {
             return a.name.compareToIgnoreCase(b.name);
         });
 
+        for (var p : products) {
+            List<EstimadoBody> temp = Lists.newArrayList();
+            var t = new EstimadoBody();
+
+            if (p.integrationId == null) {
+                // t.categoryId = 
+            }
+
+            /*
+            public Integer integrationId;
+    public String name;
+    public String desc;
+    public String category;
+    public String brand;
+    public Integer weight;
+    public Integer quantity;
+    public Integer price;
+    public List<String> pictures;
+    public List<BasicTechnical> technical;
+             */
+        }
+
         return products;
     }
 
