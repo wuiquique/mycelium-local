@@ -3,6 +3,7 @@ package com.mycelium.local.controller.product;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -13,19 +14,25 @@ import com.google.common.collect.Maps;
 import com.mycelium.local.dynamic.search.SearchCriteria;
 import com.mycelium.local.dynamic.search.SearchManager;
 import com.mycelium.local.repository.categorie.CategorieRepo;
+import com.mycelium.local.repository.errorlog.ErrorLog;
+import com.mycelium.local.repository.errorlog.ErrorLogRepo;
 import com.mycelium.local.repository.integorderproduct.IntegOrderProduct;
 import com.mycelium.local.repository.integorderproduct.IntegOrderProductRepo;
 import com.mycelium.local.repository.integration.Integration;
 import com.mycelium.local.repository.integration.IntegrationRepo;
+import com.mycelium.local.repository.jsonlog.JsonLog;
+import com.mycelium.local.repository.jsonlog.JsonLogRepo;
 import com.mycelium.local.repository.picture.Picture;
 import com.mycelium.local.repository.picture.PictureRepo;
 import com.mycelium.local.repository.product.Product;
 import com.mycelium.local.repository.product.ProductRepo;
 import com.mycelium.local.repository.technical.Technical;
 import com.mycelium.local.repository.technical.TechnicalRepo;
+import com.mycelium.local.repository.user.UserRepo;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -35,10 +42,13 @@ import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 
+@Introspected
+@JsonInclude(Include.ALWAYS)
 class ProductCreateRequest {
     public String name;
     public String desc;
@@ -49,13 +59,55 @@ class ProductCreateRequest {
     public int price;
     public List<String> pictures;
     public List<BasicTechnical> technical;
+
+    public ProductCreateRequest(String name, String desc, int categorieId, String brand, int weight, int quantity,
+            int price, List<String> pictures, List<BasicTechnical> technical) {
+        this.name = name;
+        this.desc = desc;
+        this.categorieId = categorieId;
+        this.brand = brand;
+        this.weight = weight;
+        this.quantity = quantity;
+        this.price = price;
+        this.pictures = pictures;
+        this.technical = technical;
+    }
+
+    public ProductCreateRequest() {
+    }
 }
 
+@Introspected
+@JsonInclude(Include.ALWAYS)
 class ProductImportRequest extends ProductCreateRequest {
     @Nullable
     public Integer id;
+
+    public ProductImportRequest(String name, String desc, Integer categorieId, String brand, int weight, int quantity,
+            int price, List<String> pictures, List<BasicTechnical> technical, Integer id) {
+        super(name, desc, categorieId, brand, weight, quantity, price, pictures, technical);
+        this.id = id;
+    }
+
+    public ProductImportRequest() {
+        super();
+    }
 }
 
+@Introspected
+@JsonInclude(Include.ALWAYS)
+class ProductExportResponse extends ProductCreateRequest {
+    public Integer id;
+
+    public ProductExportResponse(String name, String desc, Integer categorieId, String brand, int weight, int quantity,
+            int price, List<String> pictures, List<BasicTechnical> technical, Integer id) {
+        super(name, desc, categorieId, brand, weight, quantity, price, pictures, technical);
+        this.id = id;
+    }
+}
+
+@Introspected
+@JsonInclude(Include.ALWAYS)
 class BasicTechnical {
     public String type;
     public String value;
@@ -67,7 +119,7 @@ class BasicTechnical {
 }
 
 @Introspected
-@JsonInclude
+@JsonInclude(Include.ALWAYS)
 class IntegrationProductResponse {
     public Integer id;
     public String productId;
@@ -160,10 +212,14 @@ public class ProductController {
     private SearchManager searchManager;
     private IntegrationRepo integrationRepo;
     private IntegOrderProductRepo integOrderProductRepo;
+    private JsonLogRepo jsonLogRepo;
+    private ErrorLogRepo errorLogRepo;
+    private UserRepo userRepo;
 
     public ProductController(ProductRepo productRepo, PictureRepo pictureRepo, CategorieRepo categorieRepo,
             TechnicalRepo technicalRepo, SearchManager searchManager, IntegrationRepo integrationRepo,
-            IntegOrderProductRepo integOrderProductRepo) {
+            IntegOrderProductRepo integOrderProductRepo, JsonLogRepo jsonLogRepo, UserRepo userRepo,
+            ErrorLogRepo errorLogRepo) {
         this.productRepo = productRepo;
         this.pictureRepo = pictureRepo;
         this.categorieRepo = categorieRepo;
@@ -171,6 +227,9 @@ public class ProductController {
         this.searchManager = searchManager;
         this.integrationRepo = integrationRepo;
         this.integOrderProductRepo = integOrderProductRepo;
+        this.jsonLogRepo = jsonLogRepo;
+        this.userRepo = userRepo;
+        this.errorLogRepo = errorLogRepo;
     }
 
     @Get("/")
@@ -395,12 +454,6 @@ public class ProductController {
         return products;
     }
 
-    @Secured(SecurityRule.IS_AUTHENTICATED)
-    @Get("/export")
-    public List<ProductResponse> exportProduct() {
-        return ProductResponse.fromProductList(productRepo.findAll());
-    }
-
     @Get("/{id_integration}/{id_producto}")
     public Map<?, ?> integrationProds(int id_integration, String id_producto) {
         var integ = integrationRepo.findById(id_integration).get();
@@ -416,15 +469,83 @@ public class ProductController {
     public void addCountProd(int id_integration, String id_producto) {
         for (var integ : integrationRepo.findAll()) {
             if (integ.id == (id_integration)) {
-                var response = client.toBlocking().retrieve(
+                client.toBlocking().retrieve(
                         HttpRequest.PUT(integ.request + "/api/products/view/" + id_producto, null), String.class);
             }
         }
     }
 
     @Secured(SecurityRule.IS_AUTHENTICATED)
-    @Get("/import")
-    public void importProduct(@Body List<ProductImportRequest> body) {
+    @Get("/export")
+    public HttpResponse<List<ProductExportResponse>> exportProduct(Authentication authentication) {
+        var userMap = authentication.getAttributes();
+        var userId = (int) (long) userMap.get("id");
+
+        List<ProductExportResponse> exportedProducts = Lists.newArrayList();
+
+        var log = new JsonLog();
+
+        var currDate = new Date();
+        log.archiveName = "export_" + (currDate.getTime()) + ".json";
+        log.error = 0;
+        log.operation = false;
+        log.success = 0;
+        log.user = userRepo.findById(userId).get();
+        log.when = currDate;
+        log.errorLogs = Lists.newArrayList();
+
+        for (var prod : productRepo.findAll()) {
+            try {
+                List<String> pics = Lists.newArrayList();
+                for (var pic : prod.pictures) {
+                    pics.add(pic.url);
+                }
+
+                List<BasicTechnical> techs = Lists.newArrayList();
+                for (var tech : prod.technical) {
+                    techs.add(new BasicTechnical(tech.type, tech.value));
+                }
+
+                exportedProducts.add(new ProductExportResponse(prod.name, prod.desc, prod.categorie.id, prod.brand,
+                        prod.weight, prod.quantity, prod.price, pics, techs, prod.id));
+                log.success += 1;
+            } catch (Exception e) {
+                var errorLog = new ErrorLog();
+                errorLog.jsonLog = log;
+                errorLog.message = e.toString();
+                e.printStackTrace();
+
+                log.errorLogs.add(errorLog);
+
+                log.error += 1;
+            }
+        }
+
+        jsonLogRepo.save(log);
+        errorLogRepo.saveAll(log.errorLogs);
+
+        var response = HttpResponse.ok(exportedProducts);
+        response.header("Content-Disposition", "attachment; filename=\"" + log.archiveName + "\"");
+        return response;
+    }
+
+    @Secured(SecurityRule.IS_AUTHENTICATED)
+    @Post("/import")
+    public void importProduct(@Body List<ProductImportRequest> body, Authentication authentication) {
+        var userMap = authentication.getAttributes();
+        var userId = (int) (long) userMap.get("id");
+
+        var log = new JsonLog();
+
+        var currDate = new Date();
+        log.archiveName = "-";
+        log.error = 0;
+        log.operation = false;
+        log.success = 0;
+        log.user = userRepo.findById(userId).get();
+        log.when = currDate;
+        log.errorLogs = Lists.newArrayList();
+
         List<Integer> ids = Lists.newArrayList();
         for (var newProd : body) {
             if (newProd.id != null) {
@@ -438,41 +559,71 @@ public class ProductController {
         }
 
         for (var newProd : body) {
-            if (newProd.id != null) {
-                ids.add(newProd.id);
+            try {
+                Product prod = null;
+                if (newProd.id != null) {
+                    prod = prods.get(newProd.id);
+                }
+
+                boolean isNew;
+                if (prod == null) {
+                    prod = new Product();
+                    isNew = true;
+                } else {
+                    isNew = false;
+                }
+
+                prod.brand = newProd.brand;
+                prod.categorie = categorieRepo.findById(newProd.categorieId).get();
+                prod.desc = newProd.desc;
+                prod.name = newProd.name;
+
+                pictureRepo.deleteAll(prod.pictures);
+                prod.pictures.clear();
+                for (var url : newProd.pictures) {
+                    var pic = new Picture();
+                    pic.product = prod;
+                    pic.url = url;
+                    prod.pictures.add(pic);
+                }
+
+                prod.price = newProd.price;
+                prod.quantity = newProd.quantity;
+
+                technicalRepo.deleteAll(prod.technical);
+                prod.technical.clear();
+                for (var newTech : newProd.technical) {
+                    var tech = new Technical();
+                    tech.product = prod;
+                    tech.type = newTech.type;
+                    tech.value = newTech.value;
+                    prod.technical.add(tech);
+                }
+
+                prod.weight = newProd.weight;
+
+                if (isNew) {
+                    productRepo.save(prod);
+                } else {
+                    productRepo.update(prod);
+                }
+                pictureRepo.saveAll(prod.pictures);
+                technicalRepo.saveAll(prod.technical);
+
+                log.success += 1;
+            } catch (Exception e) {
+                var errorLog = new ErrorLog();
+                errorLog.jsonLog = log;
+                errorLog.message = e.toString();
+                e.printStackTrace();
+
+                log.errorLogs.add(errorLog);
+
+                log.error += 1;
             }
         }
-        // var prod = productRepo.findById(newProd.id).get();
 
-        // prod.name = body.name;
-        // prod.desc = body.desc;
-        // prod.categorie = categorieRepo.findById(body.categorieId).get();
-        // prod.brand = body.brand;
-        // prod.weight = body.weight;
-        // prod.quantity = body.quantity;
-        // prod.price = body.price;
-
-        // productRepo.update(prod);
-
-        // for (var pic : prod.pictures) {
-        // pictureRepo.delete(pic);
-        // }
-        // for (int i = 0; i < body.pictures.size(); i++) {
-        // var newPic = new Picture();
-        // newPic.url = body.pictures.get(i);
-        // newPic.product = prod;
-        // pictureRepo.save(newPic);
-        // }
-
-        // for (var tech : prod.technical) {
-        // technicalRepo.delete(tech);
-        // }
-        // for (int i = 0; i < body.technical.size(); i++) {
-        // var newTech = new Technical();
-        // newTech.type = body.technical.get(i).type;
-        // newTech.value = body.technical.get(i).value;
-        // newTech.product = prod;
-        // technicalRepo.save(newTech);
-        // }
+        jsonLogRepo.save(log);
+        errorLogRepo.saveAll(log.errorLogs);
     }
 }
