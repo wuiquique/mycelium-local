@@ -85,7 +85,7 @@ export function Page() {
   };
 
   useEffect(() => {
-    axios.get("/api/categories").then((res) => {
+    axios.get("/api/categories/local").then((res) => {
       setCategs(res.data);
     });
   }, []);

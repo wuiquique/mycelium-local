@@ -184,8 +184,8 @@ public class ProductController {
     }
 
     @Get("/byCategory/{categorieId}")
-    public List<ProductResponse> listPCategorie(int categorieId) {
-        return ProductResponse.fromProductList(productRepo.findByCategorieId(categorieId));
+    public List<ProductResponse> listPCategorie(String categorieId) {
+        return search("", "", "", Lists.newArrayList(categorieId));
     }
 
     @Get("/topSales")
@@ -337,7 +337,7 @@ public class ProductController {
                 // Do nothing
             }
         }
-        if (ids.size() > 0) {
+        if (categories.size() > 0 && categories.get(0).trim() != "") {
             criteria.add(new SearchCriteria.CategoryIn(ids));
         }
 
@@ -393,7 +393,6 @@ public class ProductController {
         return ProductResponse.fromProductList(productRepo.findAll());
     }
 
-    @Secured(SecurityRule.IS_AUTHENTICATED)
     @Get("/{id_integration}/{id_producto}")
     public Map<?, ?> integrationProds(int id_integration, String id_producto) {
         var integ = integrationRepo.findById(id_integration).get();

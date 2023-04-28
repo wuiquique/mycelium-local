@@ -98,7 +98,7 @@ export function Page({ searchParams: { q } }: { searchParams: { q: string } }) {
       .get("/api/categories/")
       .then((response) => {
         setCategories(response.data);
-        console.log(response.data);
+        //console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -115,6 +115,7 @@ export function Page({ searchParams: { q } }: { searchParams: { q: string } }) {
     }
     axios.get(url.toString()).then((response) => {
       setResults(response.data);
+      console.log(response.data);
     });
   }, [q, selectedPriceRange, selectedCategories]);
 

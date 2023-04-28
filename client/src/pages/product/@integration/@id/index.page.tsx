@@ -46,9 +46,9 @@ export function Page({ params: { integration, id } }) {
       //setComments(response.data.comments);
     });
     axios.put(`/api/product/${integration}/${id}`);
-    // axios.get("/api/categories/").then((response) => {
-    //   setCategs(response.data);
-    // });
+    axios.get("/api/categories/").then((response) => {
+      setCategs(response.data);
+    });
     // axios.get(`/api/pictures/product/${id}`).then((response) => {
     //   setUrls(response.data);
     // });
