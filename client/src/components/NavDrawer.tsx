@@ -18,6 +18,7 @@ import {
   MdProductionQuantityLimits,
   MdShoppingCart,
   MdTag,
+  MdFactCheck,
 } from "react-icons/md";
 import { TbPlugConnected, TbReportAnalytics } from "react-icons/tb";
 import { VscSymbolString } from "react-icons/vsc";
@@ -47,6 +48,12 @@ export default function NavDrawer({
         name: texts.navdrawer.usercart,
         href: "/user/cart",
         icon: <MdShoppingCart />,
+        privileges: 1,
+      },
+      {
+        name: texts.navdrawer.orders,
+        href: "/user/orders",
+        icon: <MdFactCheck />,
         privileges: 1,
       },
       {

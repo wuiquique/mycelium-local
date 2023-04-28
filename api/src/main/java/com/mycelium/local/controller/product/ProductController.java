@@ -58,6 +58,8 @@ class BasicTechnical {
     public String type;
     public String value;
 
+    public BasicTechnical() {}
+
     public BasicTechnical(String type, String value) {
         this.type = type;
         this.value = value;
@@ -171,6 +173,16 @@ public class ProductController {
         this.integOrderProductRepo = integOrderProductRepo;
     }
 
+    class EstimadoBody {
+        public Integer categoryId;
+        public Double salePrice;
+        public Double boughtPrice;
+        public Double porcentage;
+        public Integer quantity;
+        public Double weight;
+        public Boolean international;
+    }
+
     @Get("/")
     public List<ProductResponse> list() {
         return ProductResponse.fromProductList(productRepo.findAll());
@@ -178,12 +190,48 @@ public class ProductController {
 
     @Get("/{id}")
     public ProductResponse get(int id) {
-        return ProductResponse.fromProduct(productRepo.findById(id).get());
+        var response = (productRepo.findById(id).get());
+        List<EstimadoBody> temp = Lists.newArrayList();
+
+        var t = new EstimadoBody();
+
+        t.categoryId = response.categorie.id;
+        t.salePrice = Double.valueOf(response.price);
+        t.boughtPrice = Double.valueOf(response.price);
+        t.porcentage = 0.3;
+        t.quantity = 1;
+        t.weight = Double.valueOf(response.weight);
+        t.international = false;
+
+        temp.add(t);
+
+        var r = client.toBlocking().retrieve(HttpRequest.POST("http://mycelium-taxes/api/tax/estimate", temp), List.class);
+        
+        response.price = ((Double)((Map<?, ?>) r.get(0)).get("tax")).intValue();
+
+        return ProductResponse.fromProduct(response);
     }
 
     @Get("/byCategory/{categorieId}")
     public List<ProductResponse> listPCategorie(int categorieId) {
-        return ProductResponse.fromProductList(productRepo.findByCategorieId(categorieId));
+        var response = (productRepo.findByCategorieId(categorieId));
+
+        // for (var p : response) {
+        //     List<EstimadoBody> temp = Lists.newArrayList();
+        //     var t = new EstimadoBody();
+
+        //     t.categoryId = p.categorie.id;
+        //     t.salePrice = Double.valueOf(p.price);
+        //     t.boughtPrice = Double.valueOf(p.price);
+        //     t.porcentage = 0.3;
+        //     t.quantity = 1;
+        //     t.weight = Double.valueOf(p.weight);
+        //     t.international = false;
+
+        //     temp.add(t);
+        // }
+        
+        return ProductResponse.fromProductList(response);
     }
 
     @Get("/topSales")

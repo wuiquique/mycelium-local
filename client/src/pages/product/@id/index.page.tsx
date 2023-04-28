@@ -19,7 +19,7 @@ export function Page({ params: { id } }) {
     desc: string;
     brand: string;
     weight: number;
-    categorieId: number;
+    category: string;
     price: number;
     quantity: number;
   }>({} as any);
@@ -89,15 +89,15 @@ export function Page({ params: { id } }) {
     });
   }, [id, user]);
 
-  const categSelect = () => {
-    let temp = "";
-    for (let i = 0; i < categ.length; i++) {
-      if (prod.categorieId === categ[i].id) {
-        temp = categ[i].name;
-      }
-    }
-    return temp;
-  };
+  // const categSelect = () => {
+  //   let temp = "";
+  //   for (let i = 0; i < categ.length; i++) {
+  //     if (prod.categorieId === categ[i].id) {
+  //       temp = categ[i].name;
+  //     }
+  //   }
+  //   return temp;
+  // };
 
   const addCart = (e) => {
     e.preventDefault();
@@ -203,7 +203,7 @@ export function Page({ params: { id } }) {
                   </Typography>
                 ))}
                 <Typography variant="body1" mt={1}>
-                  <b>{texts.product.category}: </b> {categSelect()}
+                  <b>{texts.product.category}: </b> {prod.category}
                 </Typography>
                 <Typography variant="h6" mt={4} className="text-right">
                   Q. {prod.price}.00

@@ -44,13 +44,13 @@ class CartUnifiedResponse {
     public String name;
     public String description;
     public Integer quantity;
-    public String category;
+    public Integer category;
     public Integer weight;
     public Integer price;
     public List<String> pictures;
 
     public CartUnifiedResponse(Object id, boolean international, Object productId, String name, String description,
-            Integer quantity, String category, Integer weight, Integer price, List<String> pictures) {
+            Integer quantity, Integer category, Integer weight, Integer price, List<String> pictures) {
         this.id = id;
         this.international = international;
         this.productId = productId;
@@ -100,7 +100,7 @@ public class CartController {
                 pics.add(p.url);
             }
             res.add(new CartUnifiedResponse(cart.id, false, cart.product.id, cart.product.name, cart.product.desc,
-                    cart.quantity, cart.product.categorie.name, cart.product.weight, cart.product.price, pics));
+                    cart.quantity, cart.product.categorie.id, cart.product.weight, cart.product.price, pics));
         }
         for (CartInteg cart : cartIntegRepo.findByUserId(userId)) {
             Map<Object, Object> productDetails = client.toBlocking()
@@ -108,7 +108,7 @@ public class CartController {
 
             res.add(new CartUnifiedResponse(cart.id, true, cart.productId, (String) productDetails.get("name"),
                     (String) productDetails.get("desc"), cart.quantity,
-                    (String) ((Map<?, ?>) productDetails.get("categorie")).get("$oid"),
+                    (Integer) ((Map<?, ?>) productDetails.get("categorie")).get("$oid"),
                     (int) productDetails.get("weight"), (int) productDetails.get("price"),
                     (List<String>) productDetails.get("pictures")));
         }

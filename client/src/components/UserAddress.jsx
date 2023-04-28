@@ -9,7 +9,8 @@ import {
 } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { navigate } from "vite-plugin-ssr/client/router";
 
 export default function UserAddress({ products }) {
   const texts = useTexts();
@@ -30,10 +31,25 @@ export default function UserAddress({ products }) {
       since: date1,
       till: date2,
     };
-    let prodHolder = products;
+    let temp = [];
+    for (let p of products) {
+      let o = {
+        name: p.name,
+        categoryId: p.category,
+        boughtPrice: p.price,
+        porcentage: 30,
+        quantity: p.quantity,
+        weight: p.weight,
+        international: p.international,
+      };
+      temp.push(o);
+    }
+
     //no se como se va a ser el body pero aca ta adelantado
     axios.post("/api/user/order/", dirHolder).then((response) => {
-      console.log(response.data);
+      axios.post("/api/user/order/impuestos", temp).then((r) => {
+        navigate(`/user/orders/${response.data}`);
+      });
     });
   };
 

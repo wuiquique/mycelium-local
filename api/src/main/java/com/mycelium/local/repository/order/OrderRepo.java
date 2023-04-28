@@ -1,6 +1,7 @@
 package com.mycelium.local.repository.order;
 
 import java.util.Optional;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
@@ -20,4 +21,12 @@ public interface OrderRepo extends CrudRepository<Order, Integer> {
     @Join(value = "orderProducts.orderMessages", type = Join.Type.LEFT_FETCH)
     @Join(value = "orderProducts.orderMessages.status", type = Join.Type.LEFT_FETCH)
     Optional<Order> findById(@NotNull Integer id);
+
+    @Join(value = "orderProducts", type = Join.Type.LEFT_FETCH)
+    @Join(value = "orderProducts.status", type = Join.Type.LEFT_FETCH)
+    @Join(value = "orderProducts.product", type = Join.Type.LEFT_FETCH)
+    @Join(value = "orderProducts.product.pictures", type = Join.Type.LEFT_FETCH)
+    @Join(value = "orderProducts.orderMessages", type = Join.Type.LEFT_FETCH)
+    @Join(value = "orderProducts.orderMessages.status", type = Join.Type.LEFT_FETCH)
+    List<Order> findByUserId(@NotNull Integer user_id);
 }
