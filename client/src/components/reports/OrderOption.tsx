@@ -13,6 +13,7 @@ export default function OrderOption({
   value,
   onChange,
   report,
+  readOnly = false,
 }: {
   value: Order;
   onChange: (value: Order | null) => void;
@@ -27,19 +28,23 @@ export default function OrderOption({
         }[];
       }
     | undefined;
+  readOnly?: boolean;
 }) {
   return (
     <div className="grid grid-cols-[repeat(2,_minmax(0,_1fr))_auto] my-4 gap-1">
       <FormControl>
         <InputLabel>Campo</InputLabel>
         <Select
+          disabled={readOnly}
           label="Campo"
           value={value.name ?? ""}
           onChange={(e) =>
-            onChange({
-              ...value,
-              name: e.target.value,
-            })
+            !readOnly
+              ? onChange({
+                  ...value,
+                  name: e.target.value,
+                })
+              : undefined
           }
         >
           {report?.columns?.map((f, i) => (
@@ -52,22 +57,27 @@ export default function OrderOption({
       <FormControl>
         <InputLabel>Ordenamiento</InputLabel>
         <Select
+          disabled={readOnly}
           label="Ordenamiento"
           value={value.order}
           onChange={(e) =>
-            onChange({
-              ...value,
-              order: e.target.value as "ASC" | "DESC",
-            })
+            !readOnly
+              ? onChange({
+                  ...value,
+                  order: e.target.value as "ASC" | "DESC",
+                })
+              : undefined
           }
         >
           <MenuItem value="ASC">Ascendiente</MenuItem>
           <MenuItem value="DESC">Descendiente</MenuItem>
         </Select>
       </FormControl>
-      <Button onClick={() => onChange(null)}>
-        <MdRemove />
-      </Button>
+      {!readOnly ? (
+        <Button onClick={() => onChange(null)}>
+          <MdRemove />
+        </Button>
+      ) : null}
     </div>
   );
 }

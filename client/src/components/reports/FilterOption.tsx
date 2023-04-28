@@ -18,6 +18,7 @@ export default function FilterOption({
   value,
   onChange,
   report,
+  readOnly = false,
 }: {
   value: Filter;
   onChange: (value: Filter | null) => void;
@@ -32,19 +33,23 @@ export default function FilterOption({
         }[];
       }
     | undefined;
+  readOnly?: boolean;
 }) {
   return (
     <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_auto] my-4 gap-1">
       <FormControl>
         <InputLabel>Campo</InputLabel>
         <Select
+          disabled={readOnly}
           label="Campo"
           value={value.name ?? ""}
           onChange={(e) =>
-            onChange({
-              ...value,
-              name: e.target.value,
-            })
+            !readOnly
+              ? onChange({
+                  ...value,
+                  name: e.target.value,
+                })
+              : undefined
           }
         >
           {report?.columns?.map((f, i) => (
@@ -57,19 +62,22 @@ export default function FilterOption({
       <FormControl>
         <InputLabel>Operación</InputLabel>
         <Select
+          disabled={readOnly}
           label="Operación"
           value={value.operation}
           onChange={(e) =>
-            onChange({
-              ...value,
-              operation: e.target.value as
-                | "EQ"
-                | "GT"
-                | "LT"
-                | "GTEQ"
-                | "LTEQ"
-                | "LIKE",
-            })
+            !readOnly
+              ? onChange({
+                  ...value,
+                  operation: e.target.value as
+                    | "EQ"
+                    | "GT"
+                    | "LT"
+                    | "GTEQ"
+                    | "LTEQ"
+                    | "LIKE",
+                })
+              : undefined
           }
         >
           <MenuItem value="EQ">Igual a</MenuItem>
@@ -81,18 +89,23 @@ export default function FilterOption({
         </Select>
       </FormControl>
       <TextField
+        disabled={readOnly}
         label="Valor"
         value={value.value}
         onChange={(e) =>
-          onChange({
-            ...value,
-            value: e.target.value,
-          })
+          !readOnly
+            ? onChange({
+                ...value,
+                value: e.target.value,
+              })
+            : undefined
         }
       />
-      <Button onClick={() => onChange(null)}>
-        <MdRemove />
-      </Button>
+      {!readOnly ? (
+        <Button onClick={() => onChange(null)}>
+          <MdRemove />
+        </Button>
+      ) : null}
     </div>
   );
 }

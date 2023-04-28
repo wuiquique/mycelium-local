@@ -12,10 +12,10 @@ micronaut:
         mapping: /swagger-ui/**
   security:
     intercept-url-map:
-    - access: isAnonymous()
-      pattern: /swagger/**
-    - access: isAnonymous()
-      pattern: /swagger-ui/**
+      - access: isAnonymous()
+        pattern: /swagger/**
+      - access: isAnonymous()
+        pattern: /swagger-ui/**
     enabled: true
     authentication: cookie
     reject-not-found: false
@@ -27,6 +27,8 @@ micronaut:
           secret:
             generator:
               secret: ${JWT_GENERATOR_SIGNATURE_SECRET:pleaseChangeThisSecretForANewOne}
+jackson:
+  serializationInclusion: ALWAYS
 datasources:
   default:
     driverClassName: oracle.jdbc.OracleDriver
