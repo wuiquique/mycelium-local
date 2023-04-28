@@ -19,7 +19,7 @@ export function Page() {
   const texts = useTexts();
 
   useEffect(() => {
-    axios.get("/api/categories/").then((response) => {
+    axios.get("/api/categories/local").then((response) => {
       setCategs(response.data);
     });
   }, []);

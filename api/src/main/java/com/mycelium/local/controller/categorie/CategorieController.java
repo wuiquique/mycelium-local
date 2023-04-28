@@ -1,22 +1,28 @@
 package com.mycelium.local.controller.categorie;
 
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.common.collect.Lists;
 import com.mycelium.local.repository.categorie.Categorie;
 import com.mycelium.local.repository.categorie.CategorieRepo;
+import com.mycelium.local.repository.integration.IntegrationRepo;
 
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.http.HttpRequest;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
-import io.micronaut.http.annotation.Delete;
+import io.micronaut.http.client.HttpClient;
+import io.micronaut.http.client.annotation.Client;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
+import jakarta.inject.Inject;
 
 @Introspected
 @JsonInclude(Include.ALWAYS)
@@ -28,18 +34,56 @@ class CategorieUpdateRequest {
     public String name;
 }
 
+class CategorieResponse {
+    public Object id;
+    public String name;
+
+    public CategorieResponse(Object id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+}
+
 @Secured(SecurityRule.IS_ANONYMOUS)
 @Controller("/categories")
 public class CategorieController {
 
-    private CategorieRepo categorieRepo;
+    @Inject
+    @Client("/")
+    HttpClient client;
 
-    public CategorieController(CategorieRepo categorieRepo) {
+    private CategorieRepo categorieRepo;
+    private IntegrationRepo integrationRepo;
+
+    public CategorieController(CategorieRepo categorieRepo, IntegrationRepo integrationRepo) {
         this.categorieRepo = categorieRepo;
+        this.integrationRepo = integrationRepo;
     }
 
     @Get("/")
-    public List<Categorie> list() {
+    public List<CategorieResponse> list() {
+        List<CategorieResponse> categories = Lists.newArrayList();
+
+        for (var cat : categorieRepo.findAll()) {
+            categories.add(new CategorieResponse(cat.id, cat.name));
+        }
+
+        for (var integ : integrationRepo.findAll()) {
+            List<?> integCategories = client.toBlocking()
+                    .retrieve(HttpRequest.GET(integ.request + "/api/categorie"), List.class);
+
+            for (var catObj : integCategories) {
+                if (catObj instanceof Map<?, ?> cat) {
+                    categories.add(new CategorieResponse(cat.get("id"), (String) cat.get("name")));
+                }
+            }
+        }
+
+        return categories;
+    }
+
+    @Get("/local")
+    public List<Categorie> listLocal() {
         return Lists.newArrayList(categorieRepo.findAll());
     }
 

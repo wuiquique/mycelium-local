@@ -1,7 +1,9 @@
 package com.mycelium.local.repository.jsonlog;
 
 import java.util.Date;
+import java.util.List;
 
+import com.mycelium.local.repository.errorlog.ErrorLog;
 import com.mycelium.local.repository.user.User;
 
 import io.micronaut.data.annotation.GeneratedValue;
@@ -20,6 +22,9 @@ public class JsonLog {
     public String archiveName;
     public int success;
     public int error;
+
+    @Relation(value = Relation.Kind.ONE_TO_MANY, mappedBy = "jsonLog")
+    public List<ErrorLog> errorLogs;
 
     @Relation(value = Relation.Kind.MANY_TO_ONE)
     public User user;
@@ -78,5 +83,13 @@ public class JsonLog {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<ErrorLog> getErrorLogs() {
+        return errorLogs;
+    }
+
+    public void setErrorLogs(List<ErrorLog> errorLogs) {
+        this.errorLogs = errorLogs;
     }
 }

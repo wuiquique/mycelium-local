@@ -13,6 +13,7 @@
     "@emotion/react": "^11.10.6",
     "@emotion/server": "^11.10.0",
     "@emotion/styled": "^11.10.6",
+    "@hcaptcha/react-hcaptcha": "^1.8.1",
     "@mui/material": "^5.11.10",
     "@mui/x-data-grid": "^6.0.3",
     "@mui/x-date-pickers": "^5.0.20",

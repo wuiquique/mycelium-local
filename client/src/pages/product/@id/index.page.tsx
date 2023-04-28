@@ -59,7 +59,7 @@ export function Page({ params: { id } }) {
       //  setTech(response.data.tech);
       //setComments(response.data.comments);
     });
-    axios.get("/api/categories/").then((response) => {
+    axios.get("/api/categories/local").then((response) => {
       setCategs(response.data);
     });
     axios.get(`/api/pictures/product/${id}`).then((response) => {
