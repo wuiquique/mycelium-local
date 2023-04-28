@@ -44,7 +44,7 @@ class CartUnifiedResponse {
     public String name;
     public String description;
     public Integer quantity;
-    public Integer category;
+    public String category;
     public Integer weight;
     public Integer price;
     public List<String> pictures;

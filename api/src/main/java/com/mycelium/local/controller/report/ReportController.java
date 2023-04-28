@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
 import com.mycelium.local.dynamic.reports.Report;
 import com.mycelium.local.dynamic.reports.Report.Generator.Filter.Operation;
 import com.mycelium.local.dynamic.reports.Report.Generator.Sort.Order;
@@ -46,12 +45,8 @@ public class ReportController {
     }
 
     @Get("/")
-    public List<Report> availableReports() {
-        List<Report> res = Lists.newArrayList();
-        for (var entry : Report.getAvailableReports().entrySet()) {
-            res.add(entry.getValue());
-        }
-        return res;
+    public Map<String, Report> availableReports() {
+        return Report.getAvailableReports();
     }
 
     @Post("/generate")

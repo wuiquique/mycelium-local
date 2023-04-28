@@ -15,11 +15,36 @@ public class Report {
     public final String name;
     public final String tableName;
     public final List<Column> columns;
+    public final Map<String, Preconfiguration> preconfigurations;
 
-    public Report(String name, String tableName) {
+    public Report(String name, String tableName, List<Column> columns,
+            Map<String, Preconfiguration> preconfigurations) {
         this.name = name;
         this.tableName = tableName;
-        this.columns = Lists.newArrayList();
+        this.columns = columns;
+        this.preconfigurations = preconfigurations;
+    }
+
+    static public Map<String, Report> getAvailableReports() {
+        return Map.ofEntries(
+                Map.entry("inventory", new Report(
+                        "Products",
+                        "product",
+                        List.of(
+                                new Column("id", "Id", Column.Type.INTEGER),
+                                new Column("name", "Name", Column.Type.TEXT),
+                                new Column("desc", "Description", Column.Type.TEXT),
+                                new Column("brand", "Brand", Column.Type.TEXT),
+                                new Column("weight", "Weight", Column.Type.INTEGER),
+                                new Column("quantity", "Quantity", Column.Type.INTEGER),
+                                new Column("price", "Price", Column.Type.INTEGER)),
+                        Map.ofEntries(
+                                Map.entry("running_out", new Preconfiguration(
+                                        "5 products or less",
+                                        List.of(
+                                                new Generator.Filter<Integer>("quantity",
+                                                        Generator.Filter.Operation.LTEQ, 5)),
+                                        List.of()))))));
     }
 
     public boolean hasColumn(String name) {
@@ -40,28 +65,6 @@ public class Report {
         return null;
     }
 
-    public void addColumn(String name, String displayName, Column.Type type) {
-        if (this.hasColumn(name))
-            return;
-        this.columns.add(new Column(name, displayName, type));
-    }
-
-    static public Map<String, Report> getAvailableReports() {
-        Map<String, Report> reports = Maps.newHashMap();
-
-        var productReport = new Report("Products", "product");
-        productReport.addColumn("id", "Id", Column.Type.INTEGER);
-        productReport.addColumn("name", "Name", Column.Type.TEXT);
-        productReport.addColumn("desc", "Description", Column.Type.TEXT);
-        productReport.addColumn("brand", "Brand", Column.Type.TEXT);
-        productReport.addColumn("weight", "Weight", Column.Type.INTEGER);
-        productReport.addColumn("quantity", "Quantity", Column.Type.INTEGER);
-        productReport.addColumn("price", "Price", Column.Type.INTEGER);
-        reports.put(productReport.tableName, productReport);
-
-        return reports;
-    }
-
     @SuppressWarnings("unused")
     static private class Column {
         public final String name;
@@ -79,6 +82,19 @@ public class Report {
             INTEGER,
             FLOATING,
             DATETIME,
+        }
+    }
+
+    @SuppressWarnings("unused")
+    static private class Preconfiguration {
+        public final String name;
+        public final List<Generator.Filter<?>> filters;
+        public final List<Generator.Sort> sorts;
+
+        public Preconfiguration(String name, List<Generator.Filter<?>> filters, List<Generator.Sort> sorts) {
+            this.name = name;
+            this.filters = filters;
+            this.sorts = sorts;
         }
     }
 
@@ -232,12 +248,18 @@ public class Report {
             }
 
             public void setParams(int index, PreparedStatement stmt) throws SQLException {
-                if (value instanceof String) {
-                    stmt.setString(index, (String) value);
-                } else if (value instanceof Long || value instanceof Integer || value instanceof Short) {
-                    stmt.setLong(index, (long) value);
-                } else if (value instanceof Double || value instanceof Float) {
-                    stmt.setDouble(index, (double) value);
+                if (value instanceof String v) {
+                    stmt.setString(index, v);
+                } else if (value instanceof Long v) {
+                    stmt.setLong(index, v);
+                } else if (value instanceof Integer v) {
+                    stmt.setLong(index, v);
+                } else if (value instanceof Short v) {
+                    stmt.setLong(index, v);
+                } else if (value instanceof Double v) {
+                    stmt.setDouble(index, v);
+                } else if (value instanceof Float v) {
+                    stmt.setDouble(index, v);
                 } else {
                     throw new SQLException("Invalid variable type");
                 }
