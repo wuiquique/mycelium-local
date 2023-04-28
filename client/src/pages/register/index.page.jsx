@@ -1,6 +1,8 @@
+import MockHCaptcha from "@/components/MockHCaptcha";
 import { useTexts } from "@/hooks/textContext";
 import { Button, Card, CardMedia, TextField, Typography } from "@mui/material";
 import axios from "axios";
+import { useState } from "react";
 import { navigate } from "vite-plugin-ssr/client/router";
 import BackPage from "../../components/BackPage";
 import { useUser } from "../../hooks/userContext";
@@ -8,34 +10,38 @@ import { useUser } from "../../hooks/userContext";
 export function Page() {
   const texts = useTexts();
   const [, setUser] = useUser();
+  const [verified, setVerified] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     let post = {
       username: e.target.email.value,
       password: e.target.password.value,
       name: e.target.first_name.value,
       lastname: e.target.last_name.value,
     };
-    try {
-      const registerResponse = await axios.post("/api/register", post);
+    if (verified) {
+      try {
+        const registerResponse = await axios.post("/api/register", post);
 
-      if (registerResponse.data.code === "fail") {
-        // TODO: tell user
-        return;
+        if (registerResponse.data.code === "fail") {
+          // TODO: tell user
+          return;
+        }
+
+        const sessionResponse = await axios.get("/api/session");
+
+        if (!sessionResponse.data.id) {
+          // TODO: tell user;
+          return;
+        }
+        console.log(verified);
+        setUser(sessionResponse.data);
+        navigate("/");
+      } catch (e) {
+        console.error(e);
       }
-
-      const sessionResponse = await axios.get("/api/session");
-
-      if (!sessionResponse.data.id) {
-        // TODO: tell user;
-        return;
-      }
-
-      setUser(sessionResponse.data);
-      navigate("/");
-    } catch (e) {
-      console.error(e);
     }
   };
 
@@ -75,6 +81,8 @@ export function Page() {
               name="password"
             />
             <br />
+            <br />
+            <MockHCaptcha setVerified={setVerified} />
             <Button
               className="mt-6"
               variant="outlined"
