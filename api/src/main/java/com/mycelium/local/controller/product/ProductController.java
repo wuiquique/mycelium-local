@@ -112,7 +112,8 @@ class BasicTechnical {
     public String type;
     public String value;
 
-    public BasicTechnical() {}
+    public BasicTechnical() {
+    }
 
     public BasicTechnical(String type, String value) {
         this.type = type;
@@ -147,6 +148,7 @@ class ProductResponse {
     public String name;
     public String desc;
     public String category;
+    public Object categorieId;
     public String brand;
     public Integer weight;
     public Integer quantity;
@@ -155,6 +157,7 @@ class ProductResponse {
     public List<BasicTechnical> technical;
 
     public ProductResponse(Object id, @Nullable Integer integrationId, String name, String desc, String category,
+            Object categorieId,
             String brand, Integer weight, Integer quantity, Integer price, List<String> pictures,
             List<BasicTechnical> technical) {
         this.id = id;
@@ -162,6 +165,7 @@ class ProductResponse {
         this.name = name;
         this.desc = desc;
         this.category = category;
+        this.categorieId = categorieId;
         this.brand = brand;
         this.weight = weight;
         this.quantity = quantity;
@@ -179,14 +183,16 @@ class ProductResponse {
         for (var tech : prod.technical) {
             techs.add(new BasicTechnical(tech.type, tech.value));
         }
-        return new ProductResponse(prod.id, null, prod.name, prod.desc, prod.categorie.name, prod.brand, prod.weight,
+        return new ProductResponse(prod.id, null, prod.name, prod.desc, prod.categorie.name, prod.categorie.id,
+                prod.brand, prod.weight,
                 prod.quantity, prod.price, pics, techs);
     }
 
     static public ProductResponse fromProductBasic(Product prod) {
         List<String> pics = Lists.newArrayList();
         List<BasicTechnical> techs = Lists.newArrayList();
-        return new ProductResponse(prod.id, null, prod.name, prod.desc, prod.categorie.name, prod.brand, prod.weight,
+        return new ProductResponse(prod.id, null, prod.name, prod.desc, prod.categorie.name, prod.categorie.id,
+                prod.brand, prod.weight,
                 prod.quantity, prod.price, pics, techs);
     }
 
@@ -266,9 +272,10 @@ public class ProductController {
 
         temp.add(t);
 
-        var r = client.toBlocking().retrieve(HttpRequest.POST("http://mycelium-taxes/api/tax/estimate", temp), List.class);
-        
-        response.price = ((Double)((Map<?, ?>) r.get(0)).get("tax")).intValue();
+        var r = client.toBlocking().retrieve(HttpRequest.POST("http://mycelium-taxes/api/tax/estimate", temp),
+                List.class);
+
+        response.price = ((Double) ((Map<?, ?>) r.get(0)).get("tax")).intValue();
 
         return ProductResponse.fromProduct(response);
     }
@@ -287,6 +294,7 @@ public class ProductController {
                 urls.add(picture.url);
             }
             res.add(new ProductResponse(product.id, null, product.name, product.desc, product.categorie.name,
+                    product.categorie.id,
                     product.brand, product.weight, product.quantity, product.price, urls, Lists.newArrayList()));
         }
         return res;
@@ -301,6 +309,7 @@ public class ProductController {
                 urls.add(picture.url);
             }
             res.add(new ProductResponse(product.id, null, product.name, product.desc, product.categorie.name,
+                    product.categorie.id,
                     product.brand, product.weight, product.quantity, product.price, urls, Lists.newArrayList()));
         }
         return res;
@@ -465,7 +474,7 @@ public class ProductController {
             for (var prod : response) {
                 if (prod instanceof Map<?, ?> m) {
                     var res = new ProductResponse((String) m.get("_id"), integ.id, (String) m.get("name"),
-                            (String) m.get("desc"), (String) m.get("categorie"), (String) m.get("brand"),
+                            (String) m.get("desc"), "", (String) m.get("categorie"), (String) m.get("brand"),
                             (Integer) m.get("weight"), (Integer) m.get("stock"), (Integer) m.get("price"), List.of(),
                             List.of());
 
