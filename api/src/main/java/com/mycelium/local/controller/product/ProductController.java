@@ -379,6 +379,10 @@ public class ProductController {
                             (Integer) m.get("weight"), (Integer) m.get("stock"), (Integer) m.get("price"), List.of(),
                             List.of());
 
+                    client.toBlocking().retrieve(
+                            HttpRequest.PUT(integ.request + "/api/products/search/" + (String) m.get("_id"), null),
+                            String.class);
+
                     products.add(res);
                 }
             }
