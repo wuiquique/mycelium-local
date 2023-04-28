@@ -111,7 +111,7 @@ export function Page({ searchParams: { q } }: { searchParams: { q: string } }) {
     url.searchParams.set("pricemin", selectedPriceRange[0].toString());
     url.searchParams.set("pricemax", selectedPriceRange[1].toString());
     for (const category of selectedCategories) {
-      url.searchParams.append("categories", category);
+      url.searchParams.append("categories", category.toString());
     }
     axios.get(url.toString()).then((response) => {
       setResults(response.data);
