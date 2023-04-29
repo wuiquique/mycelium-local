@@ -7,13 +7,11 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.mycelium.local.repository.categorie.Categorie;
-import com.mycelium.local.repository.categorie.CategorieRepo;
 import com.mycelium.local.repository.cart.Cart;
 import com.mycelium.local.repository.cart.CartRepo;
 import com.mycelium.local.repository.cartinteg.CartInteg;
 import com.mycelium.local.repository.cartinteg.CartIntegRepo;
+import com.mycelium.local.repository.categorie.CategorieRepo;
 import com.mycelium.local.repository.integration.IntegrationRepo;
 import com.mycelium.local.repository.product.ProductRepo;
 import com.mycelium.local.repository.user.UserRepo;
@@ -64,12 +62,14 @@ class CartUnifiedResponse {
     public String description;
     public Integer quantity;
     public String category;
+    public Object categoryId;
     public Integer weight;
     public Integer price;
     public List<String> pictures;
 
     public CartUnifiedResponse(Object id, Integer integrationId, Object productId, String name, String description,
-            Integer quantity, String category, Integer weight, Integer price, List<String> pictures) {
+            Integer quantity, String category, Object categoryId, Integer weight, Integer price,
+            List<String> pictures) {
         this.id = id;
         this.integrationId = integrationId;
         this.productId = productId;
@@ -77,6 +77,7 @@ class CartUnifiedResponse {
         this.description = description;
         this.quantity = quantity;
         this.category = category;
+        this.categoryId = categoryId;
         this.weight = weight;
         this.price = price;
         this.pictures = pictures;
@@ -121,7 +122,8 @@ public class CartController {
                 pics.add(p.url);
             }
             res.add(new CartUnifiedResponse(cart.id, null, cart.product.id, cart.product.name, cart.product.desc,
-                    cart.quantity, cart.product.categorie.name, cart.product.weight, cart.product.price, pics));
+                    cart.quantity, cart.product.categorie.name, cart.product.categorie.id, cart.product.weight,
+                    cart.product.price, pics));
         }
         for (CartInteg cart : cartIntegRepo.findByUserId(userId)) {
             Map<Object, Object> productDetails = client.toBlocking()
@@ -130,19 +132,20 @@ public class CartController {
             res.add(new CartUnifiedResponse(cart.id, cart.integration.id, cart.productId,
                     (String) productDetails.get("name"),
                     (String) productDetails.get("desc"), cart.quantity,
+                    "",
                     (String) ((Map<?, ?>) productDetails.get("categorie")).get("$oid"),
                     (int) productDetails.get("weight"), (int) productDetails.get("price"),
                     (List<String>) productDetails.get("pictures")));
         }
-        for(var product : res) {
+        for (var product : res) {
             List<EstimadoBody> temp = Lists.newArrayList();
             var t = new EstimadoBody();
 
             // if (product.integrationId == null) {
-            //     Category category = categorieRepo.findByName(product.category);
-            //     t.categoryId = category.id;
+            // Category category = categorieRepo.findByName(product.category);
+            // t.categoryId = category.id;
             // } else {
-                t.categoryId = 1;
+            t.categoryId = 1;
             // }
 
             t.salePrice = Double.valueOf(product.price);
@@ -156,35 +159,36 @@ public class CartController {
             } else {
                 t.international = true;
             }
-            
+
             temp.add(t);
 
-            var r = client.toBlocking().retrieve(HttpRequest.POST("http://mycelium-taxes/api/tax/estimate", temp), List.class);
+            var r = client.toBlocking().retrieve(HttpRequest.POST("http://mycelium-taxes/api/tax/estimate", temp),
+                    List.class);
 
-            product.price = ((Double)((Map<?, ?>) r.get(0)).get("tax")).intValue();
+            product.price = ((Double) ((Map<?, ?>) r.get(0)).get("tax")).intValue();
         }
 
         /*
-        ESTIMADO
-        public Integer categoryId;
-        public Double salePrice;
-        public Double boughtPrice;
-        public Double porcentage;
-        public Integer quantity;
-        public Double weight;
-        public Boolean international;
-
-        CARTUNIFIED
-        public Object id;
-        public Integer integrationId;
-        public Object productId;
-        public String name;
-        public String description;
-        public Integer quantity;
-        public String category;
-        public Integer weight;
-        public Integer price;
-        public List<String> pictures
+         * ESTIMADO
+         * public Integer categoryId;
+         * public Double salePrice;
+         * public Double boughtPrice;
+         * public Double porcentage;
+         * public Integer quantity;
+         * public Double weight;
+         * public Boolean international;
+         * 
+         * CARTUNIFIED
+         * public Object id;
+         * public Integer integrationId;
+         * public Object productId;
+         * public String name;
+         * public String description;
+         * public Integer quantity;
+         * public String category;
+         * public Integer weight;
+         * public Integer price;
+         * public List<String> pictures
          */
 
         return res;
