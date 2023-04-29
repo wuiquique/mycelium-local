@@ -512,6 +512,10 @@ public class ProductController {
                 t.international = true;
             }
 
+            temp.add(t);
+
+            var r = client.toBlocking().retrieve(HttpRequest.POST("http://mycelium-taxes/api/tax/estimate", temp), List.class);
+
             /*
             RESPONSE
             public Object id;
