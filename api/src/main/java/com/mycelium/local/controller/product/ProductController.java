@@ -293,9 +293,31 @@ public class ProductController {
             for (Picture picture : pictureRepo.findByProductId(product.id)) {
                 urls.add(picture.url);
             }
+
+            List<EstimadoBody> temp = Lists.newArrayList();
+            var t = new EstimadoBody();
+
+            t.categoryId = product.categorie.id;
+            t.salePrice = Double.valueOf(product.price);
+            t.boughtPrice = Double.valueOf(product.price);
+            t.porcentage = 0.3;
+            t.quantity = 1;
+            t.weight = Double.valueOf(product.weight);
+            t.international = false;
+            
+            temp.add(t);
+
+            var r = client.toBlocking().retrieve(HttpRequest.POST("http://mycelium-taxes/api/tax/estimate", temp), List.class);
+
+            Integer priceInt = product.price;
+
+            if (!r.isEmpty()) {
+                priceInt = ((Double)((Map<?, ?>) r.get(0)).get("tax")).intValue(); 
+            }
+
             res.add(new ProductResponse(product.id, null, product.name, product.desc, product.categorie.name,
                     product.categorie.id,
-                    product.brand, product.weight, product.quantity, product.price, urls, Lists.newArrayList()));
+                    product.brand, product.weight, product.quantity, priceInt, urls, Lists.newArrayList()));
         }
         return res;
     }
@@ -308,9 +330,31 @@ public class ProductController {
             for (Picture picture : pictureRepo.findByProductId(product.id)) {
                 urls.add(picture.url);
             }
+
+            List<EstimadoBody> temp = Lists.newArrayList();
+            var t = new EstimadoBody();
+
+            t.categoryId = product.categorie.id;
+            t.salePrice = Double.valueOf(product.price);
+            t.boughtPrice = Double.valueOf(product.price);
+            t.porcentage = 0.3;
+            t.quantity = 1;
+            t.weight = Double.valueOf(product.weight);
+            t.international = false;
+            
+            temp.add(t);
+
+            var r = client.toBlocking().retrieve(HttpRequest.POST("http://mycelium-taxes/api/tax/estimate", temp), List.class);
+
+            Integer priceInt = product.price;
+
+            if (!r.isEmpty()) {
+                priceInt = ((Double)((Map<?, ?>) r.get(0)).get("tax")).intValue(); 
+            }
+
             res.add(new ProductResponse(product.id, null, product.name, product.desc, product.categorie.name,
                     product.categorie.id,
-                    product.brand, product.weight, product.quantity, product.price, urls, Lists.newArrayList()));
+                    product.brand, product.weight, product.quantity, priceInt, urls, Lists.newArrayList()));
         }
         return res;
     }
@@ -503,7 +547,7 @@ public class ProductController {
             t.salePrice = Double.valueOf(p.price);
             t.boughtPrice = Double.valueOf(p.price);
             t.porcentage = 0.30;
-            t.quantity = p.quantity;
+            t.quantity = 1;
             t.weight = Double.valueOf(p.weight);
             
             if (p.integrationId == null) {
@@ -516,33 +560,7 @@ public class ProductController {
 
             var r = client.toBlocking().retrieve(HttpRequest.POST("http://mycelium-taxes/api/tax/estimate", temp), List.class);
 
-            
-
-            /*
-            RESPONSE
-            public Object id;
-    @Nullable
-    public Integer integrationId;
-    public String name;
-    public String desc;
-    public String category;
-    public Object categorieId;
-    public String brand;
-    public Integer weight;
-    public Integer quantity;
-    public Integer price;
-    public List<String> pictures;
-    public List<BasicTechnical> technical;
-
-            ESTIMADO
-            public Integer categoryId;
-        public Double salePrice;
-        public Double boughtPrice;
-        public Double porcentage;
-        public Integer quantity;
-        public Double weight;
-        public Boolean international;
-             */
+            p.price = ((Double)((Map<?, ?>) r.get(0)).get("tax")).intValue();
         }
 
         return products;

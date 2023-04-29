@@ -69,7 +69,7 @@ class OrderEstimado {
 }
 
 class OrderFactura {
-    public String productName;
+    public String name;
     public String username;
     public String address;
     public Integer categoryId;
@@ -540,7 +540,7 @@ public class OrderController {
 
             var nombre = userRepo.findById(item.userId).get();            
 
-            temp.productName = item.productName;
+            temp.name = item.productName;
             temp.username = nombre.name;
             temp.address = item.address;
             temp.categoryId = item.categoryId;

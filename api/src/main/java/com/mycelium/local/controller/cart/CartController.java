@@ -6,6 +6,10 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.mycelium.local.repository.categorie.Categorie;
+import com.mycelium.local.repository.categorie.CategorieRepo;
 import com.mycelium.local.repository.cart.Cart;
 import com.mycelium.local.repository.cart.CartRepo;
 import com.mycelium.local.repository.cartinteg.CartInteg;
@@ -33,6 +37,21 @@ class CartCreateRequest {
     public Integer integrationId;
     public Object productId;
     public int quantity;
+}
+
+class EstimadoBody {
+    public Integer categoryId;
+    public Double salePrice;
+    public Double boughtPrice;
+    public Double porcentage;
+    public Integer quantity;
+    public Double weight;
+    public Boolean international;
+}
+
+class Category {
+    public Integer id;
+    public String name;
 }
 
 @Introspected
@@ -78,14 +97,16 @@ public class CartController {
     private UserRepo userRepo;
     private ProductRepo productRepo;
     private IntegrationRepo integrationRepo;
+    private CategorieRepo categorieRepo;
 
     public CartController(CartRepo cartRepo, CartIntegRepo cartIntegRepo, UserRepo userRepo, ProductRepo productRepo,
-            IntegrationRepo integrationRepo) {
+            IntegrationRepo integrationRepo, CategorieRepo categorieRepo) {
         this.cartRepo = cartRepo;
         this.cartIntegRepo = cartIntegRepo;
         this.userRepo = userRepo;
         this.productRepo = productRepo;
         this.integrationRepo = integrationRepo;
+        this.categorieRepo = categorieRepo;
     }
 
     @Get("/")
@@ -113,6 +134,59 @@ public class CartController {
                     (int) productDetails.get("weight"), (int) productDetails.get("price"),
                     (List<String>) productDetails.get("pictures")));
         }
+        for(var product : res) {
+            List<EstimadoBody> temp = Lists.newArrayList();
+            var t = new EstimadoBody();
+
+            // if (product.integrationId == null) {
+            //     Category category = categorieRepo.findByName(product.category);
+            //     t.categoryId = category.id;
+            // } else {
+                t.categoryId = 1;
+            // }
+
+            t.salePrice = Double.valueOf(product.price);
+            t.boughtPrice = Double.valueOf(product.price);
+            t.porcentage = 0.3;
+            t.quantity = 1;
+            t.weight = Double.valueOf(product.weight);
+
+            if (product.integrationId == null) {
+                t.international = false;
+            } else {
+                t.international = true;
+            }
+            
+            temp.add(t);
+
+            var r = client.toBlocking().retrieve(HttpRequest.POST("http://mycelium-taxes/api/tax/estimate", temp), List.class);
+
+            product.price = ((Double)((Map<?, ?>) r.get(0)).get("tax")).intValue();
+        }
+
+        /*
+        ESTIMADO
+        public Integer categoryId;
+        public Double salePrice;
+        public Double boughtPrice;
+        public Double porcentage;
+        public Integer quantity;
+        public Double weight;
+        public Boolean international;
+
+        CARTUNIFIED
+        public Object id;
+        public Integer integrationId;
+        public Object productId;
+        public String name;
+        public String description;
+        public Integer quantity;
+        public String category;
+        public Integer weight;
+        public Integer price;
+        public List<String> pictures
+         */
+
         return res;
     }
 
