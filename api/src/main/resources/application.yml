@@ -33,10 +33,10 @@ datasources:
   default:
     driverClassName: oracle.jdbc.OracleDriver
     url: "jdbc:oracle:thin:@myceliumdb:1521/XEPDB1"
-    username: PDBADMIN
+    username: ${DATABASE_NAME:PDBADMIN}
     password: "12345"
     dbType: oracle
-    schema: PDBADMIN
+    schema: ${DATABASE_NAME:PDBADMIN}
     schemaGenerate: CREATE
     dialect: ORACLE
 netty:
