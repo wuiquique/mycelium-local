@@ -66,7 +66,7 @@ export function Page({ searchParams: { q } }: { searchParams: { q: string } }) {
   >([]);
 
   const [priceRange, setPriceRange] = useState([0, 1000]);
-  const [selectedPriceRange, setSelectedPriceRange] = useState([0, 1000]);
+  const [selectedPriceRange, setSelectedPriceRange] = useState([0, 0]);
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
 
   const handleSliderChange = (event: unknown, newValue: number | number[]) => {
@@ -107,9 +107,11 @@ export function Page({ searchParams: { q } }: { searchParams: { q: string } }) {
 
   useEffect(() => {
     const url = new URL("/api/product/search", window.location.href);
-    url.searchParams.set("q", q);
-    url.searchParams.set("pricemin", selectedPriceRange[0].toString());
-    url.searchParams.set("pricemax", selectedPriceRange[1].toString());
+    if (q !== null && q !== undefined) url.searchParams.set("q", q);
+    if (selectedPriceRange[0] > 0)
+      url.searchParams.set("pricemin", selectedPriceRange[0].toString());
+    if (selectedPriceRange[1] > 0)
+      url.searchParams.set("pricemax", selectedPriceRange[1].toString());
     for (const category of selectedCategories) {
       url.searchParams.append("categories", category.toString());
     }
