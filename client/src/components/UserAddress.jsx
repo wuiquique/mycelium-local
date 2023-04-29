@@ -9,13 +9,13 @@ import {
 } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { navigate } from "vite-plugin-ssr/client/router";
 
 export default function UserAddress({ products }) {
   const texts = useTexts();
-  const [date1, setDate1] = useState("2014-08-18T21:11:54");
-  const [date2, setDate2] = useState("2014-08-18T21:11:54");
+  const [date1, setDate1] = useState(new Date().toISOString().slice(0, 19));
+  const [date2, setDate2] = useState(new Date().toISOString().slice(0, 19));
   const [user] = useUser();
 
   const handleSubmit = (event) => {
@@ -35,12 +35,12 @@ export default function UserAddress({ products }) {
     for (let p of products) {
       let o = {
         name: p.name,
-        categoryId: p.category,
+        categoryId: p.categoryId,
         boughtPrice: p.price,
         porcentage: 30,
         quantity: p.quantity,
         weight: p.weight,
-        international: p.international,
+        international: p.integrationId !== null,
       };
       temp.push(o);
     }

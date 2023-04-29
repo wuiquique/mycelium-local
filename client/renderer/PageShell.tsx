@@ -11,10 +11,8 @@ export function PageShell({
   pageContext: PageContext;
 }) {
   return (
-    <React.StrictMode>
-      <PageContextProvider pageContext={pageContext}>
-        <Layout pageContext={pageContext}>{children}</Layout>
-      </PageContextProvider>
-    </React.StrictMode>
+    <PageContextProvider pageContext={pageContext}>
+      <Layout pageContext={pageContext}>{children}</Layout>
+    </PageContextProvider>
   );
 }

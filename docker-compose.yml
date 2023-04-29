@@ -4,7 +4,7 @@ services:
   nginx-proxy:
     image: nginxproxy/nginx-proxy
     ports:
-      - "8080:80/tcp"
+      - "6062:80/tcp"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
     networks:
@@ -69,7 +69,7 @@ services:
   db:
     image: container-registry.oracle.com/database/express:21.3.0-xe
     ports:
-      - 1521:1521
+      - 2521:1521
     restart: unless-stopped
     environment:
       ORACLE_PWD: "12345"
