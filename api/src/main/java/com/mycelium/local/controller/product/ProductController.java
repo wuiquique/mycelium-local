@@ -496,20 +496,46 @@ public class ProductController {
             var t = new EstimadoBody();
 
             if (p.integrationId == null) {
-                // t.categoryId = 
+                t.categoryId = p.categorieId;
+            } else {
+                t.categoryId = 1;
+            }
+            t.salePrice = Double.valueOf(p.price);
+            t.boughtPrice = Double.valueOf(p.price);
+            t.porcentage = 0.30;
+            t.quantity = p.quantity;
+            t.weight = p.weight;
+            
+            if (p.integrationId == null) {
+                t.international = false;
+            } else {
+                t.international = true;
             }
 
             /*
-            public Integer integrationId;
+            RESPONSE
+            public Object id;
+    @Nullable
+    public Integer integrationId;
     public String name;
     public String desc;
     public String category;
+    public Object categorieId;
     public String brand;
     public Integer weight;
     public Integer quantity;
     public Integer price;
     public List<String> pictures;
     public List<BasicTechnical> technical;
+
+            ESTIMADO
+            public Integer categoryId;
+        public Double salePrice;
+        public Double boughtPrice;
+        public Double porcentage;
+        public Integer quantity;
+        public Double weight;
+        public Boolean international;
              */
         }
 
