@@ -14,11 +14,17 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 
+/**
+    Clase que representa una solicitud para crear una nueva imagen.
+    */
 class PictureCreateRequest {
     public String url;
     public int productId;
 }
 
+/**
+    Controlador para gestionar las imágenes.
+    */
 @Secured(SecurityRule.IS_ANONYMOUS)
 @Controller("/pictures")
 public class PictureController {
@@ -31,16 +37,30 @@ public class PictureController {
         this.productRepo = productRepo;
     }
 
+/**
+    Retorna una lista de todas las imágenes.
+    @return Una lista de objetos Picture.
+    */
+
     @Get("/")
     public List<Picture> list() {
         return Lists.newArrayList(pictureRepo.findAll());
     }
 
+/**
+    Retorna una lista de imágenes asociadas a un producto.
+    @param productId El ID del producto.
+    @return Una lista de objetos Picture.
+    */
     @Get("/product/{productId}")
     public List<Picture> list(int productId) {
         return pictureRepo.findByProductId(productId);
     }
 
+/**
+    Crea una nueva imagen.
+    @param body La solicitud de creación de la imagen.
+    */
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/")
     public void create(@Body PictureCreateRequest body) {

@@ -19,11 +19,17 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
 
+/**
+ * representa un request para crear un nuevo comentario
+ */
 class CommentCreateRequest {
     public int commentId;
     public String message;
 }
 
+/**
+ * Representa un arbol de comentarios, los cuales incluyen informacion sobre los padres y sus hijos
+ */
 @Introspected
 @JsonInclude(JsonInclude.Include.ALWAYS)
 class CommentTree {
@@ -47,6 +53,9 @@ class CommentTree {
     }
 }
 
+/**
+ * Clase de controlador para manejar comentarios
+ */
 @Secured(SecurityRule.IS_ANONYMOUS)
 @Controller("/comment")
 public class CommentController {
@@ -61,6 +70,13 @@ public class CommentController {
         this.productRepo = productRepo;
     }
 
+     /**
+     * CRea un arbol de comentarios para un ID de producto dado y un ID de comentario opcional
+     *
+     * @param productId El ID del producto sobre el que se formara el arbol
+     * @param commentId El ID del comentario sobre el que se formara el arbol (Opcional, default null)
+     * @return Una lista de objetos CommentTree que representan el arbol de comentarios
+     */
     public List<CommentTree> buildCommentTree(int productId, Integer commentId) {
         List<CommentTree> res = Lists.newArrayList();
         for (var comment : commentRepo.findByProductIdAndCommentId(productId, commentId)) {
@@ -70,11 +86,24 @@ public class CommentController {
         return res;
     }
 
+    /**
+     * Lista de comentarios para un ID de producto en especifico.
+     *
+     * @param productId El ID de la lista de comentarios
+     * @return Una lista de objetos CommentTree que representan el arbol de comentarios
+     */
     @Get("/{productId}")
     public List<CommentTree> list(int productId) {
         return buildCommentTree(productId, null);
     }
 
+     /**
+     * Crea un nuevo producto para el ID del producto dado
+     *
+     * @param authentication un objeto que representa la informacion de autentificacion de un usuario
+     * @param productId El ID del producto al cual se esta haciendo el comentario
+     * @param body un objeto CommentCreateRequest que contiene informacion del nuevo comentario
+     */
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/{productId}")
     public void create(Authentication authentication, int productId, @Body CommentCreateRequest body) {

@@ -24,16 +24,25 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
 
+/**
+ * Clase que representa la solicitud de creación de una categoría.
+ */
 @Introspected
 @JsonInclude(Include.ALWAYS)
 class CategorieCreateRequest {
     public String name;
 }
 
+/**
+ * Clase que representa la solicitud de actualización de una categoría.
+ */
 class CategorieUpdateRequest {
     public String name;
 }
 
+/**
+ * Clase que representa la respuesta de una categoría.
+ */
 class CategorieResponse {
     public Object id;
     public String name;
@@ -44,6 +53,9 @@ class CategorieResponse {
     }
 }
 
+/**
+ * Clase que representa el controlador para las categorías.
+ */
 @Secured(SecurityRule.IS_ANONYMOUS)
 @Controller("/categories")
 public class CategorieController {
@@ -55,11 +67,22 @@ public class CategorieController {
     private CategorieRepo categorieRepo;
     private IntegrationRepo integrationRepo;
 
+    /**
+     * Constructor que inicializa las dependencias del controlador.
+     * 
+     * @param categorieRepo el repositorio de categorías.
+     * @param integrationRepo el repositorio de integraciones.
+     */
     public CategorieController(CategorieRepo categorieRepo, IntegrationRepo integrationRepo) {
         this.categorieRepo = categorieRepo;
         this.integrationRepo = integrationRepo;
     }
 
+    /**
+     * Método que retorna una lista de categorías que incluye tanto las categorías locales como las integradas.
+     * 
+     * @return la lista de categorías.
+     */
     @Get("/")
     public List<CategorieResponse> list() {
         List<CategorieResponse> categories = Lists.newArrayList();
@@ -82,16 +105,33 @@ public class CategorieController {
         return categories;
     }
 
+    /**
+     * Método que retorna una lista de las categorías locales.
+     * 
+     * @return la lista de categorías locales.
+     */
     @Get("/local")
     public List<Categorie> listLocal() {
         return Lists.newArrayList(categorieRepo.findAll());
     }
 
+    /**
+     * Método que retorna una categoría por su identificador.
+     * 
+     * @param id el identificador de la categoría.
+     * @return la categoría.
+     */
     @Get("/{id}")
     public Categorie get(int id) {
         return categorieRepo.findById(id).get();
     }
 
+    /**
+     * Método que crea una nueva categoría.
+     * 
+     * @param body la solicitud de creación de la categoría.
+     * @return el identificador de la nueva categoría creada.
+     */
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/")
     public int create(@Body CategorieCreateRequest body) {
@@ -101,6 +141,12 @@ public class CategorieController {
         return newCategorie.id;
     }
 
+    /**
+     * Actualiza la categoría con el ID especificado.
+     *
+     * @param id el ID de la categoría que se actualizará.
+     * @param body el cuerpo de la solicitud de actualización de categoría.
+     */
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Put("/{id}")
     public void update(int id, @Body CategorieUpdateRequest body) {
@@ -109,6 +155,11 @@ public class CategorieController {
         categorieRepo.update(categorie);
     }
 
+    /**
+     * Elimina la categoría con el ID especificado.
+     *
+     * @param id el ID de la categoría que se eliminará.
+     */
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Delete("/{id}")
     public void delete(int id) {

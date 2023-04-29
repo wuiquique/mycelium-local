@@ -20,6 +20,9 @@ class TechnicalCreateRequest {
     public int productId;
 }
 
+/**
+    Un controlador para gestionar los aspectos técnicos de los productos.
+    */
 @Secured(SecurityRule.IS_ANONYMOUS)
 @Controller("/technical")
 public class TechnicalController {
@@ -27,21 +30,39 @@ public class TechnicalController {
     private TechnicalRepo technicalRepo;
     private ProductRepo productRepo;
 
+/**
+    Constructor para crear una nueva instancia de TechnicalController.
+    @param technicalRepo El repositorio para gestionar los aspectos técnicos.
+    @param productRepo El repositorio para gestionar los productos relacionados.
+    */
     public TechnicalController(TechnicalRepo technicalRepo, ProductRepo productRepo) {
         this.technicalRepo = technicalRepo;
         this.productRepo = productRepo;
     }
 
+/**
+    Retorna una lista de todos los aspectos técnicos.
+    @return Una lista de objetos Technical.
+    */
     @Get("/")
     public List<Technical> list() {
         return Lists.newArrayList(technicalRepo.findAll());
     }
 
+/**
+    Retorna una lista de todos los aspectos técnicos relacionados con un producto en particular.
+    @param productId El id del producto a buscar.
+    @return Una lista de objetos Technical relacionados con el producto especificado.
+    */
     @Get("/product/{productId}")
     public List<Technical> list2(int productId) {
         return technicalRepo.findByProductId(productId);
     }
 
+/**
+    Crea un nuevo aspecto técnico para un producto especificado.
+    @param body Los detalles del nuevo aspecto técnico a crear.
+    */
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/")
     public void create(@Body TechnicalCreateRequest body) {
