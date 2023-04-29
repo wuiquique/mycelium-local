@@ -496,7 +496,7 @@ public class ProductController {
             var t = new EstimadoBody();
 
             if (p.integrationId == null) {
-                t.categoryId = p.categorieId;
+                t.categoryId = (Integer) p.categorieId;
             } else {
                 t.categoryId = 1;
             }
@@ -504,7 +504,7 @@ public class ProductController {
             t.boughtPrice = Double.valueOf(p.price);
             t.porcentage = 0.30;
             t.quantity = p.quantity;
-            t.weight = p.weight;
+            t.weight = Double.valueOf(p.weight);
             
             if (p.integrationId == null) {
                 t.international = false;
