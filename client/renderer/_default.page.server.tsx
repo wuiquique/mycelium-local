@@ -3,7 +3,6 @@ import { dangerouslySkipEscape, escapeInject } from "vite-plugin-ssr/server";
 import { PageShell } from "./PageShell";
 import type { PageContextServer } from "./types";
 
-export { render };
 // See https://vite-plugin-ssr.com/data-fetching
 export const passToClient = [
   "pageProps",
@@ -12,7 +11,7 @@ export const passToClient = [
   "routeParams",
 ];
 
-async function render(pageContext: PageContextServer) {
+export async function render(pageContext: PageContextServer) {
   const { Page, pageProps } = pageContext;
   // This render() hook only supports SSR, see https://vite-plugin-ssr.com/render-modes for how to modify render() to support SPA
   if (!Page)
