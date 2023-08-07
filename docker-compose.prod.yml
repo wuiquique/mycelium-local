@@ -2,15 +2,16 @@ name: mycelium-local-dev
 
 services:
   nginx-proxy:
-    image: nginxproxy/nginx-proxy
+    image: nginx
     ports:
-      - "8080:80/tcp"
+      - "6062:80/tcp"
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./default.conf:/etc/nginx/templates/default.conf.template:z,ro
     networks:
       - mycelium-local
-    environment:
-      - DEFAULT_HOST=localhost
+    depends_on:
+      - api
+      - client
 
   api:
     image: localhost/mycelium-local_api:prod
@@ -21,11 +22,8 @@ services:
       dockerfile: Dockerfile.prod
     networks:
       - mycelium-local
-    environment:
-      - VIRTUAL_HOST=localhost
-      - VIRTUAL_PATH=/api/
-      - VIRTUAL_DEST=/
-      - VIRTUAL_PORT=8080
+    depends_on:
+      - db
 
   client:
     image: localhost/mycelium-local_client:prod
@@ -36,10 +34,6 @@ services:
       dockerfile: Dockerfile.prod
     networks:
       - mycelium-local
-    environment:
-      - VIRTUAL_HOST=localhost
-      - VIRTUAL_PATH=/
-      - VIRTUAL_PORT=3000
 
   db:
     image: container-registry.oracle.com/database/express:21.3.0-xe
@@ -49,7 +43,7 @@ services:
     environment:
       ORACLE_PWD: "12345"
     volumes:
-      - oracledb:/opt/oracle/oradata
+      - oracledb:/opt/oracle/oradata:z,rw
     networks:
       mycelium-local:
         aliases:
