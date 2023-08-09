@@ -78,16 +78,31 @@ services:
     networks:
       - mycelium-local
     environment:
-      - SONARQUBE_JDBC_USERNAME=Sonar
-      - SONARQUBE_JDBC_PASSWORD=12345
-      - SONARQUBE_JDBC_URL=jdbc:oracle:thin:@db:2521/XEPDB1
+      - SONAR_JDBC_USERNAME=sonar
+      - SONAR_JDBC_PASSWORD=12345
+      - SONAR_JDBC_URL=jdbc:postgresql://postgres:5432/sonarqube
     depends_on:
-      - db
+      - postgres
     volumes:
       - sonarqube_conf:/opt/sonarqube/conf
       - sonarqube_data:/opt/sonarqube/data
       - sonarqube_logs:/opt/sonarqube/logs
       - sonarqube_extensions:/opt/sonarqube/extensions
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: sonarqube
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - mycelium-local
+
 
 volumes:
   oracledb:
@@ -97,6 +112,8 @@ volumes:
   sonarqube_data:
   sonarqube_logs:
   sonarqube_extensions:
+  postgres_data:
+
 
 networks:
   mycelium-local:
