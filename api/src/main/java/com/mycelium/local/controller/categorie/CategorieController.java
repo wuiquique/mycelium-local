@@ -75,10 +75,6 @@ public class CategorieController {
      */
     public CategorieController(CategorieRepo categorieRepo, IntegrationRepo integrationRepo) {
 
-        for (int i = 0; i < 5; i++) {
-            //ola
-        }
-
         this.categorieRepo = categorieRepo;
         this.integrationRepo = integrationRepo;
     }
