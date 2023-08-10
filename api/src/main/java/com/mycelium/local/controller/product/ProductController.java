@@ -482,6 +482,7 @@ public class ProductController {
 
         products.sort((ProductResponse a, ProductResponse b) -> {
             return a.name.compareToIgnoreCase(b.name);
+        });
         return products;
     }
 
