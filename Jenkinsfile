@@ -47,8 +47,26 @@ pipeline {
                 failure {
                     mail (
                         to: "luisenriquem15@gmail.com",
-                        subject: "Fallo en Etapa SonarQube Back BackEnd",
+                        subject: "Fallo en Etapa SonarQube BackEnd",
                         body: "La etapa SonarQube Analysis para el backend ha fallado."
+                    )
+                }
+            }
+        }
+
+        stage("SonarQube Back Quality Gate") {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+
+            post {
+                failure {
+                    mail (
+                        to: "luisenriquem15@gmail.com",
+                        subject: "Fallo en Control de Calidad SonarQube BackEnd",
+                        body: "El análisis de SonarQube para el frontend no superó el nivel de calidad esperado",
                     )
                 }
             }
@@ -77,5 +95,22 @@ pipeline {
                 }
             }
         }
+
+        stage("SonarQube Front Quality Gate") {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+
+            post {
+                failure {
+                    mail (
+                        to: "luisenriquem15@gmail.com",
+                        subject: "Fallo en Control de Calidad SonarQube FrontEnd",
+                        body: "El análisis de SonarQube para el frontend no superó el nivel de calidad esperado",
+                    )
+                }
+          
     }
 }
