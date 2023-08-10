@@ -6,7 +6,14 @@ pipeline {
                 checkout scm
             }
         }
-        stage('SonarQube Analysis') {
+        stage('UnitTest') {
+            steps {
+                dir('api') {
+                    sh "./gradlew test"
+                }
+            }
+        }
+        stage('SonarQube') {
             steps {
                 script {
                     withSonarQubeEnv('Mycelium-dev') {
