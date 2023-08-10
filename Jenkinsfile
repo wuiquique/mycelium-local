@@ -9,7 +9,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    withSonarQubeEnv('Mycelium') {
+                    withSonarQubeEnv('Jenkins1') {
                         dir('api') {
                             sh "../gradlew sonar"
                         }
