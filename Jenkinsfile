@@ -66,7 +66,7 @@ pipeline {
                     mail (
                         to: "luisenriquem15@gmail.com",
                         subject: "Fallo en Control de Calidad SonarQube BackEnd",
-                        body: "El análisis de SonarQube para el frontend no superó el nivel de calidad esperado",
+                        body: "El análisis de SonarQube para el backend no superó el nivel de calidad esperado",
                     )
                 }
             }
