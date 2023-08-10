@@ -11,7 +11,7 @@ pipeline {
                 script {
                     withSonarQubeEnv('Mycelium') {
                         dir('api') {
-                            sh "../gradlew sonar"
+                            sh "./gradlew sonar"
                         }
                     }
                 }
