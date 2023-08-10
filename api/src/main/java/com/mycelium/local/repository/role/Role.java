@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.mycelium.local.repository.user.User;
 
-import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.Relation;
@@ -13,7 +12,6 @@ import io.micronaut.data.model.naming.NamingStrategies;
 @MappedEntity(namingStrategy = NamingStrategies.Raw.class)
 public class Role {
     @Id
-    @GeneratedValue
     public Integer id;
     public String name;
 

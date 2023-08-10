@@ -5,11 +5,10 @@ import java.util.List;
 import io.micronaut.data.annotation.Join;
 import io.micronaut.data.annotation.Repository;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
-import io.micronaut.data.model.query.builder.sql.Dialect;
 import io.micronaut.data.repository.CrudRepository;
 
 @Repository("default")
-@JdbcRepository(dialect = Dialect.ORACLE)
+@JdbcRepository()
 public interface IntegrationRepo extends CrudRepository<Integration, Integer> {
     @Join(value = "cartInteg.user", type = Join.Type.FETCH)
     @Join(value = "cartInteg", type = Join.Type.FETCH)

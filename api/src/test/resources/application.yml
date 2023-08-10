@@ -1,0 +1,43 @@
+micronaut:
+  application:
+    name: local
+  context-path: /api
+  router:
+    static-resources:
+      swagger:
+        paths: classpath:META-INF/swagger
+        mapping: /swagger/**
+      swagger-ui:
+        paths: classpath:META-INF/swagger/views/swagger-ui
+        mapping: /swagger-ui/**
+  security:
+    intercept-url-map:
+      - access: isAnonymous()
+        pattern: /swagger/**
+      - access: isAnonymous()
+        pattern: /swagger-ui/**
+    enabled: true
+    authentication: cookie
+    reject-not-found: false
+    redirect:
+      enabled: false
+    token:
+      jwt:
+        signatures:
+          secret:
+            generator:
+              secret: ${JWT_GENERATOR_SIGNATURE_SECRET:pleaseChangeThisSecretForANewOne}
+jackson:
+  serializationInclusion: ALWAYS
+datasources:
+  default:
+    driverClassName: org.h2.Driver
+    url: "jdbc:h2:mem:testdb;DATABASE_TO_UPPER=false"
+    username: sa
+    password: "sa"
+    schemaGenerate: CREATE_DROP
+    dialect: H2
+netty:
+  default:
+    allocator:
+      max-order: 3

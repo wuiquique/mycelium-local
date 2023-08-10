@@ -9,11 +9,10 @@ import io.micronaut.data.annotation.Join;
 import io.micronaut.data.annotation.Query;
 import io.micronaut.data.annotation.Repository;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
-import io.micronaut.data.model.query.builder.sql.Dialect;
 import io.micronaut.data.repository.CrudRepository;
 
 @Repository("default")
-@JdbcRepository(dialect = Dialect.ORACLE)
+@JdbcRepository()
 public interface ProductRepo extends CrudRepository<Product, Integer> {
     @Join(value = "pictures", type = Join.Type.LEFT_FETCH)
     @Join(value = "technical", type = Join.Type.LEFT_FETCH)

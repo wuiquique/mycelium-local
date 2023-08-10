@@ -1,0 +1,329 @@
+package com.mycelium.local.api;
+
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import com.mycelium.local.repository.role.Role;
+import com.mycelium.local.repository.role.RoleRepo;
+import com.mycelium.local.repository.user.User;
+import com.mycelium.local.repository.user.UserRepo;
+
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
+import io.micronaut.http.client.HttpClient;
+import io.micronaut.http.client.annotation.Client;
+import io.micronaut.http.cookie.Cookie;
+import io.micronaut.runtime.EmbeddedApplication;
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import jakarta.inject.Inject;
+
+@MicronautTest
+public class ProductTest {
+
+    @Inject
+    EmbeddedApplication<?> application;
+
+    @Inject
+    @Client("/")
+    HttpClient client;
+
+    @Inject
+    RoleRepo roleRepo;
+
+    @Inject
+    UserRepo userRepo;
+
+    @BeforeEach
+    void beforeTest() {
+        var userRole = new Role();
+        userRole.id = 1;
+        userRole.name = "Común";
+        roleRepo.save(userRole);
+
+        var adminRole = new Role();
+        adminRole.id = 2;
+        adminRole.name = "Administrador";
+        roleRepo.save(adminRole);
+
+        var dummyUser = new User();
+        dummyUser.name = "Dummy";
+        dummyUser.lastname = "Dummy";
+        dummyUser.email = "dummy@dummy.com";
+        dummyUser.password = "12345";
+        dummyUser.role = roleRepo.findById(1).get();
+
+        userRepo.save(dummyUser);
+    }
+
+    @AfterEach
+    void afterTest() {
+        userRepo.deleteAll();
+        roleRepo.deleteAll();
+    }
+
+    String login() {
+        final HttpResponse<?> loginRes = client.toBlocking()
+                .exchange(HttpRequest.POST("/api/login", Map.of("username", "dummy@dummy.com", "password", "12345")));
+        final String token = loginRes.getCookie("JWT").get().getValue();
+
+        return token;
+    }
+
+    @Test
+    void testProductList() {
+        final List<?> products = client.toBlocking().retrieve(HttpRequest.GET("/api/product"), List.class);
+
+        for (var prodItem : products) {
+            if (prodItem instanceof Map<?, ?> product) {
+                Assertions.assertTrue(product.containsKey("id"));
+                Assertions.assertTrue(product.containsKey("name"));
+                Assertions.assertTrue(product.containsKey("desc"));
+                Assertions.assertTrue(product.containsKey("categorieId"));
+                Assertions.assertTrue(product.containsKey("brand"));
+                Assertions.assertTrue(product.containsKey("weight"));
+                Assertions.assertTrue(product.containsKey("quantity"));
+                Assertions.assertTrue(product.containsKey("price"));
+                Assertions.assertTrue(product.containsKey("pictures"));
+                Assertions.assertTrue(product.containsKey("technical"));
+
+                if (product.get("pictures") instanceof List<?> pictures) {
+                    for (var picItem : pictures) {
+                        Assertions.assertTrue(picItem instanceof String);
+                    }
+                } else {
+                    Assertions.fail();
+                }
+
+                if (product.get("technical") instanceof List<?> technical) {
+                    for (var techItem : technical) {
+                        if (techItem instanceof Map<?, ?> tech) {
+                            Assertions.assertTrue(tech.containsKey("type"));
+                            Assertions.assertTrue(tech.containsKey("value"));
+                        } else {
+                            Assertions.fail();
+                        }
+                    }
+                } else {
+                    Assertions.fail();
+                }
+            } else {
+                Assertions.fail();
+            }
+        }
+    }
+
+    @Test
+    void testGetProductByCategoyId() {
+        final List<?> products = client.toBlocking().retrieve(HttpRequest.GET("/api/product/byCategory/1"), List.class);
+
+        for (var prodItem : products) {
+            if (prodItem instanceof Map<?, ?> product) {
+                Assertions.assertTrue(product.containsKey("id"));
+                Assertions.assertTrue(product.containsKey("name"));
+                Assertions.assertTrue(product.containsKey("desc"));
+                Assertions.assertTrue(product.containsKey("categorieId"));
+                Assertions.assertTrue(product.containsKey("brand"));
+                Assertions.assertTrue(product.containsKey("weight"));
+                Assertions.assertTrue(product.containsKey("quantity"));
+                Assertions.assertTrue(product.containsKey("price"));
+                Assertions.assertTrue(product.containsKey("pictures"));
+                Assertions.assertTrue(product.containsKey("technical"));
+
+                if (product.get("pictures") instanceof List<?> pictures) {
+                    for (var picItem : pictures) {
+                        Assertions.assertTrue(picItem instanceof String);
+                    }
+                } else {
+                    Assertions.fail();
+                }
+
+                if (product.get("technical") instanceof List<?> technical) {
+                    for (var techItem : technical) {
+                        if (techItem instanceof Map<?, ?> tech) {
+                            Assertions.assertTrue(tech.containsKey("type"));
+                            Assertions.assertTrue(tech.containsKey("value"));
+                        } else {
+                            Assertions.fail();
+                        }
+                    }
+                } else {
+                    Assertions.fail();
+                }
+            } else {
+                Assertions.fail();
+            }
+        }
+    }
+
+    @Test
+    void testGetProductLastBought() {
+        final List<?> products = client.toBlocking().retrieve(HttpRequest.GET("/api/product/lastBought"), List.class);
+        for (var prodItem : products) {
+            if (prodItem instanceof Map<?, ?> product) {
+                Assertions.assertTrue(product.containsKey("id"));
+                Assertions.assertTrue(product.containsKey("name"));
+                Assertions.assertTrue(product.containsKey("desc"));
+                Assertions.assertTrue(product.containsKey("categorieId"));
+                Assertions.assertTrue(product.containsKey("brand"));
+                Assertions.assertTrue(product.containsKey("weight"));
+                Assertions.assertTrue(product.containsKey("quantity"));
+                Assertions.assertTrue(product.containsKey("price"));
+                Assertions.assertTrue(product.containsKey("pictures"));
+                Assertions.assertTrue(product.containsKey("technical"));
+
+                if (product.get("pictures") instanceof List<?> pictures) {
+                    for (var picItem : pictures) {
+                        Assertions.assertTrue(picItem instanceof String);
+                    }
+                } else {
+                    Assertions.fail();
+                }
+
+                if (product.get("technical") instanceof List<?> technical) {
+                    for (var techItem : technical) {
+                        if (techItem instanceof Map<?, ?> tech) {
+                            Assertions.assertTrue(tech.containsKey("type"));
+                            Assertions.assertTrue(tech.containsKey("value"));
+                        } else {
+                            Assertions.fail();
+                        }
+                    }
+                } else {
+                    Assertions.fail();
+                }
+            } else {
+                Assertions.fail();
+            }
+        }
+    }
+
+    @Test
+    void testGetProductRating() {
+        final List<?> ratings = client.toBlocking().retrieve(HttpRequest.GET("/api/product/rating"), List.class);
+        for (var item : ratings) {
+            if (item instanceof Map<?, ?> rat) {
+                Assertions.assertTrue(rat.containsKey("id"));
+                Assertions.assertTrue(rat.containsKey("rating"));
+                Assertions.assertTrue(rat.containsKey("user"));
+            } else {
+                Assertions.fail();
+            }
+        }
+    }
+
+    @Test
+    void testPostProductRating() {
+        var token = login();
+
+        final HttpResponse<?> response = client.toBlocking()
+                .exchange(HttpRequest.POST("/api/product/rating", Map.of("userId", 1, "productId", 1, "rating", 1))
+                        .cookie(Cookie.of("JWT", token)));
+        Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
+    }
+
+    @Test
+    void testGetProductRatingAvg() {
+        final HttpResponse<Integer> response = client.toBlocking().exchange(
+                HttpRequest.GET("/api/product/rating/avg/1"),
+                Integer.class);
+        Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
+    }
+
+    @Test
+    void testGetProductRatingSpecific() {
+        final List<?> ratings = client.toBlocking().retrieve(HttpRequest.GET("/api/product/rating/1"), List.class);
+        for (var item : ratings) {
+            if (item instanceof Map<?, ?> rat) {
+                Assertions.assertTrue(rat.containsKey("id"));
+                Assertions.assertTrue(rat.containsKey("rating"));
+                Assertions.assertTrue(rat.containsKey("user"));
+            } else {
+                Assertions.fail();
+            }
+        }
+    }
+
+    @Test
+    void testGetProductTopSales() {
+        final List<?> products = client.toBlocking().retrieve(HttpRequest.GET("/api/product/lastBought"), List.class);
+        for (var prodItem : products) {
+            if (prodItem instanceof Map<?, ?> product) {
+                Assertions.assertTrue(product.containsKey("id"));
+                Assertions.assertTrue(product.containsKey("name"));
+                Assertions.assertTrue(product.containsKey("desc"));
+                Assertions.assertTrue(product.containsKey("categorieId"));
+                Assertions.assertTrue(product.containsKey("brand"));
+                Assertions.assertTrue(product.containsKey("weight"));
+                Assertions.assertTrue(product.containsKey("quantity"));
+                Assertions.assertTrue(product.containsKey("price"));
+                Assertions.assertTrue(product.containsKey("pictures"));
+                Assertions.assertTrue(product.containsKey("technical"));
+
+                if (product.get("pictures") instanceof List<?> pictures) {
+                    for (var picItem : pictures) {
+                        Assertions.assertTrue(picItem instanceof String);
+                    }
+                } else {
+                    Assertions.fail();
+                }
+
+                if (product.get("technical") instanceof List<?> technical) {
+                    for (var techItem : technical) {
+                        if (techItem instanceof Map<?, ?> tech) {
+                            Assertions.assertTrue(tech.containsKey("type"));
+                            Assertions.assertTrue(tech.containsKey("value"));
+                        } else {
+                            Assertions.fail();
+                        }
+                    }
+                } else {
+                    Assertions.fail();
+                }
+            } else {
+                Assertions.fail();
+            }
+        }
+    }
+
+    @Test
+    void testProductSpecific() {
+        final Map<?, ?> product = client.toBlocking().retrieve(HttpRequest.GET("/api/product/1"), Map.class);
+        Assertions.assertTrue(product.containsKey("id"));
+        Assertions.assertTrue(product.containsKey("name"));
+        Assertions.assertTrue(product.containsKey("desc"));
+        Assertions.assertTrue(product.containsKey("categorieId"));
+        Assertions.assertTrue(product.containsKey("brand"));
+        Assertions.assertTrue(product.containsKey("weight"));
+        Assertions.assertTrue(product.containsKey("quantity"));
+        Assertions.assertTrue(product.containsKey("price"));
+        Assertions.assertTrue(product.containsKey("pictures"));
+        Assertions.assertTrue(product.containsKey("technical"));
+
+        if (product.get("pictures") instanceof List<?> pictures) {
+            for (var picItem : pictures) {
+                Assertions.assertTrue(picItem instanceof String);
+            }
+        } else {
+            Assertions.fail();
+        }
+
+        if (product.get("technical") instanceof List<?> technical) {
+            for (var techItem : technical) {
+                if (techItem instanceof Map<?, ?> tech) {
+                    Assertions.assertTrue(tech.containsKey("type"));
+                    Assertions.assertTrue(tech.containsKey("value"));
+                } else {
+                    Assertions.fail();
+                }
+            }
+        } else {
+            Assertions.fail();
+        }
+    }
+}
