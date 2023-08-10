@@ -1,13 +1,13 @@
-pipeline {
-    agent any
-    stages {
-        stage('Hello') {
-            steps {
-                echo "Hello world"
-                    }
-            }
+// pipeline {
+//     agent any
+//     stages {
+//         stage('Hello') {
+//             steps {
+//                 echo "Hello world"
+//                     }
+//             }
         
-        stage('SonarQube') {
+//         stage('SonarQube') {
             node {
                 stage('SCM') {
                     checkout scm
@@ -18,14 +18,14 @@ pipeline {
                     }
                 }
             }
-        }
+    //     }
 
-    }
-    post{
-        always{
-            mail to: "luisenriquem15@gmail.com",
-            subject: "Sonar Test",
-            body: "Este es un test de Sonar xddd"
-        }
-    }
+    // }
+    // post{
+    //     always{
+    //         mail to: "luisenriquem15@gmail.com",
+    //         subject: "Sonar Test",
+    //         body: "Este es un test de Sonar xddd"
+    //     }
+    // }
 }
