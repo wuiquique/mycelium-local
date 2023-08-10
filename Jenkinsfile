@@ -7,7 +7,7 @@ pipeline {
 //                     }
 //             }
         
-        stage('SonarQube') {
+        step('SonarQube') {
             node {
                 stage('SCM') {
                     checkout scm
