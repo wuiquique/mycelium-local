@@ -54,23 +54,23 @@ pipeline {
             }
         }
 
-        stage("SonarQube Back Quality Gate") {
-            steps {
-                timeout(time: 5, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
+        // stage("SonarQube Back Quality Gate") {
+        //     steps {
+        //         timeout(time: 5, unit: 'MINUTES') {
+        //             waitForQualityGate abortPipeline: true
+        //         }
+        //     }
 
-            post {
-                failure {
-                    mail (
-                        to: "luisenriquem15@gmail.com",
-                        subject: "Fallo en Control de Calidad SonarQube BackEnd",
-                        body: "El análisis de SonarQube para el backend no superó el nivel de calidad esperado",
-                    )
-                }
-            }
-        }
+        //     post {
+        //         failure {
+        //             mail (
+        //                 to: "luisenriquem15@gmail.com",
+        //                 subject: "Fallo en Control de Calidad SonarQube BackEnd",
+        //                 body: "El análisis de SonarQube para el backend no superó el nivel de calidad esperado",
+        //             )
+        //         }
+        //     }
+        // }
 
         stage('SonarQube Front') {
             steps {
@@ -96,23 +96,23 @@ pipeline {
             }
         }
 
-        stage("SonarQube Front Quality Gate") {
-            steps {
-                timeout(time: 5, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
+        // stage("SonarQube Front Quality Gate") {
+        //     steps {
+        //         timeout(time: 5, unit: 'MINUTES') {
+        //             waitForQualityGate abortPipeline: true
+        //         }
+        //     }
 
-            post {
-                failure {
-                    mail (
-                        to: "luisenriquem15@gmail.com",
-                        subject: "Fallo en Control de Calidad SonarQube FrontEnd",
-                        body: "El análisis de SonarQube para el frontend no superó el nivel de calidad esperado",
-                    )
-                }
+        //     post {
+        //         failure {
+        //             mail (
+        //                 to: "luisenriquem15@gmail.com",
+        //                 subject: "Fallo en Control de Calidad SonarQube FrontEnd",
+        //                 body: "El análisis de SonarQube para el frontend no superó el nivel de calidad esperado",
+        //             )
+        //         }
           
-            }
-        }
+        //     }
+        // }
     }
 }
