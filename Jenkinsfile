@@ -42,6 +42,20 @@ pipeline {
                 }
             }
             post {
+                always {
+                    script {
+                        def response = sh(script: 'curl -s -u admin:admin http://localhost:9000/api/issues/search?componentKeys=mycelium:api -d "severities=BLOCKER,CRITICAL,MAJOR" -d "statuses=OPEN" -d "types=CODE_SMELL"', returnStdout: true).trim()
+                        if (response.contains("total\":0")) {
+                            echo "No hay deuda técnica"
+                        } else {
+                            mail (
+                                to: "correo_especifico@example.com",
+                                subject: "Deuda Técnica Detectada en SonarQube",
+                                body: "Se ha detectado deuda técnica en el proyecto."
+                            )
+                        }
+                    }
+                }
                 failure {
                     mail (
                         to: "luisenriquem15@gmail.com",
