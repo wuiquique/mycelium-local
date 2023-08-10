@@ -18,7 +18,7 @@ pipeline {
     }
     post {
         always {
-            emailext (
+            mail (
                 to: "luisenriquem15@gmail.com",
                 subject: "Sonar Test",
                 body: "Este es un test de Sonar xddd"
