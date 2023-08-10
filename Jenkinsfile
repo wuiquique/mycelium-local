@@ -1,13 +1,13 @@
 pipeline {
-//     agent any
-//     stages {
+    agent any
+    stages {
 //         stage('Hello') {
 //             steps {
 //                 echo "Hello world"
 //                     }
 //             }
         
-//         stage('SonarQube') {
+        stage('SonarQube') {
             node {
                 stage('SCM') {
                     checkout scm
@@ -18,7 +18,7 @@ pipeline {
                     }
                 }
             }
-    //     }
+        }
 
     // }
     // post{
@@ -27,5 +27,5 @@ pipeline {
     //         subject: "Sonar Test",
     //         body: "Este es un test de Sonar xddd"
     //     }
-    // }
+    }
 }
