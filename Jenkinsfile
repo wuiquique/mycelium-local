@@ -15,6 +15,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Unit Tests') {
             steps {
                 dir('api') {
@@ -31,6 +32,7 @@ pipeline {
                 }
             }
         }
+
         stage('SonarQube Analysis') {
             steps {
                 script {
