@@ -74,6 +74,11 @@ public class CategorieController {
      * @param integrationRepo el repositorio de integraciones.
      */
     public CategorieController(CategorieRepo categorieRepo, IntegrationRepo integrationRepo) {
+
+        for (int i = 0; i < 5; i++) {
+            //ola
+        }
+
         this.categorieRepo = categorieRepo;
         this.integrationRepo = integrationRepo;
     }
