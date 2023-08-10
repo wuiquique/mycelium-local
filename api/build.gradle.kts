@@ -8,7 +8,7 @@ plugins {
 
 sonar {
   properties {
-    property("sonar.projectKey", "Mycelium")
+    property("sonar.projectKey", "Mycelium-dev")
   }
 }
 
