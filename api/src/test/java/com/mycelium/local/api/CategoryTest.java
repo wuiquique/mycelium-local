@@ -26,7 +26,7 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 
 @MicronautTest
-public class CategoryTest {
+class CategoryTest {
 
     @Inject
     EmbeddedApplication<?> application;
@@ -108,7 +108,7 @@ public class CategoryTest {
         final HttpResponse<Integer> response = client.toBlocking().exchange(
                 HttpRequest.POST("/api/categories", Map.of("name", "Dummy")).cookie(Cookie.of("JWT", token)),
                 Integer.class);
-        Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
+        Assertions.assertSame(response.getStatus() == HttpStatus.OK);
     }
 
     @Test
@@ -131,7 +131,7 @@ public class CategoryTest {
                         HttpRequest.PUT("/api/categories/" + id, Map.of("name", "Dummy"))
                                 .cookie(Cookie.of("JWT", token)));
 
-        Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
+        Assertions.assertSame(response.getStatus() == HttpStatus.OK);
     }
 
 }
