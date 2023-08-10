@@ -15,7 +15,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Unit Tests') {
             steps {
                 dir('api') {
@@ -33,7 +33,7 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
+        stage('SonarQube Back') {
             steps {
                 script {
                     withSonarQubeEnv('Mycelium-dev') {
@@ -47,8 +47,30 @@ pipeline {
                 failure {
                     mail (
                         to: "luisenriquem15@gmail.com",
+                        subject: "Fallo en Etapa SonarQube Back",
+                        body: "La etapa SonarQube Analysis para el backend ha fallado."
+                    )
+                }
+            }
+        }
+
+        stage('SonarQube Front') {
+            steps {
+                script {
+                    nodejs('Mycelium-front') {
+                        def scannerHome = tool 'SonarScanner';
+                        withSonarQubeEnv() {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                        }
+                    }
+                }
+            }
+            post {
+                failure {
+                    mail (
+                        to: "luisenriquem15@gmail.com",
                         subject: "Fallo en Etapa SonarQube Analysis",
-                        body: "La etapa SonarQube Analysis ha fallado."
+                        body: "La etapa SonarQube Analysis para el frontend ha fallado."
                     )
                 }
             }
