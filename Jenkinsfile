@@ -1,27 +1,28 @@
 pipeline {
     agent any
     stages {
-//         stage('Hello') {
-//             steps {
-//                 echo "Hello world"
-//                     }
-//             }
-        
-                stage('SCM') {
-                    checkout scm
-                }
-                stage('SonarQube Analysis') {
-                    withSonarQubeEnv() {
-                    sh "./gradlew sonar"
+        stage('SCM') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    withSonarQubeEnv('SonarQube Server Name') {
+                        sh "./gradlew sonar"
                     }
                 }
-
-    // }
-    // post{
-    //     always{
-    //         mail to: "luisenriquem15@gmail.com",
-    //         subject: "Sonar Test",
-    //         body: "Este es un test de Sonar xddd"
-    //     }
+            }
+        }
+    }
+    post {
+        always {
+            emailext (
+                to: "luisenriquem15@gmail.com",
+                subject: "Sonar Test",
+                body: "Este es un test de Sonar xddd"
+            )
+        }
     }
 }
