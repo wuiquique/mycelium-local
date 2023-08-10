@@ -636,7 +636,6 @@ public class ProductController {
                 var errorLog = new ErrorLog();
                 errorLog.jsonLog = log;
                 errorLog.message = e.toString();
-                e.printStackTrace();
 
                 log.errorLogs.add(errorLog);
 
@@ -738,7 +737,6 @@ public class ProductController {
                 var errorLog = new ErrorLog();
                 errorLog.jsonLog = log;
                 errorLog.message = e.toString();
-                e.printStackTrace();
 
                 log.errorLogs.add(errorLog);
 
