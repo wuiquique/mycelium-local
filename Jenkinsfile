@@ -5,6 +5,15 @@ pipeline {
             steps {
                 checkout scm
             }
+            post {
+                failure {
+                    mail (
+                        to: "luisenriquem15@gmail.com",
+                        subject: "Fallo en Etapa SCM",
+                        body: "La etapa SCM ha fallado."
+                    )
+                }
+            }
         }
         stage('SonarQube Analysis') {
             steps {
@@ -16,6 +25,15 @@ pipeline {
                     }
                 }
             }
+            post {
+                failure {
+                    mail (
+                        to: "luisenriquem15@gmail.com",
+                        subject: "Fallo en Etapa SonarQube Analysis",
+                        body: "La etapa SonarQube Analysis ha fallado."
+                    )
+                }
+            }
         }
         stage('Unit Tests') {
             steps {
@@ -23,17 +41,12 @@ pipeline {
                     sh "./gradlew test"
                 }
             }
-        }
-    }
-    post {
-        always {
-            script {
-                currentBuild.resultIsBetterOrEqualTo('FAILURE')  // Check if build result is FAILURE or WORSE
-                if (currentBuild.resultIsBetterOrEqualTo('FAILURE')) {
+            post {
+                failure {
                     mail (
                         to: "luisenriquem15@gmail.com",
-                        subject: "Fallo en Pipeline",
-                        body: "El pipeline ha fallado en la etapa de ${currentBuild.currentStage.name}"
+                        subject: "Fallo en Etapa Unit Tests",
+                        body: "La etapa Unit Tests ha fallado."
                     )
                 }
             }
