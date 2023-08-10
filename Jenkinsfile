@@ -60,7 +60,9 @@ pipeline {
                     nodejs('Mycelium-front') {
                         def scannerHome = tool 'SonarScanner';
                         withSonarQubeEnv() {
-                        sh "${scannerHome}/bin/sonar-scanner"
+                            dir('client'){
+                                sh "${scannerHome}/bin/sonar-scanner"
+                            }
                         }
                     }
                 }
