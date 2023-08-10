@@ -31,7 +31,7 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 
 @MicronautTest
-class ProductTest {
+public class ProductTest {
 
     @Inject
     EmbeddedApplication<?> application;

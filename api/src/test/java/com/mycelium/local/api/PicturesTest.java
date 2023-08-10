@@ -31,7 +31,7 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 
 @MicronautTest
-class PicturesTest {
+public class PicturesTest {
 
     @Inject
     EmbeddedApplication<?> application;
@@ -150,7 +150,7 @@ class PicturesTest {
                 .exchange(HttpRequest
                         .POST("/api/pictures", Map.of("url", "http://example.com", "productId", productIds.get(0)))
                         .cookie(Cookie.of("JWT", token)));
-        Assertions.assertSame(response.getStatus() == HttpStatus.OK);
+        Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
     }
 
     @Test
