@@ -44,7 +44,7 @@ pipeline {
             post {
                 always {
                     script {
-                        def response = sh(script: 'curl -s -u admin:admin http://localhost:9000/api/issues/search?componentKeys=mycelium:api -d "severities=BLOCKER,CRITICAL,MAJOR" -d "statuses=OPEN" -d "types=CODE_SMELL"', returnStdout: true).trim()
+                        def response = sh(script: 'curl -s -u admin:admin http://sonarqube:9000/api/issues/search?componentKeys=mycelium:api -d "severities=BLOCKER,CRITICAL,MAJOR" -d "statuses=OPEN" -d "types=CODE_SMELL"', returnStdout: true).trim()
                         if (response.contains("total\":0")) {
                             echo "No hay deuda técnica"
                         } else {
