@@ -8,7 +8,7 @@ plugins {
 
 sonar {
   properties {
-    property "sonar.dev-token-wuiquique", "Mycelium"
+    property("sonar.projectKey", "Mycelium")
   }
 }
 
