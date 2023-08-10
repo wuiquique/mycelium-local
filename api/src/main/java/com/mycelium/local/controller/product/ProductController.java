@@ -258,6 +258,27 @@ public class ProductController {
     @Get("/{id}")
     public ProductResponse get(int id) {
         var response = (productRepo.findById(id).get());
+        // List<EstimadoBody> temp = Lists.newArrayList();
+
+        // var t = new EstimadoBody();
+
+        // t.categoryId = response.categorie.id;
+        // t.salePrice = Double.valueOf(response.price);
+        // t.boughtPrice = Double.valueOf(response.price);
+        // t.porcentage = 0.3;
+        // t.quantity = 1;
+        // t.weight = Double.valueOf(response.weight);
+        // t.international = false;
+
+        // temp.add(t);
+
+        // var r =
+        // client.toBlocking().retrieve(HttpRequest.POST("http://mycelium-taxes/api/tax/estimate",
+        // temp),
+        // List.class);
+
+        // response.price = ((Double) ((Map<?, ?>) r.get(0)).get("tax")).intValue();
+
         return ProductResponse.fromProduct(response);
     }
 
@@ -274,6 +295,25 @@ public class ProductController {
             for (Picture picture : pictureRepo.findByProductId(product.id)) {
                 urls.add(picture.url);
             }
+
+            // List<EstimadoBody> temp = Lists.newArrayList();
+            // var t = new EstimadoBody();
+
+            // t.categoryId = product.categorie.id;
+            // t.salePrice = Double.valueOf(product.price);
+            // t.boughtPrice = Double.valueOf(product.price);
+            // t.porcentage = 0.3;
+            // t.quantity = 1;
+            // t.weight = Double.valueOf(product.weight);
+            // t.international = false;
+
+            // temp.add(t);
+
+            // var r =
+            // client.toBlocking().retrieve(HttpRequest.POST("http://mycelium-taxes/api/tax/estimate",
+            // temp),
+            // List.class);
+
             Integer priceInt = product.price;
 
             // if (!r.isEmpty()) {
@@ -295,6 +335,25 @@ public class ProductController {
             for (Picture picture : pictureRepo.findByProductId(product.id)) {
                 urls.add(picture.url);
             }
+
+            // List<EstimadoBody> temp = Lists.newArrayList();
+            // var t = new EstimadoBody();
+
+            // t.categoryId = product.categorie.id;
+            // t.salePrice = Double.valueOf(product.price);
+            // t.boughtPrice = Double.valueOf(product.price);
+            // t.porcentage = 0.3;
+            // t.quantity = 1;
+            // t.weight = Double.valueOf(product.weight);
+            // t.international = false;
+
+            // temp.add(t);
+
+            // var r =
+            // client.toBlocking().retrieve(HttpRequest.POST("http://mycelium-taxes/api/tax/estimate",
+            // temp),
+            // List.class);
+
             Integer priceInt = product.price;
 
             // if (!r.isEmpty()) {
@@ -482,6 +541,39 @@ public class ProductController {
 
         products.sort((ProductResponse a, ProductResponse b) -> {
             return a.name.compareToIgnoreCase(b.name);
+        });
+
+        // for (var p : products) {
+        // List<EstimadoBody> temp = Lists.newArrayList();
+        // var t = new EstimadoBody();
+
+        // if (p.integrationId == null) {
+        // t.categoryId = (Integer) p.categorieId;
+        // } else {
+        // t.categoryId = 1;
+        // }
+        // t.salePrice = Double.valueOf(p.price);
+        // t.boughtPrice = Double.valueOf(p.price);
+        // t.porcentage = 0.30;
+        // t.quantity = 1;
+        // t.weight = Double.valueOf(p.weight);
+
+        // if (p.integrationId == null) {
+        // t.international = false;
+        // } else {
+        // t.international = true;
+        // }
+
+        // temp.add(t);
+
+        // var r =
+        // client.toBlocking().retrieve(HttpRequest.POST("http://mycelium-taxes/api/tax/estimate",
+        // temp),
+        // List.class);
+
+        // p.price = ((Double) ((Map<?, ?>) r.get(0)).get("tax")).intValue();
+        // }
+
         return products;
     }
 

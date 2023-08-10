@@ -181,6 +181,61 @@ public class CartController {
                     (int) productDetails.get("weight"), (int) productDetails.get("price"),
                     (List<String>) productDetails.get("pictures")));
         }
+        // for (var product : res) {
+        // List<EstimadoBody> temp = Lists.newArrayList();
+        // var t = new EstimadoBody();
+
+        // // if (product.integrationId == null) {
+        // // Category category = categorieRepo.findByName(product.category);
+        // // t.categoryId = category.id;
+        // // } else {
+        // t.categoryId = 1;
+        // // }
+
+        // t.salePrice = Double.valueOf(product.price);
+        // t.boughtPrice = Double.valueOf(product.price);
+        // t.porcentage = 0.3;
+        // t.quantity = 1;
+        // t.weight = Double.valueOf(product.weight);
+
+        // if (product.integrationId == null) {
+        // t.international = false;
+        // } else {
+        // t.international = true;
+        // }
+
+        // temp.add(t);
+
+        // var r =
+        // client.toBlocking().retrieve(HttpRequest.POST("http://mycelium-taxes/api/tax/estimate",
+        // temp),
+        // List.class);
+
+        // product.price = ((Double) ((Map<?, ?>) r.get(0)).get("tax")).intValue();
+        // }
+
+        /*
+         * ESTIMADO
+         * public Integer categoryId;
+         * public Double salePrice;
+         * public Double boughtPrice;
+         * public Double porcentage;
+         * public Integer quantity;
+         * public Double weight;
+         * public Boolean international;
+         * 
+         * CARTUNIFIED
+         * public Object id;
+         * public Integer integrationId;
+         * public Object productId;
+         * public String name;
+         * public String description;
+         * public Integer quantity;
+         * public String category;
+         * public Integer weight;
+         * public Integer price;
+         * public List<String> pictures
+         */
 
         return res;
     }

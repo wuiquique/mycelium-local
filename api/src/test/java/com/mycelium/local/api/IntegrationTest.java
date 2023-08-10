@@ -28,7 +28,7 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 
 @MicronautTest
-class IntegrationTest {
+public class IntegrationTest {
 
     @Inject
     EmbeddedApplication<?> application;
@@ -143,7 +143,7 @@ class IntegrationTest {
         final HttpResponse<?> integration = client.toBlocking()
                 .exchange(HttpRequest.PUT("/api/integration/" + integrationIds.get(0), obj)
                         .cookie(Cookie.of("JWT", token)));
-        Assertions.assertSame(integration.getStatus() == HttpStatus.OK);
+        Assertions.assertTrue(integration.getStatus() == HttpStatus.OK);
     }
 
     @Test
