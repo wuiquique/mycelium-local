@@ -47,7 +47,7 @@ pipeline {
                 failure {
                     mail (
                         to: "luisenriquem15@gmail.com",
-                        subject: "Fallo en Etapa SonarQube Back",
+                        subject: "Fallo en Etapa SonarQube Back BackEnd",
                         body: "La etapa SonarQube Analysis para el backend ha fallado."
                     )
                 }
@@ -71,7 +71,7 @@ pipeline {
                 failure {
                     mail (
                         to: "luisenriquem15@gmail.com",
-                        subject: "Fallo en Etapa SonarQube Analysis",
+                        subject: "Fallo en Etapa SonarQube Analysis FrontEnd",
                         body: "La etapa SonarQube Analysis para el frontend ha fallado."
                     )
                 }
