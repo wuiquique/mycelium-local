@@ -6,14 +6,7 @@ pipeline {
                 checkout scm
             }
         }
-        stage('UnitTest') {
-            steps {
-                dir('api') {
-                    sh "./gradlew test"
-                }
-            }
-        }
-        stage('SonarQube') {
+        stage('SonarQube Analysis') {
             steps {
                 script {
                     withSonarQubeEnv('Mycelium-dev') {
@@ -24,14 +17,26 @@ pipeline {
                 }
             }
         }
+        stage('Unit Tests') {
+            steps {
+                dir('api') {
+                    sh "./gradlew test"
+                }
+            }
+        }
     }
     post {
         always {
-            mail (
-                to: "luisenriquem15@gmail.com",
-                subject: "Sonar Test",
-                body: "Este es un test de Sonar xddd"
-            )
+            script {
+                currentBuild.resultIsBetterOrEqualTo('FAILURE')  // Check if build result is FAILURE or WORSE
+                if (currentBuild.resultIsBetterOrEqualTo('FAILURE')) {
+                    mail (
+                        to: "luisenriquem15@gmail.com",
+                        subject: "Fallo en Pipeline",
+                        body: "El pipeline ha fallado en la etapa de ${currentBuild.currentStage.name}"
+                    )
+                }
+            }
         }
     }
 }
