@@ -7,8 +7,6 @@ pipeline {
 //                     }
 //             }
         
-        step('SonarQube') {
-            node {
                 stage('SCM') {
                     checkout scm
                 }
@@ -17,8 +15,6 @@ pipeline {
                     sh "./gradlew sonar"
                     }
                 }
-            }
-        }
 
     // }
     // post{
