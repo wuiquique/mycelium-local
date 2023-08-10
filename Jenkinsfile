@@ -53,7 +53,7 @@ pipeline {
                 }
             }
         }
-
+ 
         stage('SonarQube Front') {
             steps {
                 script {
