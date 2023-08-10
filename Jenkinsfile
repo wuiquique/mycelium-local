@@ -10,7 +10,9 @@ pipeline {
             steps {
                 script {
                     withSonarQubeEnv('SonarQube Server Name') {
-                        sh "./gradlew sonar"
+                        dir('api') {
+                            sh "../gradlew sonar"
+                        }
                     }
                 }
             }
