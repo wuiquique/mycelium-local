@@ -34,6 +34,7 @@ dependencies {
     implementation("jakarta.annotation:jakarta.annotation-api:2.1.1")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.11")
     runtimeOnly("com.oracle.database.jdbc:ojdbc8:21.7.0.0")
+    runtimeOnly("com.h2database:h2")
     implementation("io.micronaut:micronaut-validation:3.8.4")
     implementation("io.micronaut.sql:micronaut-jdbc-ucp:4.7.2")
     implementation("com.google.guava:guava:31.1-jre")
