@@ -325,47 +325,50 @@ public class OrderController {
                     integOrderP.id, List.of(), List.of()));
         }
 
-        for (var p : products) {
-            List<EstimadoBody> temp = Lists.newArrayList();
+        // for (var p : products) {
+        // List<EstimadoBody> temp = Lists.newArrayList();
 
-            var t = new EstimadoBody();
+        // var t = new EstimadoBody();
 
-            if (p.productCategorie instanceof String) {
-                t.categoryId = 1;
-            } else if (p.productCategorie instanceof Integer v) {
-                t.categoryId = v == null ? 1 : v;
-            } else {
-                t.categoryId = 1;
-            }
-            t.salePrice = p.productPrice.doubleValue();
-            t.boughtPrice = p.productPrice.doubleValue();
-            t.porcentage = 0.30;
-            t.quantity = p.quantity;
-            t.weight = p.weight == null ? 1 : p.weight.doubleValue();
-            t.international = p.integOrderId != null;
+        // if (p.productCategorie instanceof String) {
+        // t.categoryId = 1;
+        // } else if (p.productCategorie instanceof Integer v) {
+        // t.categoryId = v == null ? 1 : v;
+        // } else {
+        // t.categoryId = 1;
+        // }
+        // t.salePrice = p.productPrice.doubleValue();
+        // t.boughtPrice = p.productPrice.doubleValue();
+        // t.porcentage = 0.30;
+        // t.quantity = p.quantity;
+        // t.weight = p.weight == null ? 1 : p.weight.doubleValue();
+        // t.international = p.integOrderId != null;
 
-            System.out.println("category: " + t.categoryId);
-            System.out.println("salePrice: " + t.salePrice);
-            System.out.println("boughtPrice: " + t.boughtPrice);
-            System.out.println("porcentage: " + t.porcentage);
-            System.out.println("quantity: " + t.quantity);
-            System.out.println("weight: " + t.weight);
-            System.out.println("international: " + t.international);
+        // System.out.println("category: " + t.categoryId);
+        // System.out.println("salePrice: " + t.salePrice);
+        // System.out.println("boughtPrice: " + t.boughtPrice);
+        // System.out.println("porcentage: " + t.porcentage);
+        // System.out.println("quantity: " + t.quantity);
+        // System.out.println("weight: " + t.weight);
+        // System.out.println("international: " + t.international);
 
-            temp.add(t);
+        // temp.add(t);
 
-            var response = client.toBlocking()
-                    .retrieve(HttpRequest.POST("http://mycelium-taxes/api/tax/estimate", temp), List.class);
+        // var response = client.toBlocking()
+        // .retrieve(HttpRequest.POST("http://mycelium-taxes/api/tax/estimate", temp),
+        // List.class);
 
-            if (p.integOrderId == null) {
-                p.productPrice = ((Double) ((Map<?, ?>) response.get(0)).get("tax")).intValue();
-                System.out.println(p.productPrice);
-            } else {
-                p.productPrice = ((Double) ((Map<?, ?>) response.get(0)).get("tax")).intValue();
-                // p.productPrice = (p.productPrice * 8) + ((Integer)((Map<?, ?>)
-                // response.get(0)).get("tax"));
-            }
-        }
+        // if (p.integOrderId == null) {
+        // p.productPrice = ((Double) ((Map<?, ?>)
+        // response.get(0)).get("tax")).intValue();
+        // System.out.println(p.productPrice);
+        // } else {
+        // p.productPrice = ((Double) ((Map<?, ?>)
+        // response.get(0)).get("tax")).intValue();
+        // // p.productPrice = (p.productPrice * 8) + ((Integer)((Map<?, ?>)
+        // // response.get(0)).get("tax"));
+        // }
+        // }
 
         orderFinal.productList = products;
 
@@ -523,56 +526,61 @@ public class OrderController {
 
     @Post("/impuestos")
     public void impuestos(@Body List<OrderImpuestos> body) {
-        List<OrderImpuestos2> b = new ArrayList<>();
-        for (var item : body) {
-            var temp = new OrderImpuestos2();
+        // List<OrderImpuestos2> b = new ArrayList<>();
+        // for (var item : body) {
+        // var temp = new OrderImpuestos2();
 
-            temp.name = item.name;
-            temp.email = "luis@dummy.com";
-            temp.password = "12345";
-            if (item.categoryId instanceof String) {
-                temp.categoryId = 1;
-            } else if (item.categoryId instanceof Integer v) {
-                temp.categoryId = v;
-            } else {
-                temp.categoryId = 1;
-            }
-            temp.boughtPrice = item.boughtPrice;
-            temp.porcentage = item.porcentage;
-            temp.quantity = item.quantity;
-            temp.weight = item.weight;
-            temp.international = item.international;
+        // temp.name = item.name;
+        // temp.email = "luis@dummy.com";
+        // temp.password = "12345";
+        // if (item.categoryId instanceof String) {
+        // temp.categoryId = 1;
+        // } else if (item.categoryId instanceof Integer v) {
+        // temp.categoryId = v;
+        // } else {
+        // temp.categoryId = 1;
+        // }
+        // temp.boughtPrice = item.boughtPrice;
+        // temp.porcentage = item.porcentage;
+        // temp.quantity = item.quantity;
+        // temp.weight = item.weight;
+        // temp.international = item.international;
 
-            b.add(temp);
-        }
-        var response = client.toBlocking().exchange(HttpRequest.POST("http://mycelium-taxes/api/tax/impuestos", b),
-                null, null);
+        // b.add(temp);
+        // }
+        // var response =
+        // client.toBlocking().exchange(HttpRequest.POST("http://mycelium-taxes/api/tax/impuestos",
+        // b),
+        // null, null);
     }
 
     @Post("/receipt")
     public HttpResponse<byte[]> recipt(@Body List<OrderEstimado> body) {
-        List<OrderFactura> b = new ArrayList<>();
-        for (var item : body) {
-            var temp = new OrderFactura();
+        // List<OrderFactura> b = new ArrayList<>();
+        // for (var item : body) {
+        // var temp = new OrderFactura();
 
-            var nombre = userRepo.findById(item.userId).get();
+        // var nombre = userRepo.findById(item.userId).get();
 
-            temp.name = item.productName;
-            temp.username = nombre.name;
-            temp.address = item.address;
-            temp.categoryId = item.categoryId == null ? 1 : item.categoryId;
-            temp.boughtPrice = item.boughtPrice;
-            temp.porcentage = item.porcentage;
-            temp.quantity = item.quantity;
-            temp.weight = item.weight;
-            temp.international = item.international;
+        // temp.name = item.productName;
+        // temp.username = nombre.name;
+        // temp.address = item.address;
+        // temp.categoryId = item.categoryId == null ? 1 : item.categoryId;
+        // temp.boughtPrice = item.boughtPrice;
+        // temp.porcentage = item.porcentage;
+        // temp.quantity = item.quantity;
+        // temp.weight = item.weight;
+        // temp.international = item.international;
 
-            b.add(temp);
-        }
+        // b.add(temp);
+        // }
 
-        var response = client.toBlocking().exchange(HttpRequest.POST("http://mycelium-taxes/api/tax/pdf", b),
-                byte[].class);
-        return HttpResponse.<byte[]>ok(response.getBody().get());
+        // var response =
+        // client.toBlocking().exchange(HttpRequest.POST("http://mycelium-taxes/api/tax/pdf",
+        // b),
+        // byte[].class);
+        // return HttpResponse.<byte[]>ok(response.getBody().get());
+        return HttpResponse.<byte[]>ok(new byte[] {});
     }
 
 }

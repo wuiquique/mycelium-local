@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.google.common.collect.Lists;
 import com.mycelium.local.repository.cart.Cart;
 import com.mycelium.local.repository.cart.CartRepo;
 import com.mycelium.local.repository.cartinteg.CartInteg;
@@ -30,16 +29,25 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
 
-/**Objeto de request que contiene el ID de la integracion, el objeto del producto y una cantidad */
+/**
+ * Objeto de request que contiene el ID de la integracion, el objeto del
+ * producto y una cantidad
+ */
 class CartCreateRequest {
-    /**ID de integracion puede ser null, lo que indicaria que el producto es del sistema local */
+    /**
+     * ID de integracion puede ser null, lo que indicaria que el producto es del
+     * sistema local
+     */
     @Nullable
     public Integer integrationId;
     public Object productId;
     public int quantity;
 }
 
-/**Objeto que representa los detalles de un producto en el carrito, utilizado para web service que calcula el estimado segun la SAT */
+/**
+ * Objeto que representa los detalles de un producto en el carrito, utilizado
+ * para web service que calcula el estimado segun la SAT
+ */
 class EstimadoBody {
     public Integer categoryId;
     public Double salePrice;
@@ -50,13 +58,16 @@ class EstimadoBody {
     public Boolean international;
 }
 
-/**Objeto que representa una categoria */
+/** Objeto que representa una categoria */
 class Category {
     public Integer id;
     public String name;
 }
 
-/**Un objeto unificado que representa la informacion de un producto en el carrito */
+/**
+ * Un objeto unificado que representa la informacion de un producto en el
+ * carrito
+ */
 @Introspected
 @JsonInclude(Include.ALWAYS)
 class CartUnifiedResponse {
@@ -73,19 +84,21 @@ class CartUnifiedResponse {
     public List<String> pictures;
 
     /**
-
-    Construye un nuevo objeto CartUnifiedResponse con los parametros especificos
-    @param id El ID del carrito
-    @param integrationId El ID de la integracion, de ser necesario
-    @param productId El ID del producto
-    @param name El nombre del producto
-    @param description La descripcion del producto
-    @param quantity La cantidad del producto
-    @param category La categoria a la que pertenece el producto
-    @param weight El peso del producto
-    @param price El precio del producto
-    @param pictures Una lista de URLs que representan las imagenes del producto
-    */
+     * 
+     * Construye un nuevo objeto CartUnifiedResponse con los parametros especificos
+     * 
+     * @param id            El ID del carrito
+     * @param integrationId El ID de la integracion, de ser necesario
+     * @param productId     El ID del producto
+     * @param name          El nombre del producto
+     * @param description   La descripcion del producto
+     * @param quantity      La cantidad del producto
+     * @param category      La categoria a la que pertenece el producto
+     * @param weight        El peso del producto
+     * @param price         El precio del producto
+     * @param pictures      Una lista de URLs que representan las imagenes del
+     *                      producto
+     */
     public CartUnifiedResponse(Object id, Integer integrationId, Object productId, String name, String description,
             Integer quantity, String category, Object categoryId, Integer weight, Integer price,
             List<String> pictures) {
@@ -122,7 +135,7 @@ public class CartController {
     private IntegrationRepo integrationRepo;
     private CategorieRepo categorieRepo;
 
-     /**
+    /**
      * Constructor para inyectar los repositorios necesarios.
      */
     public CartController(CartRepo cartRepo, CartIntegRepo cartIntegRepo, UserRepo userRepo, ProductRepo productRepo,
@@ -168,36 +181,38 @@ public class CartController {
                     (int) productDetails.get("weight"), (int) productDetails.get("price"),
                     (List<String>) productDetails.get("pictures")));
         }
-        for (var product : res) {
-            List<EstimadoBody> temp = Lists.newArrayList();
-            var t = new EstimadoBody();
+        // for (var product : res) {
+        // List<EstimadoBody> temp = Lists.newArrayList();
+        // var t = new EstimadoBody();
 
-            // if (product.integrationId == null) {
-            // Category category = categorieRepo.findByName(product.category);
-            // t.categoryId = category.id;
-            // } else {
-            t.categoryId = 1;
-            // }
+        // // if (product.integrationId == null) {
+        // // Category category = categorieRepo.findByName(product.category);
+        // // t.categoryId = category.id;
+        // // } else {
+        // t.categoryId = 1;
+        // // }
 
-            t.salePrice = Double.valueOf(product.price);
-            t.boughtPrice = Double.valueOf(product.price);
-            t.porcentage = 0.3;
-            t.quantity = 1;
-            t.weight = Double.valueOf(product.weight);
+        // t.salePrice = Double.valueOf(product.price);
+        // t.boughtPrice = Double.valueOf(product.price);
+        // t.porcentage = 0.3;
+        // t.quantity = 1;
+        // t.weight = Double.valueOf(product.weight);
 
-            if (product.integrationId == null) {
-                t.international = false;
-            } else {
-                t.international = true;
-            }
+        // if (product.integrationId == null) {
+        // t.international = false;
+        // } else {
+        // t.international = true;
+        // }
 
-            temp.add(t);
+        // temp.add(t);
 
-            var r = client.toBlocking().retrieve(HttpRequest.POST("http://mycelium-taxes/api/tax/estimate", temp),
-                    List.class);
+        // var r =
+        // client.toBlocking().retrieve(HttpRequest.POST("http://mycelium-taxes/api/tax/estimate",
+        // temp),
+        // List.class);
 
-            product.price = ((Double) ((Map<?, ?>) r.get(0)).get("tax")).intValue();
-        }
+        // product.price = ((Double) ((Map<?, ?>) r.get(0)).get("tax")).intValue();
+        // }
 
         /*
          * ESTIMADO

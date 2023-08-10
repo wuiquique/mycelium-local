@@ -133,12 +133,12 @@ public class CartTest {
         for (var prodItem : products) {
             if (prodItem instanceof Map<?, ?> product) {
                 Assertions.assertTrue(product.containsKey("id"));
-                Assertions.assertTrue(product.containsKey("international"));
+                Assertions.assertTrue(product.containsKey("integrationId"));
                 Assertions.assertTrue(product.containsKey("productId"));
                 Assertions.assertTrue(product.containsKey("name"));
                 Assertions.assertTrue(product.containsKey("description"));
                 Assertions.assertTrue(product.containsKey("quantity"));
-                Assertions.assertTrue(product.containsKey("category"));
+                Assertions.assertTrue(product.containsKey("categoryId"));
                 Assertions.assertTrue(product.containsKey("weight"));
                 Assertions.assertTrue(product.containsKey("price"));
                 Assertions.assertTrue(product.containsKey("pictures"));

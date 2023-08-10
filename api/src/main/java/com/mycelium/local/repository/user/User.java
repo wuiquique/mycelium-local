@@ -1,14 +1,14 @@
 package com.mycelium.local.repository.user;
 
+import com.mycelium.local.repository.role.Role;
+
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.Relation;
 import io.micronaut.data.model.naming.NamingStrategies;
 
-import com.mycelium.local.repository.role.Role;
-
-@MappedEntity(namingStrategy = NamingStrategies.Raw.class)
+@MappedEntity(namingStrategy = NamingStrategies.UpperCase.class)
 public class User {
     @Id
     @GeneratedValue

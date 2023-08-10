@@ -5,7 +5,7 @@ import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.model.naming.NamingStrategies;
 
-@MappedEntity(namingStrategy = NamingStrategies.Raw.class)
+@MappedEntity(namingStrategy = NamingStrategies.UpperCase.class)
 public class TranslationText {
     @Id
     @GeneratedValue

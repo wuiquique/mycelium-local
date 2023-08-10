@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.collect.Lists;
+import com.mycelium.local.repository.integration.Integration;
+import com.mycelium.local.repository.integration.IntegrationRepo;
 import com.mycelium.local.repository.role.Role;
 import com.mycelium.local.repository.role.RoleRepo;
 import com.mycelium.local.repository.user.User;
@@ -40,6 +43,10 @@ public class IntegrationTest {
     @Inject
     UserRepo userRepo;
 
+    @Inject
+    IntegrationRepo integrationRepo;
+    List<Integer> integrationIds = Lists.newArrayList();
+
     @BeforeEach
     void beforeTest() {
         var userRole = new Role();
@@ -60,10 +67,22 @@ public class IntegrationTest {
         dummyUser.role = roleRepo.findById(1).get();
 
         userRepo.save(dummyUser);
+
+        for (int i = 0; i < 10; i++) {
+            var newIntegration = new Integration();
+            newIntegration.name = "Integration " + i;
+            newIntegration.request = "http://example.com/";
+            newIntegration.user = "123";
+            newIntegration.password = "123";
+            newIntegration = integrationRepo.save(newIntegration);
+            integrationIds.add(newIntegration.id);
+        }
     }
 
     @AfterEach
     void afterTest() {
+        integrationIds.clear();
+        integrationRepo.deleteAll();
         userRepo.deleteAll();
         roleRepo.deleteAll();
     }
@@ -103,7 +122,8 @@ public class IntegrationTest {
         var token = login();
 
         final Map<?, ?> integration = client.toBlocking()
-                .retrieve(HttpRequest.GET("/api/integration/1").cookie(Cookie.of("JWT", token)), Map.class);
+                .retrieve(HttpRequest.GET("/api/integration/" + integrationIds.get(0)).cookie(Cookie.of("JWT", token)),
+                        Map.class);
         Assertions.assertTrue(integration.containsKey("id"));
         Assertions.assertTrue(integration.containsKey("name"));
         Assertions.assertTrue(integration.containsKey("request"));
@@ -121,7 +141,8 @@ public class IntegrationTest {
         obj.put("user", "Dummy");
         obj.put("password", "Dummy");
         final HttpResponse<?> integration = client.toBlocking()
-                .exchange(HttpRequest.PUT("/api/integration/1", obj).cookie(Cookie.of("JWT", token)));
+                .exchange(HttpRequest.PUT("/api/integration/" + integrationIds.get(0), obj)
+                        .cookie(Cookie.of("JWT", token)));
         Assertions.assertTrue(integration.getStatus() == HttpStatus.OK);
     }
 

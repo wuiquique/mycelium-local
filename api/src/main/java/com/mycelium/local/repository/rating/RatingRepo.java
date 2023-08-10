@@ -12,7 +12,7 @@ import io.micronaut.data.repository.CrudRepository;
 public interface RatingRepo extends CrudRepository<Rating, Integer> {
     List<Rating> findByProductId(int productId);
 
-    @Query("SELECT AVG(RATING) FROM RATING WHERE PRODUCTID = :id")
+    @Query("SELECT COALESCE(AVG(RATING), 0) FROM RATING WHERE PRODUCTID = :id")
     int findAvgByPId(Integer id);
 
     @Query("UPDATE RATING SET RATING = :rating WHERE USERID = :userId")

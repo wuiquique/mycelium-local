@@ -34,9 +34,9 @@ public interface ProductRepo extends CrudRepository<Product, Integer> {
     @Join(value = "categorie", type = Join.Type.LEFT_FETCH)
     List<Product> findByIdInList(List<Integer> ids);
 
-    @Query("SELECT * FROM (SELECT p.id, sum(o.QUANTITY) AS suma FROM ORDERPRODUCT o JOIN PRODUCT p ON o.PRODUCTID = p.ID GROUP BY p.ID ORDER BY suma DESC) a JOIN PRODUCT p2 ON a.id = p2.ID")
+    @Query("SELECT * FROM (SELECT p.ID, sum(o.QUANTITY) AS suma FROM ORDERPRODUCT o JOIN PRODUCT p ON o.PRODUCTID = p.ID GROUP BY p.ID ORDER BY suma DESC) a JOIN PRODUCT p2 ON a.ID = p2.ID")
     List<Product> findTop3Sales();
 
-    @Query("SELECT p.ID , p.name, p.\"DESC\" , p.BRAND , p.WEIGHT , p.QUANTITY , p.PRICE , p.CATEGORIEID FROM (SELECT o.PRODUCTID, max(o.CREATED) AS created FROM ORDERPRODUCT o GROUP BY o.PRODUCTID ORDER BY max(o.CREATED) DESC) a JOIN PRODUCT p ON p.id = a.productid")
+    @Query("SELECT p.ID , p.NAME, p.\"DESC\" , p.BRAND , p.WEIGHT , p.QUANTITY , p.PRICE , p.CATEGORIEID FROM (SELECT o.PRODUCTID, max(o.CREATED) AS created FROM ORDERPRODUCT o GROUP BY o.PRODUCTID ORDER BY max(o.CREATED) DESC) a JOIN PRODUCT p ON p.ID = a.PRODUCTID")
     List<Product> findLastBought();
 }

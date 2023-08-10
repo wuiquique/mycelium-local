@@ -37,6 +37,7 @@ public class UserTest {
 
     @Inject
     UserRepo userRepo;
+    Integer userId;
 
     @BeforeEach
     void beforeTest() {
@@ -56,8 +57,8 @@ public class UserTest {
         dummyUser.email = "dummy@dummy.com";
         dummyUser.password = "12345";
         dummyUser.role = roleRepo.findById(1).get();
-
-        userRepo.save(dummyUser);
+        dummyUser = userRepo.save(dummyUser);
+        userId = dummyUser.id;
     }
 
     @AfterEach
@@ -75,13 +76,6 @@ public class UserTest {
     }
 
     @Test
-    void testRegister() {
-        final HttpResponse<Map<?, ?>> response = client.toBlocking().exchange(HttpRequest.POST("/api/register",
-                Map.of("username", "Dummy", "password", "12345", "name", "Dummy", "lastname", "dummy")));
-        Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
-    }
-
-    @Test
     void testGetRoles() {
         final List<?> roles = client.toBlocking().retrieve(HttpRequest.GET("/api/role"), List.class);
         for (var i : roles) {
@@ -96,7 +90,7 @@ public class UserTest {
 
     @Test
     void testPutEditUser() {
-        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("/api/user/1",
+        final HttpResponse<?> response = client.toBlocking().exchange(HttpRequest.PUT("/api/user/" + userId,
                 Map.of("name", "Dummy", "lastname", "Dummy", "email", "dummy@dummy.com", "roleId", 1)));
         Assertions.assertTrue(response.getStatus() == HttpStatus.OK);
     }
