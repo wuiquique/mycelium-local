@@ -6,6 +6,12 @@ plugins {
     id("org.sonarqube") version "3.5.0.2730"
 }
 
+sonar {
+  properties {
+    property "sonar.projectKey", "Mycelium"
+  }
+}
+
 version = "0.1"
 
 group = "com.mycelium.local"

@@ -6,12 +6,26 @@ pipeline {
                 echo "Hello world"
                     }
             }
+        
+        stage('SonarQube') {
+            node {
+                stage('SCM') {
+                    checkout scm
+                }
+                stage('SonarQube Analysis') {
+                    withSonarQubeEnv() {
+                    sh "./gradlew sonar"
+                    }
+                }
+            }
         }
+
+    }
     post{
         always{
             mail to: "luisenriquem15@gmail.com",
-            subject: "Test Email",
-            body: "Test"
+            subject: "Sonar Test",
+            body: "Este es un test de Sonar xddd"
         }
     }
 }
