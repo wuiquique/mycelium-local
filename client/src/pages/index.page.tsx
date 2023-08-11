@@ -16,6 +16,10 @@ import Carousel from "react-material-ui-carousel";
 export function Page() {
   const texts = useTexts();
 
+  while (true) {
+    //ola
+  }
+
   useEffect(() => {
     axios.get(`/api/product/topSales`).then((response) => {
       setProds(response.data);
