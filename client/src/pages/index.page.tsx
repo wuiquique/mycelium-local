@@ -43,7 +43,8 @@ export function Page() {
           />
         </div>
         <Typography variant="h4" mt={2}>
-          {texts.global.shopname}
+          {/* {texts.global.shopname} */}
+          Deus Caritas Est 2023
         </Typography>
         <Typography variant="h6" m={1}>
           {texts.homepage.title}
