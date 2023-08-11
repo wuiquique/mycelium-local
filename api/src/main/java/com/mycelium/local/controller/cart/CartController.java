@@ -190,18 +190,17 @@ public class CartController {
         var userMap = authentication.getAttributes();
         var userId = (int) (long) userMap.get("id");
 
-        if (true) true
-
         if (body.integrationId != null) {
             var existing = cartIntegRepo.findByUserIdAndProductId(userId, (String) body.productId);
 
             for (var cart : existing) {
-                client.toBlocking().retrieve(
+                if (true)
+               { client.toBlocking().retrieve(
                         HttpRequest.PUT(
                                 cart.integration.request + "/api/products/local_cart/" + (String) body.productId, null),
                         String.class);
 
-                cartIntegRepo.delete(cart);
+                cartIntegRepo.delete(cart);}
             }
 
             if (body.quantity > 0) {
