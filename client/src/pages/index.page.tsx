@@ -31,7 +31,7 @@ export function Page() {
 
   return (
     <div className="justify-center text-center">
-      <Card className="p-4" elevation={10} sx={{ width: "100%" }}>
+      {/* <Card className="p-4" elevation={10} sx={{ width: "100%" }}>
         <div className="flex justify-center text-center">
           <CardMedia
             className="text-center"
@@ -186,7 +186,7 @@ export function Page() {
             ))}
           </List>
         </Box>
-      </Card>
+      </Card> */}
     </div>
   );
 }
