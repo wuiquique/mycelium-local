@@ -190,6 +190,8 @@ public class CartController {
         var userMap = authentication.getAttributes();
         var userId = (int) (long) userMap.get("id");
 
+        if (true) true
+
         if (body.integrationId != null) {
             var existing = cartIntegRepo.findByUserIdAndProductId(userId, (String) body.productId);
 
