@@ -43,7 +43,8 @@ export function Page() {
           />
         </div>
         <Typography variant="h4" mt={2}>
-          {texts.global.shopname}
+          {/* {texts.global.shopname} */}
+          Regina Coeli 19:31pm UAT
         </Typography>
         <Typography variant="h6" m={1}>
           {texts.homepage.title}
