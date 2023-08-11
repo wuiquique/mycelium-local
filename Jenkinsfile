@@ -8,7 +8,7 @@ pipeline {
             post {
                 failure {
                     mail (
-                        to: "luisenriquem15@gmail.com",
+                        to: "jflores@unis.edu.gt",
                         subject: "Fallo en Etapa SCM",
                         body: "La etapa SCM ha fallado."
                     )
@@ -25,7 +25,7 @@ pipeline {
             post {
                 failure {
                     mail (
-                        to: "luisenriquem15@gmail.com",
+                        to: "jflores@unis.edu.gt",
                         subject: "Fallo en Etapa Unit Tests",
                         body: "La etapa Unit Tests ha fallado."
                     )
@@ -46,7 +46,7 @@ pipeline {
             post {
                 failure {
                     mail (
-                        to: "luisenriquem15@gmail.com",
+                        to: "jflores@unis.edu.gt",
                         subject: "Fallo en Etapa SonarQube BackEnd",
                         body: "La etapa SonarQube Analysis para el backend ha fallado."
                     )
@@ -64,7 +64,7 @@ pipeline {
         //     post {
         //         failure {
         //             mail (
-        //                 to: "luisenriquem15@gmail.com",
+        //                 to: "jflores@unis.edu.gt",
         //                 subject: "Fallo en Control de Calidad SonarQube BackEnd",
         //                 body: "El análisis de SonarQube para el backend no superó el nivel de calidad esperado",
         //             )
@@ -88,7 +88,7 @@ pipeline {
             post {
                 failure {
                     mail (
-                        to: "luisenriquem15@gmail.com",
+                        to: "jflores@unis.edu.gt",
                         subject: "Fallo en Etapa SonarQube Analysis FrontEnd",
                         body: "La etapa SonarQube Analysis para el frontend ha fallado."
                     )
@@ -106,7 +106,7 @@ pipeline {
         //     post {
         //         failure {
         //             mail (
-        //                 to: "luisenriquem15@gmail.com",
+        //                 to: "jflores@unis.edu.gt",
         //                 subject: "Fallo en Control de Calidad SonarQube FrontEnd",
         //                 body: "El análisis de SonarQube para el frontend no superó el nivel de calidad esperado",
         //             )
