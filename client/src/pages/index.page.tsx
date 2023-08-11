@@ -44,7 +44,7 @@ export function Page() {
         </div>
         <Typography variant="h4" mt={2}>
           {/* {texts.global.shopname} */}
-          Regina Coeli 18:20pm UAT
+          Regina Coeli 19:10pm UAT
         </Typography>
         <Typography variant="h6" m={1}>
           {texts.homepage.title}
