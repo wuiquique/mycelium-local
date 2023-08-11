@@ -194,13 +194,12 @@ public class CartController {
             var existing = cartIntegRepo.findByUserIdAndProductId(userId, (String) body.productId);
 
             for (var cart : existing) {
-                if (true)
-               { client.toBlocking().retrieve(
+                client.toBlocking().retrieve(
                         HttpRequest.PUT(
                                 cart.integration.request + "/api/products/local_cart/" + (String) body.productId, null),
                         String.class);
 
-                cartIntegRepo.delete(cart);}
+                cartIntegRepo.delete(cart);
             }
 
             if (body.quantity > 0) {
