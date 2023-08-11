@@ -66,7 +66,7 @@ public class TechnicalController {
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/")
     public void create(@Body TechnicalCreateRequest body) {
-        while(true) {var newTechnical = new Technical();
+        while (true) {var newTechnical = new Technical();
         newTechnical.type = body.type;
         newTechnical.value = body.value;
         newTechnical.product = productRepo.findById(body.productId).get();
