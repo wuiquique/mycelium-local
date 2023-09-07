@@ -9,10 +9,10 @@ plugins {
 
 sonar {
   properties {
-    property("sonar.projectName", "Drone-Back")
-    property("sonar.projectKey", "Drone-Back")
+    property("sonar.projectName", "Main-Back")
+    property("sonar.projectKey", "Main-Back")
     property("sonar.host.url", "http://150.136.162.189:9997")
-    property("sonar.login", "sqp_ec07fa6ac66ccbf497d5890d67604e09ff1d955d")
+    property("sonar.login", "sqp_f20eae58db1eb1f593210fcd99dd45d2474e8a35")
   }
 }
 
