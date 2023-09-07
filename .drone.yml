@@ -18,29 +18,30 @@ steps:
       - push
       - pull_request
 
-# - name: SonarQube Back
-#   image: gradle:jdk11
-#   commands:
-#     - cd api
-#     - ./gradlew sonar
-#   when:
-#     event:
-#       - push
-#       - pull_request
+- name: SonarQube Analysis
+  image: sonarsource/sonar-scanner-cli:latest
+  commands:
+    - sonar-scanner \
+        -Dsonar.host.url=http://sonarqube:9000 \
+        -Dsonar.login=sqp_ca58985e84aa5af45b0087ea0174b1899bb1cb63 \
+        -Dsonar.projectKey=Drone-Back \
+        -Dsonar.projectName=Drone-Back \
+        -Dsonar.sources=. \
+  when:
+    event:
+      - push
+      - pull_request
 
-# - name: SonarQube Front
-#   image: node:lts
-#   commands:
-#     - cd client
-#     - npm install -g sonarqube-scanner
-#     - sonar-scanner
-#   when:
-#     event:
-#       - push
-#       - pull_request
-
-on_failure:
-  - name: Send Failure Email
-    image: alpine
-    commands:
-      - echo "La etapa $DRONE_STAGE_NAME ha fallado." | mail -s "Fallo en Etapa $DRONE_STAGE_NAME" jflores@unis.edu.gt
+- name: Email
+  image: drillster/drone-email
+  settings:
+    host: smtp.gmail.com
+    username: lmenendez@unis.edu.gt
+    password: jtobcnjnedbqeuhi
+    from: lmenendez@unis.edu.gt
+    subject: La etapa $DRONE_STAGE_NAME ha fallado.
+    recipients: 
+      - luisenriquem15@gmail.com
+  when:
+    status:
+    - failure

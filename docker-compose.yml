@@ -87,6 +87,8 @@ services:
       - mycelium-local
     volumes:
       - /var/lib/drone:/data
+    depends_on:
+      - sonarqube
 
   drone-runner: 
     image: drone/drone-runner-docker:1
