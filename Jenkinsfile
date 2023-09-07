@@ -114,5 +114,63 @@ pipeline {
           
             }
         }
+
+        stage("Build Back") {
+            steps {
+                script {
+                    sh "podman build -t local-registry:5000/mycelium-local_api:main-prod -f Dockerfile.prod ./api"
+                }
+            }
+
+            post {
+                failure {
+                    mail (
+                        to: "jflores@unis.edu.gt",
+                        subject: "Falló de build del Docker Back",
+                        body: "Build de Docker para el Back fallo",
+                    )
+                }
+            }
+        }
+
+        stage("Build Front") {
+            steps {
+                script {
+                    sh "podman build -t local-registry:5000/mycelium-local_client:main-prod -f Dockerfile.prod ./client"
+                }
+            }
+
+            post {
+                failure {
+                    mail (
+                        to: "jflores@unis.edu.gt",
+                        subject: "Falló de build del Docker Front",
+                        body: "Build de Docker para el Front fallo",
+                    )
+                }
+            }
+        }
+
+        stage("Publish images") {
+            steps {
+                script {
+                    sh "podman push local-registry:5000/mycelium-local_api:main-prod"
+                    sh "podman push local-registry:5000/mycelium-local_client:main-prod"
+                }
+            }
+
+            post {
+                failure {
+                    mail (
+                        to: "jflores@unis.edu.gt",
+                        subject: "Imágenes no publicadas",
+                        body: "No se pudieron publicar las imágenes al local-registry",
+                    )
+                }
+            }
+        }
+
+        
+
     }
 }

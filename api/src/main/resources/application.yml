@@ -32,7 +32,7 @@ jackson:
 datasources:
   default:
     driverClassName: oracle.jdbc.OracleDriver
-    url: "jdbc:oracle:thin:@myceliumdb:1521/XEPDB1"
+    url: ${DATABASE_JDBC_URL:jdbc:oracle:thin:@myceliumdb:1521/XEPDB1}
     username: ${DATABASE_NAME:PDBADMIN}
     password: "12345"
     dbType: oracle

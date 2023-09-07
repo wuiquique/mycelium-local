@@ -24,6 +24,8 @@ FROM docker.io/node:16 AS mycelium-international-client
 WORKDIR /app
 
 # Copy build
-COPY --from=build-base /app/ .
+COPY --from=build-base --chown=node:node /app/ .
+
+USER node
 
 CMD [ "yarn", "run", "server" ]
