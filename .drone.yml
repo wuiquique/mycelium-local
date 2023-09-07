@@ -1,10 +1,46 @@
 kind: pipeline
 type: docker
-name: default
+
+name: Pipeline
+
+platform:
+  os: linux
+  arch: amd64
 
 steps:
-- name: greeting
-  image: alpine
+- name: Unit Tests
+  image: gradle:jdk11
   commands:
-  - echo hello
-  - echo world
+    - cd api
+    - ./gradlew test
+  when:
+    event:
+      - push
+      - pull_request
+
+# - name: SonarQube Back
+#   image: gradle:jdk11
+#   commands:
+#     - cd api
+#     - ./gradlew sonar
+#   when:
+#     event:
+#       - push
+#       - pull_request
+
+# - name: SonarQube Front
+#   image: node:lts
+#   commands:
+#     - cd client
+#     - npm install -g sonarqube-scanner
+#     - sonar-scanner
+#   when:
+#     event:
+#       - push
+#       - pull_request
+
+on_failure:
+  - name: Send Failure Email
+    image: alpine
+    commands:
+      - echo "La etapa $DRONE_STAGE_NAME ha fallado." | mail -s "Fallo en Etapa $DRONE_STAGE_NAME" jflores@unis.edu.gt
