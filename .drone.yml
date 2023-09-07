@@ -38,7 +38,7 @@ steps:
     from: lmenendez@unis.edu.gt
     subject: La etapa $DRONE_STAGE_NAME ha fallado.
     recipients: 
-      - luisenriquem15@gmail.com
-  when:
-    status:
-    - failure
+      - DRONE_COMMIT_AUTHOR_EMAIL
+  # when:
+  #   status:
+  #   - failure
