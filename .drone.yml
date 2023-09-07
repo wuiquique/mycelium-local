@@ -21,16 +21,12 @@ steps:
 - name: SonarQube Analysis
   image: sonarsource/sonar-scanner-cli:latest
   commands:
-    - sonar-scanner \
-        -Dsonar.host.url=http://sonarqube:9000 \
-        -Dsonar.login=sqp_ca58985e84aa5af45b0087ea0174b1899bb1cb63 \
-        -Dsonar.projectKey=Drone-Back \
-        -Dsonar.projectName=Drone-Back \
-        -Dsonar.sources=. \
+    - sonar-scanner
   when:
     event:
       - push
       - pull_request
+
 
 - name: Email
   image: drillster/drone-email
