@@ -9,7 +9,7 @@ platform:
 
 steps:
 - name: Unit Tests
-  image: gradle:jdk11
+  image: gradle:7.5.1-jdk17
   commands:
     - cd api
     - ./gradlew test
