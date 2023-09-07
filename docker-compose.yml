@@ -72,6 +72,37 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
 
+  drone:
+    image: drone/drone:2
+    container_name: drone
+    ports:
+      - "7000:80"
+    environment:
+      - DRONE_GITHUB_CLIENT_ID=dbdcb085b3941797ab63
+      - DRONE_GITHUB_CLIENT_SECRET=a2c53b66c20c48e5839a2b40876dbddfd001658a
+      - DRONE_SERVER_HOST=150.136.162.189:9998
+      - DRONE_SERVER_PROTO=http
+      - DRONE_RPC_SECRET=f213e0a34e9e602bd587033b43b5e56b
+    networks:
+      - mycelium-local
+    volumes:
+      - /var/lib/drone:/data
+
+  drone-runner: 
+    image: drone/drone-runner-docker:1
+    networks:
+      - mycelium-local
+    volumes: 
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DRONE_RPC_PROTO=http
+      - DRONE_RPC_HOST=drone:80
+      - DRONE_RPC_SECRET=f213e0a34e9e602bd587033b43b5e56b
+      - DRONE_RUNNER_CAPACITY=2
+      - DRONE_RUNNER_NAME=mycelium-runner
+    ports:
+      - "7070:7070"
+
   sonarqube:
     image: sonarqube:lts
     container_name: sonarqube
