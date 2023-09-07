@@ -8,26 +8,31 @@ platform:
   arch: amd64
 
 steps:
-# - name: Unit Tests
-#   image: gradle:7.5.1-jdk17
-#   commands:
-#     - cd api
-#     - ./gradlew test
-#   when:
-#     event:
-#       - push
-#       - pull_request
+- name: Unit Tests
+  image: gradle:7.5.1-jdk17
+  commands:
+    - cd api
+    - ./gradlew test
+  when:
+    event:
+      - push
+      - pull_request
 
-# - name: analisis-back
-#   image: gradle:7.5.1-jdk17
-#   commands:
-#     - cd api
-#     - gradle sonar
-#   when:
-#     event:
-#       - push
-#       - pull_request
+- name: SonarQube Back
+  image: gradle:7.5.1-jdk17
+  commands:
+    - cd api
+    - gradle sonar
+  when:
+    event:
+      - push
+      - pull_request
 
+- name: SonarQube Front
+  image: node:16.18.1
+    commands:
+      - npm install -g sonarqube-scanner
+      - sonar-scanner
 
 - name: Email
   image: drillster/drone-email
@@ -39,6 +44,6 @@ steps:
     subject: La etapa $DRONE_STAGE_NAME ha fallado.
     recipients: 
       - luisenriquem15@gmail.com
-  # when:
-  #   status:
-  #   - failure
+  when:
+    status:
+    - failure
