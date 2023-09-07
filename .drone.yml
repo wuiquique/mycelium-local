@@ -18,10 +18,11 @@ steps:
       - push
       - pull_request
 
-- name: SonarQube Analysis
-  image: sonarsource/sonar-scanner-cli:latest
+- name: analisis-back
+  image: gradle:7.5.1-jdk17
   commands:
-    - sonar-scanner
+    - cd api
+    - gradle sonar
   when:
     event:
       - push

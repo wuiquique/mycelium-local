@@ -9,7 +9,10 @@ plugins {
 
 sonar {
   properties {
-    property("sonar.projectKey", "Mycelium-dev")
+    property("sonar.projectName", "Drone-Back")
+    property("sonar.projectKey", "Drone-Back")
+    property("sonar.host.url", "150.136.162.189:9997")
+    property("sonar.login", "sqp_ec07fa6ac66ccbf497d5890d67604e09ff1d955d")
   }
 }
 
