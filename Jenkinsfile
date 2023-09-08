@@ -188,16 +188,16 @@ pipeline {
                 )
             }
 
-        //     post {
-        //         failure {
-        //             mail (
-        //                 to: "jflores@unis.edu.gt",
-        //                 subject: "Los contenedores no se pudieron ejecutar",
-        //                 body: "No se pudo ejecutar los contenedores actualizados en las computadoras",
-        //             )
-        //         }
-        //     }
-        // }
+            post {
+                failure {
+                    mail (
+                        to: "jflores@unis.edu.gt",
+                        subject: "Los contenedores no se pudieron ejecutar",
+                        body: "No se pudo ejecutar los contenedores actualizados en las computadoras",
+                    )
+                }
+            }
+        }
 
     }
 }
