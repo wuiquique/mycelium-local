@@ -118,7 +118,7 @@ pipeline {
         stage("Build Back") {
             steps {
                 script {
-                    sh "podman build -t local-registry:5000/mycelium-local_api:main-prod -f Dockerfile.prod ./api"
+                    sh "podman build -t local-registry:5000/mycelium-local_api:main -f Dockerfile.prod ./api"
                 }
             }
 
@@ -136,7 +136,7 @@ pipeline {
         stage("Build Front") {
             steps {
                 script {
-                    sh "podman build -t local-registry:5000/mycelium-local_client:main-prod -f Dockerfile.prod ./client"
+                    sh "podman build -t local-registry:5000/mycelium-local_client:main -f Dockerfile.prod ./client"
                 }
             }
 
@@ -154,8 +154,8 @@ pipeline {
         stage("Publish images") {
             steps {
                 script {
-                    sh "podman push local-registry:5000/mycelium-local_api:main-prod"
-                    sh "podman push local-registry:5000/mycelium-local_client:main-prod"
+                    sh "podman push local-registry:5000/mycelium-local_api:main"
+                    sh "podman push local-registry:5000/mycelium-local_client:main"
                 }
             }
 
@@ -170,7 +170,34 @@ pipeline {
             }
         }
 
-        
+        stage("Deployment") {
+            steps {
+                sshPublisher(
+                    failOnError: true,
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: "Main",
+                            transfers: [
+                                sshTransfer(
+                                    execCommand: 'docker compose pull && docker compose up -d',
+                                    execTimeout: 300000
+                                )
+                            ]
+                        )
+                    ]
+                )
+            }
+
+            post {
+                failure {
+                    mail (
+                        to: "${notifMail}",
+                        subject: "Los contenedores no se pudieron ejecutar",
+                        body: "No se pudo ejecutar los contenedores actualizados en las computadoras",
+                    )
+                }
+            }
+        }
 
     }
 }
