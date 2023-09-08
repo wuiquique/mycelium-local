@@ -33,7 +33,7 @@ steps:
   commands:
     - npm install -g sonarqube-scanner
     - sonar-scanner -Dsonar.qualitygate.wait=true
-
+ 
 - name: Email
   image: drillster/drone-email
   settings:
