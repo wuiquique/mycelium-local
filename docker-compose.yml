@@ -81,9 +81,10 @@ services:
     container_name: drone
     ports:
       - "7000:80"
+    privileged: true
+    env_file:
+      - .env
     environment:
-      - DRONE_GITHUB_CLIENT_ID=dbdcb085b3941797ab63
-      - DRONE_GITHUB_CLIENT_SECRET=a2c53b66c20c48e5839a2b40876dbddfd001658a
       - DRONE_SERVER_HOST=150.136.162.189:9998
       - DRONE_SERVER_PROTO=http
       - DRONE_RPC_SECRET=f213e0a34e9e602bd587033b43b5e56b
