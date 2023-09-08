@@ -176,7 +176,7 @@ pipeline {
                     failOnError: true,
                     publishers: [
                         sshPublisherDesc(
-                            configName: "Main",
+                            configName: "Dev",
                             transfers: [
                                 sshTransfer(
                                     execCommand: 'docker compose pull && docker compose up -d',
