@@ -60,7 +60,11 @@ services:
           - myceliumdb
 
   jenkins:
-    image: jenkins/jenkins:2.401.3-lts-jdk17
+    image: 127.0.0.1:5000/jenkins:2.401.3-lts-jdk17
+    build:
+      context: jenkins
+      dockerfile: Dockerfile
+    privileged: true
     container_name: jenkins
     ports:
       - "8080:8080"
@@ -138,6 +142,60 @@ services:
     networks:
       - mycelium-local
 
+  local-registry:
+    image: docker.io/registry:2
+    expose:
+      - 5000
+    networks:
+      - mycelium-local
+
+  main:
+    image: 127.0.0.1:5000/debian-podman-ssh:12.1
+    privileged: true
+    ports:
+      - 2222:22/tcp
+    build:
+      context: pcs
+      dockerfile: Dockerfile
+    volumes:
+      - ./home/master:/home/debian:z
+      - ./init:/app/init:z,ro
+    depends_on:
+      - db
+    networks:
+      - mycelium-local
+
+  dev:
+    image: 127.0.0.1:5000/debian-podman-ssh:12.1
+    privileged: true
+    ports:
+      - 2223:22/tcp
+    build:
+      context: pcs
+      dockerfile: Dockerfile
+    volumes:
+      - ./home/dev:/home/debian:z
+      - ./init:/app/init:z,ro
+    depends_on:
+      - db
+    networks:
+      - mycelium-local
+
+  uat:
+    image: 127.0.0.1:5000/debian-podman-ssh:12.1
+    privileged: true
+    ports:
+      - 2224:22/tcp
+    build:
+      context: pcs
+      dockerfile: Dockerfile
+    volumes:
+      - ./home/uat:/home/debian:z
+      - ./init:/app/init:z,ro
+    depends_on:
+      - db
+    networks:
+      - mycelium-local
 
 volumes:
   oracledb:
