@@ -170,34 +170,34 @@ pipeline {
             }
         }
 
-        stage("Deployment") {
-            steps {
-                sshPublisher(
-                    failOnError: true,
-                    publishers: [
-                        sshPublisherDesc(
-                            configName: "Uat",
-                            transfers: [
-                                sshTransfer(
-                                    execCommand: 'docker compose pull && docker compose up -d',
-                                    execTimeout: 300000
-                                )
-                            ]
-                        )
-                    ]
-                )
-            }
+        // stage("Deployment") {
+        //     steps {
+        //         sshPublisher(
+        //             failOnError: true,
+        //             publishers: [
+        //                 sshPublisherDesc(
+        //                     configName: "Uat",
+        //                     transfers: [
+        //                         sshTransfer(
+        //                             execCommand: 'docker compose pull && docker compose up -d',
+        //                             execTimeout: 300000
+        //                         )
+        //                     ]
+        //                 )
+        //             ]
+        //         )
+        //     }
 
-            post {
-                failure {
-                    mail (
-                        to: "jflores@unis.edu.gt",
-                        subject: "Los contenedores no se pudieron ejecutar",
-                        body: "No se pudo ejecutar los contenedores actualizados en las computadoras",
-                    )
-                }
-            }
-        }
+        //     post {
+        //         failure {
+        //             mail (
+        //                 to: "jflores@unis.edu.gt",
+        //                 subject: "Los contenedores no se pudieron ejecutar",
+        //                 body: "No se pudo ejecutar los contenedores actualizados en las computadoras",
+        //             )
+        //         }
+        //     }
+        // }
 
     }
 }
