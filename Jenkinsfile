@@ -114,5 +114,90 @@ pipeline {
           
             }
         }
+
+        stage("Build Back") {
+            steps {
+                script {
+                    sh "podman build -t local-registry:5000/mycelium-local_api:main -f Dockerfile.prod ./api"
+                }
+            }
+
+            post {
+                failure {
+                    mail (
+                        to: "jflores@unis.edu.gt",
+                        subject: "Falló de build del Docker Back",
+                        body: "Build de Docker para el Back fallo",
+                    )
+                }
+            }
+        }
+
+        stage("Build Front") {
+            steps {
+                script {
+                    sh "podman build -t local-registry:5000/mycelium-local_client:main -f Dockerfile.prod ./client"
+                }
+            }
+
+            post {
+                failure {
+                    mail (
+                        to: "jflores@unis.edu.gt",
+                        subject: "Falló de build del Docker Front",
+                        body: "Build de Docker para el Front fallo",
+                    )
+                }
+            }
+        }
+
+        stage("Publish images") {
+            steps {
+                script {
+                    sh "podman push local-registry:5000/mycelium-local_api:main"
+                    sh "podman push local-registry:5000/mycelium-local_client:main"
+                }
+            }
+
+            post {
+                failure {
+                    mail (
+                        to: "jflores@unis.edu.gt",
+                        subject: "Imágenes no publicadas",
+                        body: "No se pudieron publicar las imágenes al local-registry",
+                    )
+                }
+            }
+        }
+
+        stage("Deployment") {
+            steps {
+                sshPublisher(
+                    failOnError: true,
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: "Main",
+                            transfers: [
+                                sshTransfer(
+                                    execCommand: 'docker compose pull && docker compose up -d',
+                                    execTimeout: 300000
+                                )
+                            ]
+                        )
+                    ]
+                )
+            }
+
+            post {
+                failure {
+                    mail (
+                        to: "jflores@unis.edu.gt",
+                        subject: "Los contenedores no se pudieron ejecutar",
+                        body: "No se pudo ejecutar los contenedores actualizados en las computadoras",
+                    )
+                }
+            }
+        }
+
     }
 }
