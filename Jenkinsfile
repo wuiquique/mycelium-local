@@ -52,7 +52,7 @@ pipeline {
                     )
                 }
             }
-        }
+        } 
 
         stage("SonarQube Back Quality Gate") {
             steps {
