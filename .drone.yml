@@ -22,7 +22,7 @@ steps:
   image: gradle:7.5.1-jdk17
   commands:
     - cd api
-    - gradle sonar
+    - gradle sonar -Dsonar.qualitygate.wait=true
   when:
     event:
       - push
@@ -32,7 +32,7 @@ steps:
   image: node:16.18.1
   commands:
     - npm install -g sonarqube-scanner
-    - sonar-scanner
+    - sonar-scanner -Dsonar.qualitygate.wait=true
 
 - name: Email
   image: drillster/drone-email
