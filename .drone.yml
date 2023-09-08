@@ -39,7 +39,8 @@ steps:
   settings:
     host: smtp.gmail.com
     username: lmenendez@unis.edu.gt
-    password: from_secret: email-pass
+    password: 
+      from_secret: email-pass
     from: lmenendez@unis.edu.gt
     subject: La etapa $DRONE_STAGE_NAME ha fallado.
     recipients: 
