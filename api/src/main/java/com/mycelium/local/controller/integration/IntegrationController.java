@@ -94,7 +94,7 @@ public class IntegrationController {
         // integration.user = body.user;
         // integration.password = body.password; // TODO: hash
         // integrationRepo.update(integration);
-        // return list();
+        return list();
     }
 
     /**
