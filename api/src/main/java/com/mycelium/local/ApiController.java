@@ -11,8 +11,6 @@ public class ApiController {
 
     @Get(uri = "/", produces = "text/plain")
     public String index() {
-        if (true) {
-            return "Example Response";
-        }
+        return "Example Response";
     }
 }

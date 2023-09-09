@@ -88,13 +88,13 @@ public class IntegrationController {
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Put("/{id}")
     public List<Integration> update(int id, @Body IntegrationCreateRequest body) {
-        var integration = integrationRepo.findById(id).get();
-        integration.name = body.name;
-        integration.request = body.request;
-        integration.user = body.user;
-        integration.password = body.password; // TODO: hash
-        integrationRepo.update(integration);
-        return list();
+        // var integration = integrationRepo.findById(id).get();
+        // integration.name = body.name;
+        // integration.request = body.request;
+        // integration.user = body.user;
+        // integration.password = body.password; // TODO: hash
+        // integrationRepo.update(integration);
+        // return list();
     }
 
     /**
