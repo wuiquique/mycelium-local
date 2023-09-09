@@ -11,9 +11,8 @@ public class ApiController {
 
     @Get(uri = "/", produces = "text/plain")
     public String index() {
-        while (true) {
-            //ola
+        if (true) {
+            return "Example Response";
         }
-        return "Example Response";
     }
 }
