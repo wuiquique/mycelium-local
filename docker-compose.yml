@@ -109,7 +109,7 @@ services:
       - DRONE_RUNNER_NAME=mycelium-runner
     ports:
       - "7070:7070"
-
+ 
   sonarqube:
     image: sonarqube:lts
     container_name: sonarqube
