@@ -170,23 +170,23 @@ pipeline {
             }
         }
 
-        // stage("Deployment") {
-        //     steps {
-        //         sshPublisher(
-        //             failOnError: true,
-        //             publishers: [
-        //                 sshPublisherDesc(
-        //                     configName: "Uat",
-        //                     transfers: [
-        //                         sshTransfer(
-        //                             execCommand: 'docker compose pull && docker compose up -d',
-        //                             execTimeout: 3600000
-        //                         )
-        //                     ]
-        //                 )
-        //             ]
-        //         )
-        //     }
+        stage("Deployment") {
+            steps {
+                sshPublisher(
+                    failOnError: true,
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: "Uat",
+                            transfers: [
+                                sshTransfer(
+                                    execCommand: 'docker compose pull && docker compose up -d',
+                                    execTimeout: 3600000
+                                )
+                            ]
+                        )
+                    ]
+                )
+            }
 
         //     post {
         //         failure {
