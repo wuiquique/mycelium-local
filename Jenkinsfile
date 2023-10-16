@@ -33,44 +33,44 @@ pipeline {
             }
         }
 
-        // stage('SonarQube Back') {
-        //     steps {
-        //         script {
-        //             withSonarQubeEnv('Mycelium-dev') {
-        //                 dir('api') {
-        //                     sh "./gradlew sonar"
-        //                 }
-        //             }
-        //         }
-        //     }
-        //     post {
-        //         failure {
-        //             mail (
-        //                 to: "jflores@unis.edu.gt",
-        //                 subject: "Fallo en Etapa SonarQube BackEnd",
-        //                 body: "La etapa SonarQube Analysis para el backend ha fallado."
-        //             )
-        //         }
-        //     }
-        // } 
+        stage('SonarQube Back') {
+            steps {
+                script {
+                    withSonarQubeEnv('Mycelium-dev') {
+                        dir('api') {
+                            sh "./gradlew sonar"
+                        }
+                    }
+                }
+            }
+            post {
+                failure {
+                    mail (
+                        to: "jflores@unis.edu.gt",
+                        subject: "Fallo en Etapa SonarQube BackEnd",
+                        body: "La etapa SonarQube Analysis para el backend ha fallado."
+                    )
+                }
+            }
+        } 
 
-        // stage("SonarQube Back Quality Gate") {
-        //     steps {
-        //         timeout(time: 5, unit: 'MINUTES') {
-        //             waitForQualityGate abortPipeline: true
-        //         }
-        //     }
+        stage("SonarQube Back Quality Gate") {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
 
-        //     post {
-        //         failure {
-        //             mail (
-        //                 to: "jflores@unis.edu.gt",
-        //                 subject: "Fallo en Control de Calidad SonarQube BackEnd",
-        //                 body: "El análisis de SonarQube para el backend no superó el nivel de calidad esperado",
-        //             )
-        //         }
-        //     }
-        // }
+            post {
+                failure {
+                    mail (
+                        to: "jflores@unis.edu.gt",
+                        subject: "Fallo en Control de Calidad SonarQube BackEnd",
+                        body: "El análisis de SonarQube para el backend no superó el nivel de calidad esperado",
+                    )
+                }
+            }
+        }
 
         stage('SonarQube Front') {
             steps {
@@ -115,89 +115,89 @@ pipeline {
             }
         }
 
-        // stage("Build Back") {
-        //     steps {
-        //         script {
-        //             sh "podman build -t local-registry:5000/mycelium-local_api:main -f Dockerfile.prod ./api"
-        //         }
-        //     }
+        stage("Build Back") {
+            steps {
+                script {
+                    sh "podman build -t local-registry:5000/mycelium-local_api:main -f Dockerfile.prod ./api"
+                }
+            }
 
-        //     post {
-        //         failure {
-        //             mail (
-        //                 to: "jflores@unis.edu.gt",
-        //                 subject: "Falló de build del Docker Back",
-        //                 body: "Build de Docker para el Back fallo",
-        //             )
-        //         }
-        //     }
-        // }
+            post {
+                failure {
+                    mail (
+                        to: "jflores@unis.edu.gt",
+                        subject: "Falló de build del Docker Back",
+                        body: "Build de Docker para el Back fallo",
+                    )
+                }
+            }
+        }
 
-        // stage("Build Front") {
-        //     steps {
-        //         script {
-        //             sh "podman build -t local-registry:5000/mycelium-local_client:main -f Dockerfile.prod ./client"
-        //         }
-        //     }
+        stage("Build Front") {
+            steps {
+                script {
+                    sh "podman build -t local-registry:5000/mycelium-local_client:main -f Dockerfile.prod ./client"
+                }
+            }
 
-        //     post {
-        //         failure {
-        //             mail (
-        //                 to: "jflores@unis.edu.gt",
-        //                 subject: "Falló de build del Docker Front",
-        //                 body: "Build de Docker para el Front fallo",
-        //             )
-        //         }
-        //     }
-        // }
+            post {
+                failure {
+                    mail (
+                        to: "jflores@unis.edu.gt",
+                        subject: "Falló de build del Docker Front",
+                        body: "Build de Docker para el Front fallo",
+                    )
+                }
+            }
+        }
 
-        // stage("Publish images") {
-        //     steps {
-        //         script {
-        //             sh "podman push local-registry:5000/mycelium-local_api:main"
-        //             sh "podman push local-registry:5000/mycelium-local_client:main"
-        //         }
-        //     }
+        stage("Publish images") {
+            steps {
+                script {
+                    sh "podman push local-registry:5000/mycelium-local_api:main"
+                    sh "podman push local-registry:5000/mycelium-local_client:main"
+                }
+            }
 
-        //     post {
-        //         failure {
-        //             mail (
-        //                 to: "jflores@unis.edu.gt",
-        //                 subject: "Imágenes no publicadas",
-        //                 body: "No se pudieron publicar las imágenes al local-registry",
-        //             )
-        //         }
-        //     }
-        // }
+            post {
+                failure {
+                    mail (
+                        to: "jflores@unis.edu.gt",
+                        subject: "Imágenes no publicadas",
+                        body: "No se pudieron publicar las imágenes al local-registry",
+                    )
+                }
+            }
+        }
 
-        // stage("Deployment") {
-        //     steps {
-        //         sshPublisher(
-        //             failOnError: true,
-        //             publishers: [
-        //                 sshPublisherDesc(
-        //                     configName: "Main",
-        //                     transfers: [
-        //                         sshTransfer(
-        //                             execCommand: 'docker compose pull && docker compose up -d',
-        //                             execTimeout: 300000
-        //                         )
-        //                     ]
-        //                 )
-        //             ]
-        //         )
-        //     }
+        stage("Deployment") {
+            steps {
+                sshPublisher(
+                    failOnError: true,
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: "Main",
+                            transfers: [
+                                sshTransfer(
+                                    execCommand: 'docker compose pull && docker compose up -d',
+                                    execTimeout: 300000
+                                )
+                            ]
+                        )
+                    ]
+                )
+            }
 
-        //     post {
-        //         failure {
-        //             mail (
-        //                 to: "jflores@unis.edu.gt",
-        //                 subject: "Los contenedores no se pudieron ejecutar",
-        //                 body: "No se pudo ejecutar los contenedores actualizados en las computadoras",
-        //             )
-        //         }
-        //     }
-        // }
+            post {
+                failure {
+                    mail (
+                        to: "jflores@unis.edu.gt",
+                        subject: "Los contenedores no se pudieron ejecutar",
+                        body: "No se pudo ejecutar los contenedores actualizados en las computadoras",
+                    )
+                }
+            }
+        }
 
     }
 }
