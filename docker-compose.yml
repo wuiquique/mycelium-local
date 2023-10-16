@@ -125,7 +125,7 @@ services:
       - postgres
     volumes:
       - sonarqube_conf:/opt/sonarqube/conf
-      - /media/wuiquique/7A56AF5A56AF15C3/docker/_data/:/opt/sonarqube/data
+      - sonarqube_data:/opt/sonarqube/data
       - sonarqube_logs:/opt/sonarqube/logs
       - sonarqube_extensions:/opt/sonarqube/extensions
 
