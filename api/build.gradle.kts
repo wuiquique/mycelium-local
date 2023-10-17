@@ -12,7 +12,7 @@ sonar {
     property("sonar.projectName", "Uat-Back")
     property("sonar.projectKey", "Uat-Back")
     property("sonar.host.url", "http://150.136.162.189:9997")
-    property("sonar.login", "sqp_b1cbbe8166da0c644632b1bcf1dd42a77280aaf7")
+    property("sonar.login", "sqa_76f7917882b9643a1ca6c624bf48b4ac487008c5")
   }
 }
 
