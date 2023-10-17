@@ -180,7 +180,7 @@ pipeline {
                             transfers: [
                                 sshTransfer(
                                     execCommand: 'docker compose pull && docker compose up -d',
-                                    execTimeout: 300000
+                                    execTimeout: 3000000
                                 )
                             ]
                         )
