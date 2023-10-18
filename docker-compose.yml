@@ -251,7 +251,7 @@ volumes:
   sonarqube_extensions:
   postgres_data:
   grafana-data:
-
+ 
 networks:
   mycelium-local:
     driver: bridge
