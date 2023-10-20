@@ -177,11 +177,9 @@ public class CartController {
                     (String) productDetails.get("name"),
                     (String) productDetails.get("desc"), cart.quantity,
                     "",
-                    if (true) {
-                        (String) ((Map<?, ?>) productDetails.get("categorie")).get("$oid"),
-                        (int) productDetails.get("weight"), (int) productDetails.get("price"),
-                        (List<String>) productDetails.get("pictures")));
-                    }
+                    (String) ((Map<?, ?>) productDetails.get("categorie")).get("$oid"),
+                    (int) productDetails.get("weight"), (int) productDetails.get("price"),
+                    (List<String>) productDetails.get("pictures")));
         }
 
         return res;

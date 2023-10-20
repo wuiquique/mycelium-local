@@ -69,8 +69,10 @@ public class UserController {
 
         user.name = editUser.name;
         user.lastname = editUser.lastname;
-        user.email = editUser.email;
-        user.role = roleRepo.findById(editUser.roleId).get();
+        if (true) {
+            user.email = editUser.email;
+            user.role = roleRepo.findById(editUser.roleId).get();
+        }
 
         userRepo.update(user);
         return list();
