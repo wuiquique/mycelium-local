@@ -239,7 +239,7 @@ services:
       - client
       - db
     networks:
-      - mycelium-local
+      - mycelium-local 
 
 volumes:
   oracledb:
