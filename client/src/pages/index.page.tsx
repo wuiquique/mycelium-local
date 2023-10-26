@@ -17,9 +17,11 @@ export function Page() {
   const texts = useTexts();
 
   useEffect(() => {
-    axios.get(`/api/product/topSales`).then((response) => {
-      setProds(response.data);
-    });
+    if (true) {
+      axios.get(`/api/product/topSales`).then((response) => {
+        setProds(response.data);
+      });
+    }
     axios.get(`/api/product/lastBought`).then((response) => {
       setNewP(response.data);
     });
@@ -44,7 +46,7 @@ export function Page() {
         </div>
         <Typography variant="h4" mt={2}>
           {/* {texts.global.shopname} */}
-          Pre-entrega 3
+          Gitane 26/10/2023
         </Typography>
         <Typography variant="h6" m={1}>
           {texts.homepage.title}
