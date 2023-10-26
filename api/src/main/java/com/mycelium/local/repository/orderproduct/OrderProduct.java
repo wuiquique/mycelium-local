@@ -19,7 +19,7 @@ import io.micronaut.data.model.naming.NamingStrategies;
 @MappedEntity(namingStrategy = NamingStrategies.UpperCase.class)
 public class OrderProduct {
     @Id
-    @GeneratedValue
+    @GeneratedValue(GeneratedValue.Type.IDENTITY)
     public Integer id;
     public int quantity;
     public String tracking;

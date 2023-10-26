@@ -17,7 +17,7 @@ import io.micronaut.data.model.naming.NamingStrategies;
 @MappedEntity(namingStrategy = NamingStrategies.UpperCase.class)
 public class Product {
     @Id
-    @GeneratedValue
+    @GeneratedValue(GeneratedValue.Type.IDENTITY)
     public Integer id;
     public String name;
     public String desc;

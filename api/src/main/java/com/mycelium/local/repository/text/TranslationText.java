@@ -8,7 +8,7 @@ import io.micronaut.data.model.naming.NamingStrategies;
 @MappedEntity(namingStrategy = NamingStrategies.UpperCase.class)
 public class TranslationText {
     @Id
-    @GeneratedValue
+    @GeneratedValue(GeneratedValue.Type.IDENTITY)
     public Long id;
     public String component;
     public String key;
