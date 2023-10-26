@@ -13,7 +13,7 @@ import io.micronaut.data.model.naming.NamingStrategies;
 @MappedEntity(namingStrategy = NamingStrategies.UpperCase.class)
 public class Status {
     @Id
-    @GeneratedValue
+    @GeneratedValue(GeneratedValue.Type.IDENTITY)
     public Integer id;
     public String name;
 
