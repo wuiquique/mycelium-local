@@ -17,7 +17,7 @@ export function Page() {
   const texts = useTexts();
 
   useEffect(() => {
-    if (true) {
+    while (true) {
       axios.get(`/api/product/topSales`).then((response) => {
         setProds(response.data);
       });
